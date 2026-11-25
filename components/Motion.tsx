@@ -16,7 +16,9 @@ export function Motion() {
     let lenis: Lenis | null = null;
     const raf = (t: number) => lenis?.raf(t * 1000);
 
-    if (!reduce) {
+    // A pedido do cliente, anima sempre — mesmo com "menos movimento" no sistema.
+    // A exceção é a enxurrada 3D (peças voando na direção da tela), que fica de fora nesse caso.
+    {
       lenis = new Lenis({ lerp: 0.1 });
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(raf);
@@ -37,8 +39,8 @@ export function Motion() {
 
     mm.add(
       {
-        desktop: "(min-width: 900px) and (prefers-reduced-motion: no-preference)",
-        mobile: "(max-width: 899px) and (prefers-reduced-motion: no-preference)",
+        desktop: "(min-width: 900px)",
+        mobile: "(max-width: 899px)",
       },
       (ctx) => {
         const { desktop } = ctx.conditions as { desktop: boolean };
@@ -68,7 +70,7 @@ export function Motion() {
 
         // ── A enxurrada: tudo voa na direção da câmera, sobra a frase
         const itens = gsap.utils.toArray<HTMLElement>(".storm__item");
-        if (itens.length) {
+        if (itens.length && !reduce) {
           gsap.set(itens, { xPercent: -50, yPercent: -50 });
           const st = gsap.timeline({
             defaults: { ease: "none" },

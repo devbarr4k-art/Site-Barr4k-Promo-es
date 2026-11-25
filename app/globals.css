@@ -1566,14 +1566,6 @@ h2 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
 
 /* ── Partículas do topo */
 .particles {
@@ -1671,6 +1663,7 @@ h2 {
     max-height: 120px;
   }
 }
+/* quem pediu menos movimento no sistema não vê as peças voando (só a frase) */
 @media (prefers-reduced-motion: reduce) {
   .storm__item {
     display: none;
@@ -1796,11 +1789,5 @@ h2 {
   }
   .dep {
     width: 300px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .deps__row {
-    overflow-x: auto;
   }
 }

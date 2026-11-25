@@ -11,7 +11,6 @@ export function Particles({ count = 700 }: { count?: number }) {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0;
     let h = 0;
@@ -100,10 +99,9 @@ export function Particles({ count = 700 }: { count?: number }) {
     const io = new IntersectionObserver(([entry]) => {
       visivel = entry.isIntersecting;
       cancelAnimationFrame(raf);
-      if (visivel && !reduce) raf = requestAnimationFrame(step);
+      if (visivel) raf = requestAnimationFrame(step);
     });
     io.observe(canvas);
-    if (reduce) draw();
 
     return () => {
       cancelAnimationFrame(raf);
