@@ -1194,9 +1194,11 @@ h2 {
   position: absolute;
   left: 0;
   top: 0;
-  width: 320px;
-  max-width: none;
+  /* limita largura E altura: produto alto (fone) não fica gigante */
+  width: auto;
   height: auto;
+  max-width: 320px;
+  max-height: 230px;
   translate: -50% -60%;
   opacity: 0;
   scale: 0.7;
@@ -1540,8 +1542,10 @@ h2 {
   will-change: transform, opacity;
 }
 .storm__item--img img {
-  width: clamp(160px, 18vw, 300px);
+  width: auto;
   height: auto;
+  max-width: clamp(160px, 18vw, 300px);
+  max-height: clamp(130px, 22vh, 230px);
   filter: drop-shadow(0 30px 30px rgba(0, 0, 0, 0.85));
 }
 .storm__item--tag span {
@@ -1600,7 +1604,8 @@ h2 {
 
 @media (max-width: 899px) {
   .storm__item--img img {
-    width: 140px;
+    max-width: 140px;
+    max-height: 120px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
