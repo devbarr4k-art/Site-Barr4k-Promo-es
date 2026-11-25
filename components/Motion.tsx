@@ -159,34 +159,47 @@ export function Motion() {
           scrollTrigger: { trigger: ".idx", start: "top 80%" },
         });
 
-        // ── Números grandes: entram e contam (38 sobe, spam desce de 214 pra 5, VIP desce pra R$ 0)
+        // ── Números grandes: entram e contam toda vez que aparecem na tela
+        // (38 sobe, spam desce de 214 pra 5, VIP desce de R$ 19,90 pra R$ 0)
         gsap.utils.toArray<HTMLElement>(".stat__num").forEach((el) => {
-          gsap.from(el, {
-            yPercent: 30,
-            opacity: 0,
-            duration: 1,
-            ease: "power4.out",
-            scrollTrigger: { trigger: el, start: "top 88%" },
+          const counts = gsap.utils.toArray<HTMLElement>(".count", el).map((c) => {
+            const de = Number(c.dataset.from);
+            const ate = Number(c.dataset.to);
+            const dec = Number(c.dataset.dec ?? 0);
+            const fmtN = (v: number) =>
+              v === ate
+                ? ate.toLocaleString("pt-BR")
+                : v.toLocaleString("pt-BR", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+            const st = { v: de };
+            const tw = gsap.to(st, {
+              v: ate,
+              duration: 2.2,
+              ease: "power3.out",
+              paused: true,
+              onUpdate: () => {
+                c.textContent = fmtN(dec ? st.v : Math.round(st.v));
+              },
+            });
+            return { tw, reset: () => { tw.pause(0); st.v = de; c.textContent = fmtN(de); } };
           });
-        });
-        gsap.utils.toArray<HTMLElement>(".count").forEach((el) => {
-          const de = Number(el.dataset.from);
-          const ate = Number(el.dataset.to);
-          const dec = Number(el.dataset.dec ?? 0);
-          const fmtN = (v: number) =>
-            v === ate
-              ? ate.toLocaleString("pt-BR")
-              : v.toLocaleString("pt-BR", { minimumFractionDigits: dec, maximumFractionDigits: dec });
-          const st = { v: de };
-          el.textContent = fmtN(de);
-          gsap.to(st, {
-            v: ate,
-            duration: 2.2,
-            ease: "power3.out",
-            onUpdate: () => {
-              el.textContent = fmtN(dec ? st.v : Math.round(st.v));
-            },
-            scrollTrigger: { trigger: el, start: "top 85%" },
+          const entrada = gsap.fromTo(el, { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1, ease: "power4.out", paused: true });
+          const tocar = () => {
+            entrada.restart();
+            counts.forEach((c) => c.tw.restart());
+          };
+          const zerar = () => {
+            entrada.pause(0);
+            counts.forEach((c) => c.reset());
+          };
+          zerar();
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top 88%",
+            end: "bottom 12%",
+            onEnter: tocar,
+            onEnterBack: tocar,
+            onLeave: zerar,
+            onLeaveBack: zerar,
           });
         });
       },
