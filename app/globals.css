@@ -1359,7 +1359,7 @@ h2 {
   top: 34px;
   margin: 0;
 }
-.ticket--back {
+.tickets .ticket--back {
   top: -4px !important;
   left: 40px !important;
   right: -6px !important;
@@ -1368,7 +1368,7 @@ h2 {
   color: #8e8e8e;
   box-shadow: none;
 }
-.ticket--back .ticket__code {
+.tickets .ticket--back .ticket__code {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
