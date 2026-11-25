@@ -3,6 +3,7 @@ import { Bolt, Logo } from "@/components/Logo";
 import { Motion } from "@/components/Motion";
 import { PhoneFeed } from "@/components/PhoneFeed";
 import { IndexList } from "@/components/IndexList";
+import { GateLink, LeadModal } from "@/components/LeadGate";
 import { Particles } from "@/components/Particles";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
 import { DEPOIMENTOS, LINKS, NUMEROS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
@@ -64,20 +65,22 @@ function SpamChat({ nome, membros, msgs }: { nome: string; membros: string; msgs
 // Botão com a animação da BB Agency (ref. kr3w.gg): o círculo cresce e enche a pílula,
 // o ícone sai e entra de novo, e o texto rola pra cima já na cor nova.
 function Btn({
-  href,
+  canal = "telegram",
+  origem,
   icon,
   children,
   variant = "lime",
   size = "lg",
 }: {
-  href: string;
+  canal?: "telegram" | "whatsapp";
+  origem: string;
   icon: React.ReactNode;
   children: string;
   variant?: "lime" | "white";
   size?: "lg" | "sm";
 }) {
   return (
-    <a className={`btn btn--${variant} btn--${size}`} href={href} target="_blank" rel="noopener">
+    <GateLink canal={canal} origem={origem} className={`btn btn--${variant} btn--${size}`}>
       <span className="btn__fill" aria-hidden="true" />
       <span className="btn__ico" aria-hidden="true">
         <span className="btn__ico-a">{icon}</span>
@@ -87,17 +90,17 @@ function Btn({
         <span>{children}</span>
         <span aria-hidden="true">{children}</span>
       </span>
-    </a>
+    </GateLink>
   );
 }
 
-function CTAButtons() {
+function CTAButtons({ origem }: { origem: string }) {
   return (
     <div className="ctas">
-      <Btn href={LINKS.telegram} icon={<TelegramIcon size={18} />}>
+      <Btn origem={origem} icon={<TelegramIcon size={18} />}>
         Entrar no grupo do Telegram
       </Btn>
-      <Btn href={LINKS.whatsapp} icon={<WhatsIcon size={18} />} variant="white">
+      <Btn canal="whatsapp" origem={origem} icon={<WhatsIcon size={18} />} variant="white">
         Comunidade no WhatsApp
       </Btn>
     </div>
@@ -193,7 +196,12 @@ function Estrelas({ nota }: { nota: number }) {
 function CardDepoimento({ d, i }: { d: Depoimento; i: number }) {
   const iniciais = d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2);
   return (
-    <figure className="dep">
+    <figure className={`dep ${d.foto ? "dep--foto" : ""}`}>
+      {d.foto && (
+        <div className="dep__foto">
+          <Image src={d.foto} alt={`Foto do ${d.produto} que ${d.nome.split(" ")[0]} recebeu`} width={400} height={300} sizes="380px" />
+        </div>
+      )}
       <div className="dep__top">
         <span className="dep__produto">{d.produto}</span>
         <Estrelas nota={d.nota ?? 5} />
@@ -215,26 +223,23 @@ function CardDepoimento({ d, i }: { d: Depoimento; i: number }) {
 }
 
 function Depoimentos() {
-  const linhas = [DEPOIMENTOS.slice(0, 5), DEPOIMENTOS.slice(5)];
   return (
     <section className="deps" aria-labelledby="deps-titulo">
       <div className="deps__head">
         <h2 id="deps-titulo" className="mega">Quem entrou, comprou.</h2>
         <p>O que a galera do grupo conta depois que a encomenda chega.</p>
       </div>
-      {linhas.map((linha, l) => (
-        <div key={l} className={`deps__row ${l === 1 ? "deps__row--rev" : ""}`}>
-          <div className="deps__track">
-            {[0, 1].map((c) => (
-              <div key={c} className="deps__set" aria-hidden={c === 1 ? true : undefined}>
-                {linha.map((d, i) => (
-                  <CardDepoimento key={d.nome} d={d} i={i + l * 5} />
-                ))}
-              </div>
-            ))}
-          </div>
+      <div className="deps__row">
+        <div className="deps__track">
+          {[0, 1].map((c) => (
+            <div key={c} className="deps__set" aria-hidden={c === 1 ? true : undefined}>
+              {DEPOIMENTOS.map((d, i) => (
+                <CardDepoimento key={d.nome} d={d} i={i} />
+              ))}
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </section>
   );
 }
@@ -243,6 +248,7 @@ export default function Home() {
   return (
     <>
       <Motion />
+      <LeadModal />
       <div className="grain" aria-hidden="true" />
 
       <header className="nav">
@@ -253,7 +259,7 @@ export default function Home() {
           <a href="#ofertas">Ofertas</a>
           <a href="#duvidas">Dúvidas</a>
         </nav>
-        <Btn href={LINKS.telegram} icon={<TelegramIcon size={14} />} size="sm">
+        <Btn origem="navbar" icon={<TelegramIcon size={14} />} size="sm">
           Entrar
         </Btn>
       </header>
@@ -272,7 +278,7 @@ export default function Home() {
                 Enquanto os outros grupos jogam qualquer link, a ACHOU confere o preço, o cupom e a
                 loja antes de mandar pro seu celular.
               </p>
-              <CTAButtons />
+              <CTAButtons origem="topo" />
               <div className="hero__proof">
                 <span className="avatars" aria-hidden="true">
                   <span style={{ background: "#C6FF00" }}>LP</span>
@@ -376,7 +382,7 @@ export default function Home() {
                     <strong>{brl(fone.por)}</strong>
                   </p>
                   <p className="chat__note">Menor preço dos últimos 90 dias · conferido às 10:47</p>
-                  <a className="btn btn--lime btn--block" href={LINKS.telegram} target="_blank" rel="noopener">Ver oferta</a>
+                  <GateLink origem="comparacao" className="btn btn--lime btn--block">Ver oferta</GateLink>
                 </article>
               </div>
               <ul className="chat__verdict chat__verdict--good">
@@ -465,7 +471,7 @@ export default function Home() {
             <span>A próxima oferta</span>
             <span>já está a caminho.</span>
           </h2>
-          <CTAButtons />
+          <CTAButtons origem="final" />
         </section>
       </main>
 
@@ -477,7 +483,7 @@ export default function Home() {
           </div>
           <nav className="foot__links" aria-label="Rodapé">
             <a href="#">Termos de uso</a>
-            <a href="#">Privacidade</a>
+            <a href="/privacidade">Privacidade</a>
             <a href={LINKS.instagram}>Instagram</a>
             <a href={LINKS.tiktok}>TikTok</a>
           </nav>

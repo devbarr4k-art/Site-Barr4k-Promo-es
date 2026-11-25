@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { LINKS, OFERTAS, brl, desconto } from "@/lib/config";
+import { OFERTAS, brl, desconto } from "@/lib/config";
+import { entrar } from "./LeadGate";
 
 // Lista de ofertas em linhas. No desktop, a foto do produto segue o mouse.
 export function IndexList() {
@@ -29,9 +30,11 @@ export function IndexList() {
           <li key={o.id}>
             <a
               className={`idx__row ${ativo === i ? "is-on" : ""}`}
-              href={LINKS.telegram}
-              target="_blank"
-              rel="noopener"
+              href="#entrar"
+              onClick={(e) => {
+                e.preventDefault();
+                entrar("telegram", "indice");
+              }}
               onMouseEnter={() => setAtivo(i)}
               onFocus={() => setAtivo(i)}
             >
