@@ -109,51 +109,125 @@ h2 {
   padding: 0.06em 0.06em 0 0;
 }
 
-/* ── Botões (pílula com ícone em círculo, do canvas) */
+/* ── Botões: pílula com ícone em círculo + animação da BB Agency */
 .ctas {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 .btn {
+  --ease: cubic-bezier(0.7, 0, 0.2, 1);
+  --pad: 8px;
+  --box: 42px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   height: 58px;
-  padding: 0 26px 0 8px;
+  padding: 0 26px 0 var(--pad);
   border-radius: 999px;
   font-family: var(--display);
   font-weight: 700;
   font-size: 16px;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  transition: transform 0.25s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.3s ease;
-}
-.btn:hover {
-  transform: translateY(-2px);
-}
-.btn:active {
-  transform: scale(0.98);
-}
-.btn__ico {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #0a0a0a;
-  color: var(--lime);
 }
 .btn--lime {
   background: var(--lime);
   color: #050505;
-}
-.btn--lime:hover {
-  box-shadow: 0 14px 40px -10px rgba(198, 255, 0, 0.6);
+  --hover-text: var(--lime);
 }
 .btn--white {
   background: var(--off);
   color: #050505;
+  --hover-text: var(--off);
+}
+/* círculo preto que cresce até encher o botão */
+.btn__fill {
+  position: absolute;
+  z-index: -1;
+  top: var(--pad);
+  bottom: var(--pad);
+  left: var(--pad);
+  width: var(--box);
+  border-radius: 999px;
+  background: #0a0a0a;
+  transition: width 0.55s var(--ease);
+}
+.btn:hover .btn__fill,
+.btn:focus-visible .btn__fill {
+  width: calc(100% - 2 * var(--pad));
+}
+.btn__ico {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--box);
+  height: var(--box);
+  overflow: hidden;
+  color: var(--lime);
+}
+.btn--white .btn__ico {
+  color: var(--off);
+}
+.btn__ico-a,
+.btn__ico-b {
+  display: grid;
+  place-items: center;
+  transition: transform 0.55s var(--ease);
+}
+.btn__ico-b {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-200%);
+}
+.btn:hover .btn__ico-a,
+.btn:focus-visible .btn__ico-a {
+  transform: translateX(200%);
+}
+.btn:hover .btn__ico-b,
+.btn:focus-visible .btn__ico-b {
+  transform: translateX(0);
+}
+/* texto que rola pra cima já na cor nova */
+.btn__label {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 1.25em;
+  line-height: 1.25em;
+}
+.btn__label > span {
+  display: block;
+  transition: transform 0.55s var(--ease);
+}
+.btn__label > span + span {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+  color: var(--hover-text);
+}
+.btn:hover .btn__label > span:first-child,
+.btn:focus-visible .btn__label > span:first-child {
+  transform: translateY(-100%);
+}
+.btn:hover .btn__label > span + span,
+.btn:focus-visible .btn__label > span + span {
+  transform: translateY(0);
+}
+.btn:active {
+  scale: 0.98;
+}
+.btn--sm {
+  --pad: 5px;
+  --box: 32px;
+  height: 42px;
+  gap: 10px;
+  padding-right: 18px;
+  font-size: 14px;
 }
 .btn--block {
   width: 100%;
@@ -194,24 +268,6 @@ h2 {
 .nav__links a:hover {
   color: var(--off);
 }
-.nav__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 42px;
-  padding: 0 18px;
-  border-radius: 999px;
-  background: var(--lime);
-  color: #050505;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 14px;
-  transition: box-shadow 0.25s;
-}
-.nav__cta:hover {
-  box-shadow: 0 10px 30px -8px rgba(198, 255, 0, 0.55);
-}
-
 /* ── Hero */
 .hero {
   position: relative;

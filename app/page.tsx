@@ -61,17 +61,45 @@ function SpamChat({ nome, membros, msgs }: { nome: string; membros: string; msgs
   );
 }
 
+// Botão com a animação da BB Agency (ref. kr3w.gg): o círculo cresce e enche a pílula,
+// o ícone sai e entra de novo, e o texto rola pra cima já na cor nova.
+function Btn({
+  href,
+  icon,
+  children,
+  variant = "lime",
+  size = "lg",
+}: {
+  href: string;
+  icon: React.ReactNode;
+  children: string;
+  variant?: "lime" | "white";
+  size?: "lg" | "sm";
+}) {
+  return (
+    <a className={`btn btn--${variant} btn--${size}`} href={href} target="_blank" rel="noopener">
+      <span className="btn__fill" aria-hidden="true" />
+      <span className="btn__ico" aria-hidden="true">
+        <span className="btn__ico-a">{icon}</span>
+        <span className="btn__ico-b">{icon}</span>
+      </span>
+      <span className="btn__label">
+        <span>{children}</span>
+        <span aria-hidden="true">{children}</span>
+      </span>
+    </a>
+  );
+}
+
 function CTAButtons() {
   return (
     <div className="ctas">
-      <a className="btn btn--lime" href={LINKS.telegram} target="_blank" rel="noopener">
-        <span className="btn__ico"><TelegramIcon size={18} /></span>
+      <Btn href={LINKS.telegram} icon={<TelegramIcon size={18} />}>
         Entrar no grupo do Telegram
-      </a>
-      <a className="btn btn--white" href={LINKS.whatsapp} target="_blank" rel="noopener">
-        <span className="btn__ico"><WhatsIcon size={18} /></span>
+      </Btn>
+      <Btn href={LINKS.whatsapp} icon={<WhatsIcon size={18} />} variant="white">
         Comunidade no WhatsApp
-      </a>
+      </Btn>
     </div>
   );
 }
@@ -210,9 +238,9 @@ export default function Home() {
           <a href="#ofertas">Ofertas</a>
           <a href="#duvidas">Dúvidas</a>
         </nav>
-        <a className="nav__cta" href={LINKS.telegram} target="_blank" rel="noopener">
-          <TelegramIcon size={16} /> Entrar
-        </a>
+        <Btn href={LINKS.telegram} icon={<TelegramIcon size={14} />} size="sm">
+          Entrar
+        </Btn>
       </header>
 
       <main id="topo">
