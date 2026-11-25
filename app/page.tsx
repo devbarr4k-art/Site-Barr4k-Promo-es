@@ -334,8 +334,21 @@ export default function Home() {
             <p>Seis coisas que a ACHOU faz por você enquanto os outros grupos mandam corrente.</p>
             <div className="why__visual" aria-hidden="true">
               <span className="why__glow" />
-              <Image src={OFERTAS[3].img} alt="" width={OFERTAS[3].w} height={OFERTAS[3].h} sizes="260px" />
-              <span className="why__badge">-{desconto(OFERTAS[3])}%</span>
+              {OFERTAS.slice(0, 3).map((o, i) => (
+                <div key={o.id} className={`push push--${i}`}>
+                  <Bolt size={36} />
+                  <span className="push__text">
+                    <span className="push__row">
+                      <strong>ACHOU Ofertas</strong>
+                      <span>{["agora", "2 min", "9 min"][i]}</span>
+                    </span>
+                    <span className="push__line">{o.nome}</span>
+                    <span className="push__line">
+                      De {brl(o.de)} por <b>{brl(o.por)}</b>
+                    </span>
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
           <ul className="why__grid">
