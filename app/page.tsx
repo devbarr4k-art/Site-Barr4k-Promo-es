@@ -178,11 +178,26 @@ function Tempestade() {
 
 const CORES_AVATAR = ["#C6FF00", "#D9D9D3", "#9FBF8A", "#E8E8E2", "#B6F500"];
 
+function Estrelas({ nota }: { nota: number }) {
+  return (
+    <span className="stars" role="img" aria-label={`Nota ${nota} de 5`}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <svg key={i} viewBox="0 0 20 20" className={i < nota ? "on" : undefined} aria-hidden="true">
+          <path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
 function CardDepoimento({ d, i }: { d: Depoimento; i: number }) {
   const iniciais = d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2);
   return (
     <figure className="dep">
-      <span className="dep__produto">{d.produto}</span>
+      <div className="dep__top">
+        <span className="dep__produto">{d.produto}</span>
+        <Estrelas nota={d.nota ?? 5} />
+      </div>
       <blockquote>{d.texto}</blockquote>
       <figcaption>
         <span className="dep__av" style={{ background: CORES_AVATAR[i % CORES_AVATAR.length] }}>{iniciais}</span>

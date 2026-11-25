@@ -1791,3 +1791,25 @@ h2 {
     width: 300px;
   }
 }
+
+/* estrelas de avaliação */
+.dep__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  flex: none;
+}
+.stars svg {
+  width: 16px;
+  height: 16px;
+  fill: #2c2c2c;
+}
+.stars svg.on {
+  fill: var(--lime);
+  filter: drop-shadow(0 0 4px rgba(198, 255, 0, 0.45));
+}
