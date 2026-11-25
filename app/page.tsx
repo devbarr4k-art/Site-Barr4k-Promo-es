@@ -1,7 +1,9 @@
+import Image from "next/image";
 import { Bolt, Logo } from "@/components/Logo";
 import { Motion } from "@/components/Motion";
 import { PhoneFeed } from "@/components/PhoneFeed";
-import Image from "next/image";
+import { IndexList } from "@/components/IndexList";
+import { Particles } from "@/components/Particles";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
 import { LINKS, NUMEROS, OFERTAS, brl, desconto } from "@/lib/config";
 
@@ -59,16 +61,90 @@ function SpamChat({ nome, membros, msgs }: { nome: string; membros: string; msgs
   );
 }
 
-function CTAButtons({ size = "lg" }: { size?: "lg" | "md" }) {
+function CTAButtons() {
   return (
-    <div className={`ctas ctas--${size}`}>
+    <div className="ctas">
       <a className="btn btn--lime" href={LINKS.telegram} target="_blank" rel="noopener">
-        <TelegramIcon /> Entrar no grupo do Telegram
+        <span className="btn__ico"><TelegramIcon size={18} /></span>
+        Entrar no grupo do Telegram
       </a>
       <a className="btn btn--white" href={LINKS.whatsapp} target="_blank" rel="noopener">
-        <WhatsIcon /> Comunidade no WhatsApp
+        <span className="btn__ico"><WhatsIcon size={18} /></span>
+        Comunidade no WhatsApp
       </a>
     </div>
+  );
+}
+
+function Ticker() {
+  const itens = [...OFERTAS, ...OFERTAS];
+  return (
+    <div className="ticker" aria-label="Ofertas recentes">
+      <div className="ticker__track">
+        {[0, 1].map((c) => (
+          <div key={c} className="ticker__set" aria-hidden={c === 1 ? true : undefined}>
+            {itens.map((o, i) => (
+              <span key={`${o.id}-${i}`} className="ticker__item">
+                <Bolt size={22} />
+                <span>{o.nome}</span>
+                <s>{brl(o.de)}</s>
+                <b>{brl(o.por)}</b>
+                <em>-{desconto(o)}%</em>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Peças que voam na "enxurrada": [tipo, conteúdo, x (vw), y (vh), profundidade inicial]
+const TEMPESTADE: [string, string, number, number, number][] = [
+  ["img", "0", -26, -14, 0],
+  ["spam", "CORREEEE!!! 🔥", 24, -22, 1],
+  ["tag", "-40%", -8, 18, 2],
+  ["img", "2", 30, 12, 3],
+  ["spam", "GRUPO VIP R$ 19,90", -34, 20, 4],
+  ["tag", "R$ 299", 14, -8, 5],
+  ["img", "1", -18, -30, 6],
+  ["spam", "link expirado", 36, -30, 7],
+  ["tag", "CUPOM ACHOU15", -30, 4, 8],
+  ["img", "3", 22, 28, 9],
+  ["spam", "SÓ HOJE!!! ÚLTIMAS UNIDADES", -12, -24, 10],
+  ["tag", "FRETE GRÁTIS", 32, -2, 11],
+  ["img", "4", -36, -6, 12],
+  ["spam", "bit.ly/3xK9q…", 8, 30, 13],
+  ["tag", "-38%", -22, 30, 14],
+  ["spam", "promoção falsa", 18, -34, 15],
+];
+
+function Tempestade() {
+  return (
+    <section className="storm" aria-label="1.240 promoções por dia, 38 valem a pena">
+      <div className="storm__stage">
+        <div className="storm__space" aria-hidden="true">
+          {TEMPESTADE.map(([tipo, c, x, y, z], i) => (
+            <div
+              key={i}
+              className={`storm__item storm__item--${tipo}`}
+              data-z={z}
+              style={{ left: `calc(50% + ${x}vw)`, top: `calc(50% + ${y}vh)` }}
+            >
+              {tipo === "img" ? (
+                <Image src={OFERTAS[Number(c)].img} alt="" width={OFERTAS[Number(c)].w} height={OFERTAS[Number(c)].h} sizes="300px" />
+              ) : (
+                <span>{c}</span>
+              )}
+            </div>
+          ))}
+        </div>
+        <h2 className="storm__title">
+          <span>1.240 promoções por dia.</span>
+          <span className="lime">38 valem a pena.</span>
+        </h2>
+      </div>
+    </section>
   );
 }
 
@@ -79,69 +155,70 @@ export default function Home() {
       <div className="grain" aria-hidden="true" />
 
       <header className="nav">
-        <a className="nav__brand" href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={26} /></a>
+        <a className="nav__brand" href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={24} /></a>
         <nav className="nav__links" aria-label="Seções">
           <a href="#como-funciona">Como funciona</a>
           <a href="#comparar">Comparar</a>
           <a href="#ofertas">Ofertas</a>
           <a href="#duvidas">Dúvidas</a>
         </nav>
-        <a className="btn btn--lime btn--sm" href={LINKS.telegram} target="_blank" rel="noopener">
-          <TelegramIcon size={16} /> Entrar
+        <a className="nav__cta" href={LINKS.telegram} target="_blank" rel="noopener">
+          Entrar no grupo
         </a>
       </header>
 
       <main id="topo">
         {/* HERO */}
         <section className="hero">
-          <div className="hero__glow" aria-hidden="true" />
-          <svg className="hero__streaks" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="st" x1="0" x2="1">
-                <stop offset="0" stopColor="#C6FF00" stopOpacity="0" />
-                <stop offset=".6" stopColor="#C6FF00" stopOpacity=".55" />
-                <stop offset="1" stopColor="#C6FF00" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <path d="M-40 760 L1480 80" stroke="url(#st)" strokeWidth="1.2" />
-            <path d="M200 900 L1500 260" stroke="url(#st)" strokeWidth=".6" />
-            <path d="M-100 520 L900 -40" stroke="url(#st)" strokeWidth=".5" />
-          </svg>
-
-          <div className="hero__copy">
-            <h1 className="hero__title">
-              <span className="hero__line"><span>A gente encontra.</span></span>
-              <span className="hero__line"><span>Você economiza<span className="lime">.</span></span></span>
-            </h1>
-            <p className="hero__sub">
-              A gente confere cada promoção antes de mandar pro seu celular: preço real, link
-              seguro, loja confiável. Sem corrente, sem spam, sem grupo VIP pago.
-            </p>
-            <CTAButtons />
-            <div className="hero__proof">
-              <span className="avatars" aria-hidden="true">
-                <span style={{ background: "#C6FF00" }}>LP</span>
-                <span style={{ background: "#D9D9D3" }}>MA</span>
-                <span style={{ background: "#9FBF8A" }}>RJ</span>
-                <span style={{ background: "#E8E8E2" }}>CS</span>
-              </span>
-              <p>
-                <b>{NUMEROS.membros}</b> pessoas já fazem parte
+          <Particles />
+          <div className="hero__grid">
+            <div className="hero__copy">
+              <p className="hero__live">
+                <span className="hero__pulse" aria-hidden="true" />
+                Curadoria ao vivo · {NUMEROS.ofertasMes} ofertas conferidas este mês
               </p>
+              <h1 className="hero__title">
+                <span className="hero__line"><span>A gente encontra.</span></span>
+                <span className="hero__line"><span>Você economiza<span className="lime">.</span></span></span>
+              </h1>
+              <p className="hero__sub">
+                Enquanto os outros grupos jogam qualquer link, a ACHOU confere o preço, o cupom e a
+                loja antes de mandar pro seu celular.
+              </p>
+              <CTAButtons />
+              <div className="hero__proof">
+                <span className="avatars" aria-hidden="true">
+                  <span style={{ background: "#C6FF00" }}>LP</span>
+                  <span style={{ background: "#D9D9D3" }}>MA</span>
+                  <span style={{ background: "#9FBF8A" }}>RJ</span>
+                  <span style={{ background: "#E8E8E2" }}>CS</span>
+                </span>
+                <p>
+                  <b>{NUMEROS.membros}</b> pessoas já fazem parte
+                </p>
+              </div>
+            </div>
+
+            <div className="hero__phone">
+              <PhoneFeed />
             </div>
           </div>
 
-          <div className="hero__phone">
-            <PhoneFeed />
+          <div className="hero__word" aria-hidden="true">
+            <span>ACHOU</span>
           </div>
         </section>
+
+        <Ticker />
+
+        <Tempestade />
 
         {/* A HISTÓRIA DE UMA OFERTA */}
         <section className="drop" id="como-funciona" data-from={console8.de} data-to={console8.por}>
           <div className="drop__stage">
             <div className="drop__glow" aria-hidden="true" />
             <div className="drop__intro">
-              <h2>Uma oferta da ACHOU, do começo ao fim.</h2>
+              <h2>Uma oferta, do começo ao fim.</h2>
               <p>Role a página e veja o que acontece numa terça-feira comum.</p>
             </div>
 
@@ -162,22 +239,18 @@ export default function Home() {
 
             <ol className="drop__steps">
               <li className="drop__step">
-                <span className="drop__dot" />
                 <time>09:14</time>
                 <p>O preço cai numa loja parceira. Nosso robô percebe na hora.</p>
               </li>
               <li className="drop__step">
-                <span className="drop__dot" />
                 <time>09:16</time>
-                <p>Alguém do time confere: histórico de preço, frete, vendedor e cupom.</p>
+                <p>Alguém do time confere histórico de preço, frete, vendedor e cupom.</p>
               </li>
               <li className="drop__step">
-                <span className="drop__dot" />
                 <time>09:17</time>
                 <p>A oferta chega no seu Telegram e no WhatsApp, com o link certo.</p>
               </li>
               <li className="drop__step">
-                <span className="drop__dot" />
                 <time>09:31</time>
                 <p>Esgotou. Quem estava no grupo pagou {brl(console8.de - console8.por)} a menos.</p>
               </li>
@@ -187,13 +260,11 @@ export default function Home() {
 
         {/* COMPARAÇÃO */}
         <section className="compare" id="comparar">
-          <div className="compare__head">
-            <h2>O mesmo fone. Três grupos.</h2>
-            <p>
-              Grupo de promoção tem aos montes. A diferença está no que chega até você e no que fica
-              de fora.
-            </p>
-          </div>
+          <h2 className="mega">
+            O mesmo fone.
+            <br />
+            Três grupos.
+          </h2>
 
           <div className="compare__grid">
             <SpamChat nome="Ofertas do Zé" membros="grupo · 4.812 membros" msgs={SPAM_ZE} />
@@ -233,119 +304,43 @@ export default function Home() {
           <p className="compare__foot">O mesmo produto. A diferença é quem filtrou.</p>
         </section>
 
-        {/* VITRINE */}
-        <section className="shelf" id="ofertas">
-          <div className="shelf__head">
-            <h2>Achados desta semana</h2>
+        {/* ÍNDICE DE ACHADOS */}
+        <section className="index" id="ofertas">
+          <div className="index__head">
+            <h2 className="mega">Achados da semana</h2>
             <p>Uma amostra do que passou pelo grupo. Quando você ler isso, provavelmente já acabou.</p>
           </div>
-          <div className="shelf__viewport">
-            <div className="shelf__track">
-              {[0, 1].map((copy) => (
-                <div key={copy} className="shelf__set" aria-hidden={copy === 1 ? true : undefined}>
-                  {OFERTAS.map((o) => (
-                    <article key={o.id} className="deal">
-                      <div className="deal__stage">
-                        <Image src={o.img} alt={copy === 0 ? o.nome : ""} width={o.w} height={o.h} sizes="300px" />
-                        <span className="deal__badge">-{desconto(o)}%</span>
-                      </div>
-                      <h3 className="deal__name">{o.nome}</h3>
-                      <p className="deal__was">{brl(o.de)}</p>
-                      <p className="deal__now"><span>Preço ACHOU</span> {brl(o.por)}</p>
-                      <p className="deal__store">{o.loja} · já esgotado</p>
-                    </article>
-                  ))}
-                  <a className="deal deal--more" href={LINKS.telegram} target="_blank" rel="noopener" tabIndex={copy === 1 ? -1 : undefined}>
-                    <Bolt size={56} />
-                    <span>As próximas chegam primeiro no grupo.</span>
-                    <span className="btn btn--lime">Entrar agora</span>
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
+          <IndexList />
         </section>
 
-        {/* POR QUE */}
-        <section className="why">
-          <div className="why__head">
-            <h2>Entrou, economizou<span className="lime">.</span></h2>
-            <p>O que acontece por trás de cada oferta que chega no seu celular.</p>
+        {/* NÚMEROS */}
+        <section className="stats" aria-label="A ACHOU em números">
+          <div className="stat">
+            <p className="stat__num">
+              38<span>/1.240</span>
+            </p>
+            <h3>Só o que vale a pena</h3>
+            <p>Promoções que passaram no filtro hoje, de 1.240 analisadas. Se não é o menor preço dos últimos meses, não entra.</p>
           </div>
-
-          <div className="bento">
-            <article className="bento__card">
-              <div className="bento__visual">
-                <div className="dots" aria-hidden="true">
-                  {Array.from({ length: 160 }, (_, i) => (
-                    <i key={i} className={[23, 58, 91, 117, 142].includes(i) ? "on" : undefined} />
-                  ))}
-                </div>
-                <p className="bento__stat">
-                  <b className="lime">38</b> de 1.240 promoções analisadas hoje
-                </p>
-              </div>
-              <div className="bento__copy">
-                <h3>Só o que vale a pena</h3>
-                <p>Se não é o menor preço dos últimos meses, não vai pro grupo.</p>
-              </div>
-            </article>
-
-            <article className="bento__card">
-              <div className="bento__visual">
-                <div className="ticks" aria-hidden="true">
-                  <div className="ticks__row ticks__row--bad">
-                    <span>Grupo comum</span>
-                    <div className="ticks__line">
-                      {Array.from({ length: 64 }, (_, i) => <i key={i} />)}
-                    </div>
-                    <b>214 / dia</b>
-                  </div>
-                  <div className="ticks__row ticks__row--good">
-                    <span>ACHOU</span>
-                    <div className="ticks__line">
-                      {Array.from({ length: 5 }, (_, i) => <i key={i} />)}
-                    </div>
-                    <b>5 / dia</b>
-                  </div>
-                </div>
-              </div>
-              <div className="bento__copy">
-                <h3>Zero spam</h3>
-                <p>Cerca de 5 mensagens por dia. Pode deixar a notificação ligada.</p>
-              </div>
-            </article>
-
-            <article className="bento__card">
-              <div className="bento__visual">
-                <div className="tickets" aria-hidden="true">
-                  <div className="ticket ticket--back">
-                    <span className="ticket__off">R$ 50</span>
-                    <span className="ticket__code">FRETE0</span>
-                  </div>
-                  <div className="ticket">
-                    <span className="ticket__off">15% OFF</span>
-                    <span className="ticket__code">ACHOU15</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bento__copy">
-                <h3>Cupons exclusivos</h3>
-                <p>Códigos negociados com as lojas, que você não acha em outro lugar.</p>
-              </div>
-            </article>
+          <div className="stat">
+            <p className="stat__num">
+              5<span>/dia</span>
+            </p>
+            <h3>Zero spam</h3>
+            <p>Grupo comum manda mais de 200 mensagens por dia. Aqui você pode deixar a notificação ligada.</p>
           </div>
-
-          <ul className="trust">
-            <li><Check /> Link e cupom testados antes de postar</li>
-            <li><Check /> Só lojas com boa reputação</li>
-            <li><Check /> De graça, sem grupo VIP</li>
-          </ul>
+          <div className="stat">
+            <p className="stat__num">
+              R$&nbsp;0
+            </p>
+            <h3>De graça, sempre</h3>
+            <p>Sem grupo VIP. A ACHOU ganha uma comissão das lojas e o preço pra você não muda.</p>
+          </div>
         </section>
 
         {/* DÚVIDAS */}
         <section className="faq" id="duvidas">
-          <h2>Dúvidas</h2>
+          <h2 className="mega">Dúvidas</h2>
           <div className="faq__list">
             <details>
               <summary>Precisa pagar alguma coisa?</summary>
@@ -373,28 +368,28 @@ export default function Home() {
         {/* CTA FINAL */}
         <section className="final">
           <div className="final__glow" aria-hidden="true" />
-          <Bolt size={120} className="final__bolt" />
-          <h2>A próxima oferta já está a caminho.</h2>
-          <p>Entre agora e receba antes de esgotar.</p>
+          <h2 className="final__title">
+            <span>A próxima oferta</span>
+            <span>já está a caminho.</span>
+          </h2>
           <CTAButtons />
         </section>
       </main>
 
       <footer className="foot">
-        <div className="foot__brand">
-          <Logo size={24} />
-          <p>A gente encontra. Você economiza.</p>
+        <div className="foot__row">
+          <p className="foot__legal">
+            A ACHOU participa de programas de afiliados de lojas parceiras. Preços e estoque podem
+            mudar a qualquer momento. Imagens meramente ilustrativas.
+          </p>
+          <nav className="foot__links" aria-label="Rodapé">
+            <a href="#">Termos de uso</a>
+            <a href="#">Privacidade</a>
+            <a href={LINKS.instagram}>Instagram</a>
+            <a href={LINKS.tiktok}>TikTok</a>
+          </nav>
         </div>
-        <p className="foot__legal">
-          A ACHOU participa de programas de afiliados de lojas parceiras. Preços e estoque podem
-          mudar a qualquer momento. Imagens meramente ilustrativas.
-        </p>
-        <nav className="foot__links" aria-label="Rodapé">
-          <a href="#">Termos de uso</a>
-          <a href="#">Privacidade</a>
-          <a href={LINKS.instagram}>Instagram</a>
-          <a href={LINKS.tiktok}>TikTok</a>
-        </nav>
+        <p className="foot__word" aria-hidden="true">ACHOU</p>
         <p className="foot__copy">© 2026 ACHOU · achou.io</p>
       </footer>
     </>
