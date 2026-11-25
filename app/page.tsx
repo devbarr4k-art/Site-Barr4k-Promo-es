@@ -27,67 +27,6 @@ const SPAM_JU = [
   { t: "tem pix?", h: "10:46", user: "Jéssica" },
 ];
 
-const BENEFICIOS = [
-  {
-    t: "Ofertas selecionadas",
-    d: "Cada post passa por gente de verdade antes de chegar até você.",
-    icon: <path d="M4 5h16l-6 7.5V18l-4 2v-7.5z" />,
-  },
-  {
-    t: "Links confiáveis",
-    d: "Só lojas conhecidas. Link, cupom e vendedor testados antes de publicar.",
-    icon: (
-      <>
-        <path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z" />
-        <path d="M9 12l2 2 4-4.5" />
-      </>
-    ),
-  },
-  {
-    t: "Alertas em tempo real",
-    d: "Bug de preço e cupom relâmpago no minuto em que aparecem.",
-    icon: (
-      <>
-        <path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z" />
-        <path d="M10 21h4" />
-        <path d="M12.5 8.5l-2 3h3l-2 3" />
-      </>
-    ),
-  },
-  {
-    t: "Comunidade ativa",
-    d: "Quem comprou conta como foi. Você decide com mais certeza.",
-    icon: (
-      <>
-        <circle cx="9" cy="8" r="3.2" />
-        <path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" />
-        <circle cx="17" cy="9" r="2.5" />
-        <path d="M16.5 14.2c2.6.2 4.5 2.2 4.5 4.8" />
-      </>
-    ),
-  },
-  {
-    t: "Cupons exclusivos",
-    d: "Códigos negociados que você não acha em outro lugar.",
-    icon: (
-      <>
-        <path d="M3 7h18v3.2a2 2 0 0 0 0 3.6V17H3v-3.2a2 2 0 0 0 0-3.6z" />
-        <path d="M14 7v10" strokeDasharray="2 2" />
-      </>
-    ),
-  },
-  {
-    t: "Zero spam",
-    d: "De 3 a 6 ofertas por dia. Pode deixar a notificação ligada.",
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M5.6 5.6l12.8 12.8" />
-      </>
-    ),
-  },
-];
-
 function SpamChat({ nome, membros, msgs }: { nome: string; membros: string; msgs: typeof SPAM_ZE }) {
   const loop = [...msgs, ...msgs];
   return (
@@ -140,7 +79,7 @@ export default function Home() {
       <div className="grain" aria-hidden="true" />
 
       <header className="nav">
-        <a href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={26} /></a>
+        <a className="nav__brand" href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={26} /></a>
         <nav className="nav__links" aria-label="Seções">
           <a href="#como-funciona">Como funciona</a>
           <a href="#comparar">Comparar</a>
@@ -329,36 +268,65 @@ export default function Home() {
 
         {/* POR QUE */}
         <section className="why">
-          <div className="why__intro">
+          <div className="why__head">
             <h2>Entrou, economizou<span className="lime">.</span></h2>
-            <p>Seis coisas que a ACHOU faz por você enquanto os outros grupos mandam corrente.</p>
-            <div className="why__visual" aria-hidden="true">
-              <span className="why__glow" />
-              {OFERTAS.slice(0, 3).map((o, i) => (
-                <div key={o.id} className={`push push--${i}`}>
-                  <Bolt size={36} />
-                  <span className="push__text">
-                    <span className="push__row">
-                      <strong>ACHOU Ofertas</strong>
-                      <span>{["agora", "2 min", "9 min"][i]}</span>
-                    </span>
-                    <span className="push__line">{o.nome}</span>
-                    <span className="push__line">
-                      De {brl(o.de)} por <b>{brl(o.por)}</b>
-                    </span>
-                  </span>
-                </div>
-              ))}
-            </div>
+            <p>O que acontece por trás de cada oferta que chega no seu celular.</p>
           </div>
-          <ul className="why__grid">
-            {BENEFICIOS.map((b) => (
-              <li key={b.t} className="ben">
-                <svg viewBox="0 0 24 24" aria-hidden="true">{b.icon}</svg>
-                <h3>{b.t}</h3>
-                <p>{b.d}</p>
-              </li>
-            ))}
+
+          <div className="bento">
+            <article className="bento__card">
+              <div className="funnel" aria-hidden="true">
+                <div>
+                  <b>1.240</b>
+                  <span>promoções analisadas hoje</span>
+                </div>
+                <svg viewBox="0 0 24 24" className="funnel__arrow"><path d="M12 4v16M6 14l6 6 6-6" /></svg>
+                <div className="funnel__out">
+                  <b>38</b>
+                  <span>chegaram no grupo</span>
+                </div>
+              </div>
+              <div className="bento__copy">
+                <h3>Só o que vale a pena</h3>
+                <p>Se não é o menor preço dos últimos meses, não vai pro grupo.</p>
+              </div>
+            </article>
+
+            <article className="bento__card">
+              <div className="bars" aria-hidden="true">
+                <div className="bars__row">
+                  <span>Grupo comum</span>
+                  <i style={{ width: "100%" }} className="bars__bad" />
+                  <b>214</b>
+                </div>
+                <div className="bars__row">
+                  <span>ACHOU</span>
+                  <i style={{ width: "5%" }} className="bars__good" />
+                  <b className="lime">5</b>
+                </div>
+              </div>
+              <div className="bento__copy">
+                <h3>Zero spam</h3>
+                <p>Cerca de 5 mensagens por dia. Pode deixar a notificação ligada.</p>
+              </div>
+            </article>
+
+            <article className="bento__card">
+              <div className="ticket" aria-hidden="true">
+                <span className="ticket__off">15% OFF</span>
+                <span className="ticket__code">ACHOU15</span>
+              </div>
+              <div className="bento__copy">
+                <h3>Cupons exclusivos</h3>
+                <p>Códigos negociados com as lojas, que você não acha em outro lugar.</p>
+              </div>
+            </article>
+          </div>
+
+          <ul className="trust">
+            <li><Check /> Link e cupom testados antes de postar</li>
+            <li><Check /> Só lojas com boa reputação</li>
+            <li><Check /> De graça, sem grupo VIP</li>
           </ul>
         </section>
 

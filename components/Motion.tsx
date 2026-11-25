@@ -121,13 +121,22 @@ export function Motion() {
         });
 
         // ── Benefícios: cada card acende ao passar pelo meio da tela
-        gsap.utils.toArray<HTMLElement>(".ben").forEach((card) => {
+        gsap.utils.toArray<HTMLElement>(".bento__card").forEach((card) => {
           ScrollTrigger.create({
             trigger: card,
             start: "top 62%",
             end: "bottom 38%",
             toggleClass: "is-lit",
           });
+        });
+
+        // ── Barras de spam crescem ao aparecer
+        gsap.from(".bars__row i", {
+          scaleX: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          stagger: 0.2,
+          scrollTrigger: { trigger: ".bars", start: "top 80%" },
         });
 
         // ── CTA final: o raio acende
