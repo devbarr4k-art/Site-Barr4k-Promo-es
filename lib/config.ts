@@ -23,12 +23,12 @@ export type Oferta = {
   h: number;
 };
 
+// Recortes vindos do canvas de marca (ACHOU — Brand Guidelines). Trocar pelas fotos das ofertas reais.
 export const OFERTAS: Oferta[] = [
-  { id: "console", nome: "Console portátil 8 GB", loja: "Loja parceira", de: 2499, por: 1549, img: "/produtos/console.webp", w: 635, h: 411 },
-  { id: "fone", nome: "Fone com cancelamento de ruído", loja: "Loja parceira", de: 799, por: 569, img: "/produtos/fone.webp", w: 417, h: 495 },
-  { id: "ssd", nome: "SSD NVMe 2 TB", loja: "Loja parceira", de: 1299, por: 589, img: "/produtos/ssd.webp", w: 518, h: 403 },
-  { id: "teclado", nome: "Teclado mecânico sem fio", loja: "Loja parceira", de: 899, por: 489, img: "/produtos/teclado.webp", w: 480, h: 174 },
-  { id: "earbuds", nome: "Fone in-ear Bluetooth", loja: "Loja parceira", de: 349, por: 179, img: "/produtos/earbuds.webp", w: 236, h: 328 },
+  { id: "console", nome: "Console portátil 64 GB", loja: "Loja parceira", de: 2399, por: 1799, img: "/produtos/console-v3.webp", w: 1800, h: 882 },
+  { id: "fone", nome: "Headphone Bluetooth ANC", loja: "Loja parceira", de: 799, por: 569, img: "/produtos/headphone-v2.webp", w: 300, h: 338 },
+  { id: "ssd", nome: "SSD NVMe 1 TB", loja: "Loja parceira", de: 499, por: 299, img: "/produtos/ssd-v2.webp", w: 599, h: 539 },
+  { id: "earbuds", nome: "Fone sem fio TWS", loja: "Loja parceira", de: 199, por: 123, img: "/produtos/earbuds-v2.webp", w: 287, h: 301 },
 ];
 
 export const brl = (n: number) =>

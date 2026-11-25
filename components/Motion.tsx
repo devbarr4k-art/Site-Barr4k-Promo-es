@@ -82,7 +82,7 @@ export function Motion() {
               pin: ".drop__stage",
             },
           });
-          tl.fromTo(".drop__product", { rotate: -14, scale: 0.86, y: 40 }, { rotate: 4, scale: 1, y: -10, duration: 3 }, 0)
+          tl.fromTo(".drop__product", { rotate: -5, scale: 0.9, y: 40 }, { rotate: 2, scale: 1, y: -10, duration: 3 }, 0)
             .to(state, {
               v: to,
               duration: 1.6,
@@ -119,33 +119,6 @@ export function Motion() {
           ease: "power3.out",
           scrollTrigger: { trigger: ".compare__grid", start: "top 70%" },
         });
-
-        // ── Vitrine: rolagem horizontal fixa no desktop
-        if (desktop) {
-          const track = document.querySelector<HTMLElement>(".shelf__track");
-          if (track) {
-            const dist = () => track.scrollWidth - window.innerWidth + 64;
-            gsap.to(track, {
-              x: () => -dist(),
-              ease: "none",
-              scrollTrigger: {
-                trigger: ".shelf",
-                start: "top top",
-                end: () => "+=" + dist(),
-                scrub: 0.5,
-                pin: true,
-                invalidateOnRefresh: true,
-              },
-            });
-            gsap.utils.toArray<HTMLElement>(".shelf__img").forEach((img) => {
-              gsap.fromTo(img, { rotate: -6 }, {
-                rotate: 6,
-                ease: "none",
-                scrollTrigger: { trigger: ".shelf", start: "top top", end: () => "+=" + dist(), scrub: true },
-              });
-            });
-          }
-        }
 
         // ── CTA final: o raio acende
         gsap.fromTo(".final__bolt", { scale: 0.6, opacity: 0.2 }, {

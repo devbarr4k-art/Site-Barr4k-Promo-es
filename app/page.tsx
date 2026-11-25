@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Bolt, Logo } from "@/components/Logo";
 import { Motion } from "@/components/Motion";
 import { PhoneFeed } from "@/components/PhoneFeed";
+import Image from "next/image";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
 import { LINKS, NUMEROS, OFERTAS, brl, desconto } from "@/lib/config";
 
@@ -111,17 +111,24 @@ export default function Home() {
           <div className="hero__copy">
             <h1 className="hero__title">
               <span className="hero__line"><span>A gente encontra.</span></span>
-              <span className="hero__line"><span>Você economiza.</span></span>
+              <span className="hero__line"><span>Você economiza<span className="lime">.</span></span></span>
             </h1>
             <p className="hero__sub">
               A gente confere cada promoção antes de mandar pro seu celular: preço real, link
               seguro, loja confiável. Sem corrente, sem spam, sem grupo VIP pago.
             </p>
             <CTAButtons />
-            <p className="hero__proof">
-              <span className="hero__pulse" aria-hidden="true" />
-              {NUMEROS.membros} pessoas recebendo · {NUMEROS.ofertasMes} ofertas conferidas este mês
-            </p>
+            <div className="hero__proof">
+              <span className="avatars" aria-hidden="true">
+                <span style={{ background: "#C6FF00" }}>LP</span>
+                <span style={{ background: "#D9D9D3" }}>MA</span>
+                <span style={{ background: "#9FBF8A" }}>RJ</span>
+                <span style={{ background: "#E8E8E2" }}>CS</span>
+              </span>
+              <p>
+                <b>{NUMEROS.membros}</b> pessoas já fazem parte
+              </p>
+            </div>
           </div>
 
           <div className="hero__phone">
@@ -140,7 +147,7 @@ export default function Home() {
 
             <div className="drop__visual">
               <div className="drop__product">
-                <Image src={console8.img} alt={console8.nome} width={console8.w} height={console8.h} sizes="(max-width: 900px) 80vw, 520px" priority />
+                <Image src={console8.img} alt={console8.nome} width={console8.w} height={console8.h} sizes="(max-width: 900px) 90vw, 620px" quality={95} priority />
                 <span className="drop__badge">-{desconto(console8)}%</span>
               </div>
               <div className="drop__pricebox">
@@ -193,7 +200,7 @@ export default function Home() {
 
             <div className="chat chat--achou">
               <header className="chat__head">
-                <span className="chat__avatar chat__avatar--achou"><Bolt size={18} /></span>
+                <span className="chat__avatar chat__avatar--achou"><Bolt size={40} round /></span>
                 <span>
                   <strong>ACHOU Ofertas</strong>
                   <small>canal · 3 ofertas hoje</small>
@@ -202,7 +209,7 @@ export default function Home() {
               <div className="chat__window chat__window--calm">
                 <article className="chat__deal">
                   <div className="chat__dealimg">
-                    <Image src={fone.img} alt={fone.nome} width={fone.w} height={fone.h} sizes="180px" />
+                    <Image src={fone.img} alt={fone.nome} width={fone.w} height={fone.h} sizes="200px" />
                     <span className="chat__badge">-{desconto(fone)}%</span>
                   </div>
                   <p className="chat__dealname">{fone.nome}</p>
@@ -234,23 +241,27 @@ export default function Home() {
           </div>
           <div className="shelf__viewport">
             <div className="shelf__track">
-              {OFERTAS.map((o) => (
-                <article key={o.id} className="deal">
-                  <div className="deal__stage">
-                    <Image className="shelf__img" src={o.img} alt={o.nome} width={o.w} height={o.h} sizes="320px" />
-                    <span className="deal__badge">-{desconto(o)}%</span>
-                  </div>
-                  <h3 className="deal__name">{o.nome}</h3>
-                  <p className="deal__was">{brl(o.de)}</p>
-                  <p className="deal__now"><span>Preço ACHOU</span> {brl(o.por)}</p>
-                  <p className="deal__store">{o.loja} · já esgotado</p>
-                </article>
+              {[0, 1].map((copy) => (
+                <div key={copy} className="shelf__set" aria-hidden={copy === 1 ? true : undefined}>
+                  {OFERTAS.map((o) => (
+                    <article key={o.id} className="deal">
+                      <div className="deal__stage">
+                        <Image src={o.img} alt={copy === 0 ? o.nome : ""} width={o.w} height={o.h} sizes="300px" />
+                        <span className="deal__badge">-{desconto(o)}%</span>
+                      </div>
+                      <h3 className="deal__name">{o.nome}</h3>
+                      <p className="deal__was">{brl(o.de)}</p>
+                      <p className="deal__now"><span>Preço ACHOU</span> {brl(o.por)}</p>
+                      <p className="deal__store">{o.loja} · já esgotado</p>
+                    </article>
+                  ))}
+                  <a className="deal deal--more" href={LINKS.telegram} target="_blank" rel="noopener" tabIndex={copy === 1 ? -1 : undefined}>
+                    <Bolt size={56} />
+                    <span>As próximas chegam primeiro no grupo.</span>
+                    <span className="btn btn--lime">Entrar agora</span>
+                  </a>
+                </div>
               ))}
-              <a className="deal deal--more" href={LINKS.telegram} target="_blank" rel="noopener">
-                <Bolt size={56} />
-                <span>As próximas chegam primeiro no grupo.</span>
-                <span className="btn btn--lime">Entrar agora</span>
-              </a>
             </div>
           </div>
         </section>

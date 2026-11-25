@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Archivo, Inter, Inter_Tight, Poppins } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const interTight = Inter_Tight({ variable: "--font-tight", subsets: ["latin"] });
+const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight: ["500", "600", "700", "800"] });
+const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin"], style: ["italic"], axes: ["wdth"] });
 
 export const metadata: Metadata = {
   title: "ACHOU · A gente encontra. Você economiza.",
@@ -21,14 +24,7 @@ export const viewport: Viewport = { themeColor: "#050505" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" translate="no" className={inter.variable}>
-      <head>
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700,500i,600i,700i&display=swap"
-        />
-      </head>
+    <html lang="pt-BR" translate="no" className={`${inter.variable} ${interTight.variable} ${poppins.variable} ${archivo.variable}`}>
       <body>{children}</body>
     </html>
   );
