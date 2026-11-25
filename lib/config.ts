@@ -26,14 +26,32 @@ export type Oferta = {
 // Recortes vindos do canvas de marca (ACHOU — Brand Guidelines). Trocar pelas fotos das ofertas reais.
 export const OFERTAS: Oferta[] = [
   { id: "console", nome: "Console portátil 64 GB", loja: "Loja parceira", de: 2399, por: 1799, img: "/produtos/console-v3.webp", w: 1800, h: 882 },
-  { id: "fone", nome: "Headphone Bluetooth ANC", loja: "Loja parceira", de: 799, por: 569, img: "/produtos/headphone-v2.webp", w: 300, h: 338 },
+  { id: "fone", nome: "Headphone Bluetooth ANC", loja: "Loja parceira", de: 419.9, por: 269.9, img: "/produtos/headphone-v2.webp", w: 300, h: 338 },
   { id: "ssd", nome: "SSD NVMe 1 TB", loja: "Loja parceira", de: 499, por: 299, img: "/produtos/ssd-v2.webp", w: 599, h: 539 },
   { id: "teclado", nome: "Teclado mecânico 75%", loja: "Loja parceira", de: 549, por: 389, img: "/produtos/teclado-v2.webp", w: 618, h: 375 },
   { id: "earbuds", nome: "Fone sem fio TWS", loja: "Loja parceira", de: 199, por: 123, img: "/produtos/earbuds-v3.webp", w: 352, h: 559 },
 ];
 
+// Mostra centavos só quando o preço tem (R$ 269,90 / R$ 1.799)
+// Produto da animação "uma oferta, do começo ao fim"
+export const DESTAQUE: Oferta = {
+  id: "ps5",
+  nome: "PlayStation 5 Digital",
+  loja: "Loja parceira",
+  de: 3999,
+  por: 3199,
+  img: "/produtos/ps5-v1.webp",
+  w: 474,
+  h: 660,
+};
+
 export const brl = (n: number) =>
-  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+  n.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
+    maximumFractionDigits: Number.isInteger(n) ? 0 : 2,
+  });
 
 export const desconto = (o: Pick<Oferta, "de" | "por">) => Math.round((1 - o.por / o.de) * 100);
 

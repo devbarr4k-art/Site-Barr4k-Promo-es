@@ -6,14 +6,14 @@ import { IndexList } from "@/components/IndexList";
 import { GateLink, LeadModal } from "@/components/LeadGate";
 import { Particles } from "@/components/Particles";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
-import { DEPOIMENTOS, LINKS, NUMEROS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
+import { DEPOIMENTOS, DESTAQUE, LINKS, NUMEROS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
 
-const console8 = OFERTAS[0];
+const console8 = DESTAQUE;
 const fone = OFERTAS[1];
 
 const SPAM_ZE = [
   { t: "🚨🚨🚨 CORREEEEE PESSOAL", h: "10:41" },
-  { t: "FONE BLUETOOTH CANCELAMENTO R$ 749 👉 bit.ly/3xK9q…", h: "10:41", price: true },
+  { t: "FONE BLUETOOTH CANCELAMENTO R$ 349 👉 bit.ly/3xK9q…", h: "10:41", price: true },
   { t: "alguém comprou? o link deu erro aqui", h: "10:43", user: "Marcos" },
   { t: "PROMOÇÃO RELÂMPAGO!!! SÓ HOJE!!! 🔥🔥", h: "10:44" },
   { t: "📢 ENTRE NO NOSSO GRUPO VIP POR R$ 19,90", h: "10:44" },
@@ -22,7 +22,7 @@ const SPAM_ZE = [
 ];
 const SPAM_JU = [
   { t: "Bom diaaa meninas!! 💖💖", h: "10:38" },
-  { t: "⚠️ FONE TOP R$ 719 (cupom JU10 não funciona no app)", h: "10:40", price: true },
+  { t: "⚠️ FONE TOP R$ 329 (cupom JU10 não funciona no app)", h: "10:40", price: true },
   { t: "cupom inválido aqui 😭", h: "10:40", user: "Carla" },
   { t: "olha esse sorteio!!! compartilhe com 10 amigos", h: "10:42" },
   { t: "link expirado", h: "10:42", user: "Rafa" },
