@@ -378,10 +378,10 @@ export default function Home() {
 
       <footer className="foot">
         <div className="foot__row">
-          <p className="foot__legal">
-            A ACHOU participa de programas de afiliados de lojas parceiras. Preços e estoque podem
-            mudar a qualquer momento. Imagens meramente ilustrativas.
-          </p>
+          <div className="foot__brand">
+            <Logo size={22} />
+            <p>A gente encontra. Você economiza.</p>
+          </div>
           <nav className="foot__links" aria-label="Rodapé">
             <a href="#">Termos de uso</a>
             <a href="#">Privacidade</a>
@@ -389,8 +389,13 @@ export default function Home() {
             <a href={LINKS.tiktok}>TikTok</a>
           </nav>
         </div>
-        <p className="foot__word" aria-hidden="true">ACHOU</p>
-        <p className="foot__copy">© 2026 ACHOU · achou.io</p>
+        <div className="foot__row foot__row--legal">
+          <p>
+            A ACHOU participa de programas de afiliados de lojas parceiras. Preços e estoque podem
+            mudar a qualquer momento. Imagens meramente ilustrativas.
+          </p>
+          <p>© 2026 ACHOU · achou.io</p>
+        </div>
       </footer>
     </>
   );
