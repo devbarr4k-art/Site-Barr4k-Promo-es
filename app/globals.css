@@ -1253,74 +1253,123 @@ h2 {
   line-height: 1.5;
 }
 
-.funnel {
+.bento__visual {
+  height: 200px;
   display: grid;
-  gap: 6px;
+  align-content: center;
+  gap: 18px;
 }
-.funnel > div {
-  display: grid;
-  line-height: 1.1;
+.bento__card {
+  transition: border-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
 }
-.funnel b {
-  font-family: var(--price);
-  font-weight: 800;
-  font-size: 44px;
-  letter-spacing: -0.03em;
-  color: #6e6e6a;
+.bento__card:hover {
+  transform: translateY(-4px);
 }
-.funnel span {
-  font-size: 14px;
-  color: #8e8e8e;
-}
-.funnel__out b {
-  font-size: 64px;
-  color: var(--lime);
-}
-.funnel__arrow {
-  width: 26px;
-  height: 26px;
-  fill: none;
-  stroke: #4a4a48;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.bars {
-  display: grid;
-  gap: 26px;
-  padding-top: 12px;
-}
-.bars__row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px 14px;
-  align-items: center;
-  font-size: 14px;
+.bento__stat {
+  font-size: 14.5px;
   color: #a9a9a3;
 }
-.bars__row span {
-  grid-column: 1 / -1;
+.bento__stat b {
+  font-family: var(--price);
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: -0.03em;
+  margin-right: 4px;
 }
-.bars__row i {
-  display: block;
-  height: 14px;
-  border-radius: 99px;
-  transform-origin: left;
+
+/* grade de promoções: só algumas acendem */
+.dots {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 7px;
 }
-.bars__bad {
-  background: #8a3f3a;
+.dots i {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #262626;
 }
-.bars__good {
-  min-width: 14px;
+.dots i.on {
   background: var(--lime);
-  box-shadow: 0 0 18px rgba(198, 255, 0, 0.6);
+  box-shadow: 0 0 10px rgba(198, 255, 0, 0.8);
 }
-.bars__row b {
+
+/* régua de mensagens */
+.ticks {
+  display: grid;
+  gap: 26px;
+}
+.ticks__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 14px;
+  align-items: center;
+}
+.ticks__row span {
+  font-size: 13.5px;
+  color: #8e8e8e;
+}
+.ticks__row b {
+  grid-row: 1;
+  grid-column: 2;
   font-family: var(--price);
   font-weight: 700;
-  font-size: 28px;
-  color: var(--off);
+  font-size: 15px;
+}
+.ticks__line {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 3px;
+  height: 34px;
+}
+.ticks__line i {
+  flex: 0 0 3px;
+  border-radius: 2px;
+}
+.ticks__row--bad .ticks__line i {
+  background: #7a3a36;
+}
+.ticks__row--bad .ticks__line i:nth-child(3n) {
+  height: 70%;
+  align-self: end;
+}
+.ticks__row--bad b {
+  color: #c2655e;
+}
+.ticks__row--good .ticks__line {
+  gap: 18px;
+}
+.ticks__row--good .ticks__line i {
+  flex-basis: 4px;
+  background: var(--lime);
+  box-shadow: 0 0 12px rgba(198, 255, 0, 0.7);
+}
+.ticks__row--good b {
+  color: var(--lime);
+}
+
+/* cupons empilhados */
+.tickets {
+  position: relative;
+  height: 150px;
+}
+.tickets .ticket {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 34px;
+  margin: 0;
+}
+.ticket--back {
+  top: -4px !important;
+  left: 40px !important;
+  right: -6px !important;
+  rotate: 9deg;
+  background: #2a2a2a;
+  color: #8e8e8e;
+  box-shadow: none;
+}
+.ticket--back .ticket__code {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .ticket {

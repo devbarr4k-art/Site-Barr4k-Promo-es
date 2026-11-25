@@ -275,16 +275,15 @@ export default function Home() {
 
           <div className="bento">
             <article className="bento__card">
-              <div className="funnel" aria-hidden="true">
-                <div>
-                  <b>1.240</b>
-                  <span>promoções analisadas hoje</span>
+              <div className="bento__visual">
+                <div className="dots" aria-hidden="true">
+                  {Array.from({ length: 160 }, (_, i) => (
+                    <i key={i} className={[23, 58, 91, 117, 142].includes(i) ? "on" : undefined} />
+                  ))}
                 </div>
-                <svg viewBox="0 0 24 24" className="funnel__arrow"><path d="M12 4v16M6 14l6 6 6-6" /></svg>
-                <div className="funnel__out">
-                  <b>38</b>
-                  <span>chegaram no grupo</span>
-                </div>
+                <p className="bento__stat">
+                  <b className="lime">38</b> de 1.240 promoções analisadas hoje
+                </p>
               </div>
               <div className="bento__copy">
                 <h3>Só o que vale a pena</h3>
@@ -293,16 +292,22 @@ export default function Home() {
             </article>
 
             <article className="bento__card">
-              <div className="bars" aria-hidden="true">
-                <div className="bars__row">
-                  <span>Grupo comum</span>
-                  <i style={{ width: "100%" }} className="bars__bad" />
-                  <b>214</b>
-                </div>
-                <div className="bars__row">
-                  <span>ACHOU</span>
-                  <i style={{ width: "5%" }} className="bars__good" />
-                  <b className="lime">5</b>
+              <div className="bento__visual">
+                <div className="ticks" aria-hidden="true">
+                  <div className="ticks__row ticks__row--bad">
+                    <span>Grupo comum</span>
+                    <div className="ticks__line">
+                      {Array.from({ length: 64 }, (_, i) => <i key={i} />)}
+                    </div>
+                    <b>214 / dia</b>
+                  </div>
+                  <div className="ticks__row ticks__row--good">
+                    <span>ACHOU</span>
+                    <div className="ticks__line">
+                      {Array.from({ length: 5 }, (_, i) => <i key={i} />)}
+                    </div>
+                    <b>5 / dia</b>
+                  </div>
                 </div>
               </div>
               <div className="bento__copy">
@@ -312,9 +317,17 @@ export default function Home() {
             </article>
 
             <article className="bento__card">
-              <div className="ticket" aria-hidden="true">
-                <span className="ticket__off">15% OFF</span>
-                <span className="ticket__code">ACHOU15</span>
+              <div className="bento__visual">
+                <div className="tickets" aria-hidden="true">
+                  <div className="ticket ticket--back">
+                    <span className="ticket__off">R$ 50</span>
+                    <span className="ticket__code">FRETE0</span>
+                  </div>
+                  <div className="ticket">
+                    <span className="ticket__off">15% OFF</span>
+                    <span className="ticket__code">ACHOU15</span>
+                  </div>
+                </div>
               </div>
               <div className="bento__copy">
                 <h3>Cupons exclusivos</h3>

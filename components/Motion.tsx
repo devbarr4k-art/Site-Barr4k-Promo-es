@@ -130,13 +130,29 @@ export function Motion() {
           });
         });
 
-        // ── Barras de spam crescem ao aparecer
-        gsap.from(".bars__row i", {
-          scaleX: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          stagger: 0.2,
-          scrollTrigger: { trigger: ".bars", start: "top 80%" },
+        // ── Benefícios: a grade apaga e só as boas ficam acesas; a régua se enche
+        gsap.from(".dots i", {
+          opacity: 0,
+          scale: 0.3,
+          duration: 0.5,
+          stagger: { each: 0.006, from: "random" },
+          scrollTrigger: { trigger: ".dots", start: "top 80%" },
+        });
+        gsap.from(".ticks__line i", {
+          scaleY: 0,
+          transformOrigin: "bottom",
+          duration: 0.4,
+          stagger: 0.012,
+          ease: "power2.out",
+          scrollTrigger: { trigger: ".ticks", start: "top 80%" },
+        });
+        gsap.from(".ticket:not(.ticket--back)", {
+          y: 40,
+          rotate: 8,
+          opacity: 0,
+          duration: 0.9,
+          ease: "back.out(1.6)",
+          scrollTrigger: { trigger: ".tickets", start: "top 80%" },
         });
 
         // ── CTA final: o raio acende
