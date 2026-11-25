@@ -50,7 +50,7 @@ export function Motion() {
         intro
           .from(".hero__word span", { yPercent: 60, opacity: 0, duration: 1.4 }, 0)
           .from(".hero__line > span", { yPercent: 110, duration: 1.1, stagger: 0.1 }, 0.15)
-          .from(".hero__live, .hero__sub, .hero__proof", { opacity: 0, y: 16, duration: 0.8, stagger: 0.06 }, 0.5)
+          .from(".hero__sub, .hero__proof", { opacity: 0, y: 16, duration: 0.8, stagger: 0.06 }, 0.5)
           .from(".hero .ctas .btn", { opacity: 0, y: 16, duration: 0.8, stagger: 0.08 }, 0.6)
           .from(".hero__phone", { opacity: 0, y: 120, rotateX: 18, duration: 1.5 }, 0.2);
 

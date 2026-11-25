@@ -264,13 +264,9 @@ export default function Home() {
           <Particles />
           <div className="hero__grid">
             <div className="hero__copy">
-              <p className="hero__live">
-                <span className="hero__pulse" aria-hidden="true" />
-                Curadoria ao vivo · {NUMEROS.ofertasMes} ofertas conferidas este mês
-              </p>
               <h1 className="hero__title">
                 <span className="hero__line"><span>A gente acha.</span></span>
-                <span className="hero__line"><span>Você economiza<span className="lime">.</span></span></span>
+                <span className="hero__line"><span>Você <span className="hl">economiza</span><span className="lime">.</span></span></span>
               </h1>
               <p className="hero__sub">
                 Enquanto os outros grupos jogam qualquer link, a ACHOU confere o preço, o cupom e a

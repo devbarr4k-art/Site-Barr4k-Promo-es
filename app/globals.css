@@ -250,9 +250,7 @@ h2 {
   gap: 24px;
   padding: 8px 8px 8px 22px;
   border-radius: 999px;
-  background: #0c0c0c;
-  border: 1px solid #1f1f1f;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+  background: #111;
 }
 .nav__brand {
   display: flex;
@@ -298,14 +296,6 @@ h2 {
   max-width: 1440px;
   margin: 0 auto;
   padding: clamp(48px, 7vh, 96px) var(--pad) 0;
-}
-.hero__live {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 28px;
-  font-size: 14px;
-  color: var(--g1);
 }
 .hero__pulse {
   width: 8px;
@@ -1812,4 +1802,18 @@ h2 {
 .stars svg.on {
   fill: var(--lime);
   filter: drop-shadow(0 0 4px rgba(198, 255, 0, 0.45));
+}
+
+/* "economiza" selecionado: o fundo lima passa como uma seleção de texto */
+.hl {
+  padding: 0 0.06em;
+  margin: 0 -0.02em;
+  background: linear-gradient(var(--lime), var(--lime)) left center / 0% 100% no-repeat;
+  animation: selecionar 0.7s cubic-bezier(0.7, 0, 0.2, 1) 1.2s forwards;
+}
+@keyframes selecionar {
+  to {
+    background-size: 100% 100%;
+    color: #050505;
+  }
 }
