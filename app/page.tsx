@@ -182,13 +182,15 @@ function Tempestade() {
 function CardDepoimento({ d }: { d: Depoimento }) {
   return (
     <figure className="dep dep--membro">
-      <Image className="dep__foto-membro" src={d.avatar} alt={`Foto de ${d.nome}`} width={200} height={200} sizes="88px" />
-      <figcaption>
-        <b>{d.nome}</b>
-        <span className="dep__comprou">{d.cidade}</span>
-        <span className="dep__produto">Comprou: {d.produto}</span>
-        {d.texto && <blockquote>{d.texto}</blockquote>}
-      </figcaption>
+      <div className="dep__head">
+        <Image className="dep__foto-membro" src={d.avatar} alt={`Foto de ${d.nome}`} width={120} height={120} sizes="60px" />
+        <span className="dep__quem2">
+          <b>{d.nome}</b>
+          <span className="dep__comprou">{d.cidade}</span>
+        </span>
+      </div>
+      {d.texto && <blockquote>“{d.texto}”</blockquote>}
+      <figcaption className="dep__produto">Comprou: {d.produto}</figcaption>
     </figure>
   );
 }

@@ -2282,49 +2282,56 @@ h2 {
   border: 2px solid rgba(198, 255, 0, 0.5);
 }
 
-/* depoimento de membro: só foto, nome e produto (dados reais) */
+/* depoimento de membro: foto, nome, cidade, produto e a fala da pessoa */
 .dep--membro {
-  flex-direction: row;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  width: 400px;
+  padding: 24px;
+}
+.dep__head {
+  display: flex;
   align-items: center;
-  gap: 18px;
-  width: 390px;
-  padding: 18px 22px 18px 18px;
+  gap: 14px;
 }
 .dep__foto-membro {
   flex: none;
-  width: 88px;
-  height: 88px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(198, 255, 0, 0.55);
 }
-.dep--membro figcaption {
+.dep__quem2 {
   display: grid;
-  gap: 4px;
-  padding: 0;
-  border: 0;
-  align-items: start;
+  line-height: 1.3;
 }
-.dep--membro b {
+.dep__quem2 b {
   font-family: var(--display);
-  font-size: 19px;
+  font-size: 18px;
   letter-spacing: -0.02em;
 }
 .dep__comprou {
   font-size: 13px;
   color: var(--g2);
 }
+.dep--membro blockquote {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--off);
+}
 .dep--membro .dep__produto {
+  align-self: start;
   white-space: nowrap;
-  justify-self: start;
-  margin-top: 4px;
 }
 @media (max-width: 899px) {
   .dep--membro {
-    width: 330px;
+    width: 310px;
+    padding: 20px;
   }
-  .dep__foto-membro {
-    width: 72px;
-    height: 72px;
+  .dep--membro blockquote {
+    font-size: 15px;
   }
 }
