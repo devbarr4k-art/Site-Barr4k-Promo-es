@@ -227,7 +227,6 @@ function Depoimentos() {
     <section className="deps" aria-labelledby="deps-titulo">
       <div className="deps__head">
         <h2 id="deps-titulo" className="mega">Quem entrou, comprou.</h2>
-        <p>O que a galera do grupo conta depois que a encomenda chega.</p>
       </div>
       <div className="deps__row">
         <div className="deps__track">
@@ -401,7 +400,6 @@ export default function Home() {
         <section className="index" id="ofertas">
           <div className="index__head">
             <h2 className="mega">Achados da semana</h2>
-            <p>Uma amostra do que passou pelo grupo. Quando você ler isso, provavelmente já acabou.</p>
           </div>
           <IndexList />
         </section>

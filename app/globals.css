@@ -1047,7 +1047,8 @@ h2 {
 .chat__window--calm {
   display: grid;
   place-items: center;
-  height: 360px;
+  height: auto;
+  min-height: 360px;
   padding: 16px 20px;
   mask-image: none;
 }
@@ -1460,7 +1461,10 @@ h2 {
     white-space: normal;
   }
   .hero__phone {
-    margin-bottom: -30vw;
+    margin-bottom: 4vw;
+  }
+  .hero__word {
+    margin-top: 0;
   }
   .phone {
     width: 300px;
@@ -2189,4 +2193,83 @@ h2 {
   height: auto;
   max-width: 85%;
   filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.8));
+}
+
+/* ── Ajustes de celular */
+@media (max-width: 899px) {
+  /* preço caindo: tudo cabe numa tela só, sem nada por cima do console */
+  .drop__stage {
+    padding: 92px var(--pad) 24px;
+    row-gap: 14px;
+  }
+  .drop__intro p {
+    display: none;
+  }
+  .drop__intro h2 {
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+  }
+  .drop__product {
+    width: min(300px, 62vw);
+    margin-bottom: 10px;
+  }
+  .drop__badge {
+    top: -14%;
+    right: -10%;
+    width: 64px;
+    height: 64px;
+    font-size: 18px;
+  }
+  .drop__name,
+  .drop__was {
+    font-size: 15px;
+  }
+  .drop__price {
+    font-size: clamp(3rem, 16vw, 4.4rem);
+  }
+  .drop__steps {
+    gap: 10px 16px;
+    margin-top: 12px;
+  }
+  .drop__step {
+    padding-top: 10px;
+  }
+  .drop__step time {
+    font-size: 13px;
+  }
+  .drop__step p {
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  /* enxurrada: título sem palavra sobrando */
+  .storm__title {
+    font-size: clamp(1.6rem, 7.2vw, 2.4rem);
+    padding: 0 var(--pad);
+  }
+  .chat__window--calm {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+/* toque não tem hover: o efeito do botão não fica grudado depois de tocar */
+@media (hover: none) {
+  .btn:hover .btn__fill {
+    width: var(--box);
+  }
+  .btn:hover .btn__ico-a {
+    transform: none;
+  }
+  .btn:hover .btn__ico-b {
+    transform: translateX(-200%);
+  }
+  .btn:hover .btn__label > span:first-child {
+    transform: none;
+  }
+  .btn:hover .btn__label > span + span {
+    transform: translateY(100%);
+  }
+  .deal:hover .deal__stage img,
+  .dep:hover {
+    transform: none;
+  }
 }
