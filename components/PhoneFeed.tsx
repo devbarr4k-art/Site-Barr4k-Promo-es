@@ -13,21 +13,24 @@ type Msg = { key: number; idx: number; hora: string };
 function StatusIcons() {
   return (
     <span className="ios__icons" aria-hidden="true">
-      <svg width="17" height="11" viewBox="0 0 18 12">
-        <rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor" />
-        <rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor" />
-        <rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor" />
-        <rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor" />
+      {/* sinal */}
+      <svg width="19" height="12" viewBox="0 0 19 12">
+        <rect x="0" y="7.5" width="3.4" height="4.5" rx="0.9" fill="#fff" />
+        <rect x="5.2" y="5" width="3.4" height="7" rx="0.9" fill="#fff" />
+        <rect x="10.4" y="2.5" width="3.4" height="9.5" rx="0.9" fill="#fff" />
+        <rect x="15.6" y="0" width="3.4" height="12" rx="0.9" fill="#fff" />
       </svg>
-      <svg width="15" height="11" viewBox="0 0 16 12">
-        <path d="M8 11.5 10.3 9a3.3 3.3 0 0 0-4.6 0L8 11.5Z" fill="currentColor" />
-        <path d="M3.6 6.9a6.2 6.2 0 0 1 8.8 0l1.4-1.5a8.3 8.3 0 0 0-11.6 0l1.4 1.5Z" fill="currentColor" />
-        <path d="M.9 4a10 10 0 0 1 14.2 0l1-1.1a11.6 11.6 0 0 0-16.2 0L.9 4Z" fill="currentColor" />
+      {/* wi-fi */}
+      <svg width="17" height="12" viewBox="0 0 17 12">
+        <path fill="#fff" d="M8.5 2.4c2.3 0 4.4.9 6 2.4.1.1.4.1.5 0l1.2-1.2c.1-.1.1-.4 0-.5A10.3 10.3 0 0 0 .8 3.1c-.1.1-.1.4 0 .5L2 4.8c.1.1.4.1.5 0a8.6 8.6 0 0 1 6-2.4Z" />
+        <path fill="#fff" d="M8.5 6.3c1.3 0 2.5.5 3.4 1.3.2.1.4.1.5 0l1.2-1.2c.1-.1.1-.4 0-.5a7 7 0 0 0-10.2 0c-.1.1-.1.4 0 .5l1.2 1.2c.1.1.4.1.5 0 .9-.8 2.1-1.3 3.4-1.3Z" />
+        <path fill="#fff" d="M10.8 9.2c.1-.1.1-.4 0-.5a3.4 3.4 0 0 0-4.6 0c-.1.1-.1.4 0 .5l2 2c.1.1.4.1.5 0l2.1-2Z" />
       </svg>
-      <svg width="25" height="12" viewBox="0 0 27 13">
-        <rect x=".5" y=".5" width="23" height="12" rx="3.6" fill="none" stroke="currentColor" opacity=".4" />
-        <rect x="2" y="2" width="17" height="9" rx="2.2" fill="currentColor" />
-        <path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2Z" fill="currentColor" opacity=".45" />
+      {/* bateria */}
+      <svg width="27" height="13" viewBox="0 0 27 13">
+        <rect x="0.5" y="0.5" width="23" height="12" rx="3.8" fill="none" stroke="#fff" strokeOpacity="0.38" />
+        <rect x="2" y="2" width="18" height="9" rx="2.4" fill="#fff" />
+        <path d="M25 4.3v4.4a2.4 2.4 0 0 0 0-4.4Z" fill="#fff" fillOpacity="0.4" />
       </svg>
     </span>
   );

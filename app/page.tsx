@@ -27,6 +27,67 @@ const SPAM_JU = [
   { t: "tem pix?", h: "10:46", user: "Jéssica" },
 ];
 
+const BENEFICIOS = [
+  {
+    t: "Ofertas selecionadas",
+    d: "Cada post passa por gente de verdade antes de chegar até você.",
+    icon: <path d="M4 5h16l-6 7.5V18l-4 2v-7.5z" />,
+  },
+  {
+    t: "Links confiáveis",
+    d: "Só lojas conhecidas. Link, cupom e vendedor testados antes de publicar.",
+    icon: (
+      <>
+        <path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z" />
+        <path d="M9 12l2 2 4-4.5" />
+      </>
+    ),
+  },
+  {
+    t: "Alertas em tempo real",
+    d: "Bug de preço e cupom relâmpago no minuto em que aparecem.",
+    icon: (
+      <>
+        <path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z" />
+        <path d="M10 21h4" />
+        <path d="M12.5 8.5l-2 3h3l-2 3" />
+      </>
+    ),
+  },
+  {
+    t: "Comunidade ativa",
+    d: "Quem comprou conta como foi. Você decide com mais certeza.",
+    icon: (
+      <>
+        <circle cx="9" cy="8" r="3.2" />
+        <path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" />
+        <circle cx="17" cy="9" r="2.5" />
+        <path d="M16.5 14.2c2.6.2 4.5 2.2 4.5 4.8" />
+      </>
+    ),
+  },
+  {
+    t: "Cupons exclusivos",
+    d: "Códigos negociados que você não acha em outro lugar.",
+    icon: (
+      <>
+        <path d="M3 7h18v3.2a2 2 0 0 0 0 3.6V17H3v-3.2a2 2 0 0 0 0-3.6z" />
+        <path d="M14 7v10" strokeDasharray="2 2" />
+      </>
+    ),
+  },
+  {
+    t: "Zero spam",
+    d: "De 3 a 6 ofertas por dia. Pode deixar a notificação ligada.",
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M5.6 5.6l12.8 12.8" />
+      </>
+    ),
+  },
+];
+
 function SpamChat({ nome, membros, msgs }: { nome: string; membros: string; msgs: typeof SPAM_ZE }) {
   const loop = [...msgs, ...msgs];
   return (
@@ -268,25 +329,24 @@ export default function Home() {
 
         {/* POR QUE */}
         <section className="why">
-          <h2 className="why__title">O que a gente promete.</h2>
-          <dl className="why__list">
-            <div>
-              <dt>Só entra o que vale a pena</dt>
-              <dd>Se o preço não é o menor dos últimos meses, não vai pro grupo. Simples assim.</dd>
+          <div className="why__intro">
+            <h2>Entrou, economizou<span className="lime">.</span></h2>
+            <p>Seis coisas que a ACHOU faz por você enquanto os outros grupos mandam corrente.</p>
+            <div className="why__visual" aria-hidden="true">
+              <span className="why__glow" />
+              <Image src={OFERTAS[3].img} alt="" width={OFERTAS[3].w} height={OFERTAS[3].h} sizes="260px" />
+              <span className="why__badge">-{desconto(OFERTAS[3])}%</span>
             </div>
-            <div>
-              <dt>Link que funciona</dt>
-              <dd>Testamos o link, o cupom e o vendedor antes de mandar. Nada de golpe ou página falsa.</dd>
-            </div>
-            <div>
-              <dt>Poucas mensagens por dia</dt>
-              <dd>Média de 3 a 6 ofertas por dia. Você pode deixar as notificações ligadas sem medo.</dd>
-            </div>
-            <div>
-              <dt>De graça, sempre</dt>
-              <dd>Não existe grupo VIP pago. A ACHOU ganha uma pequena comissão das lojas quando você compra, e o preço pra você não muda.</dd>
-            </div>
-          </dl>
+          </div>
+          <ul className="why__grid">
+            {BENEFICIOS.map((b) => (
+              <li key={b.t} className="ben">
+                <svg viewBox="0 0 24 24" aria-hidden="true">{b.icon}</svg>
+                <h3>{b.t}</h3>
+                <p>{b.d}</p>
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* DÚVIDAS */}

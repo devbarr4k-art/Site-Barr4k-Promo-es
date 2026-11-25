@@ -321,7 +321,6 @@ h2 {
   width: 330px;
   transform: rotateY(-20deg) rotateX(9deg) rotateZ(3deg);
   transform-style: preserve-3d;
-  will-change: transform;
   font-family: -apple-system, "SF Pro Text", var(--body);
   -webkit-font-smoothing: antialiased;
 }
@@ -390,11 +389,16 @@ h2 {
   position: relative;
   z-index: 6;
   height: 54px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  /* orelha esquerda · espaço da ilha · orelha direita */
+  grid-template-columns: 1fr 118px 1fr;
   align-items: center;
-  padding: 6px 26px 0 36px;
+  justify-items: center;
+  padding: 2px 8px 0;
   background: #1c1c1d;
+}
+.ios__status .ios__icons {
+  grid-column: 3;
 }
 .ios__time {
   font-weight: 600;
@@ -409,6 +413,7 @@ h2 {
 .ios__icons svg {
   display: block;
   flex: none;
+  shape-rendering: geometricPrecision;
 }
 .ios__home {
   position: absolute;
@@ -1184,39 +1189,128 @@ h2 {
   color: var(--off);
 }
 
-/* ── Promessas */
+/* ── Benefícios (cards de vidro do canvas) */
 .why {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: 60px;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: 64px;
   padding: 120px var(--pad);
   max-width: 1440px;
   margin: 0 auto;
 }
-.why__title {
+.why__intro {
   position: sticky;
   top: 120px;
   align-self: start;
-}
-.why__list > div {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 24px;
-  padding: 30px 0;
-  border-top: 1px solid var(--line-2);
+  gap: 18px;
 }
-.why__list > div:last-child {
-  border-bottom: 1px solid var(--line-2);
+.why__intro p {
+  max-width: 24rem;
+  color: #a9a9a3;
 }
-.why__list dt {
+.why__visual {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin-top: 24px;
+  display: grid;
+  place-items: center;
+}
+.why__visual img {
+  position: relative;
+  width: 78%;
+  height: auto;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.22)) drop-shadow(0 30px 30px rgba(0, 0, 0, 0.9));
+  animation: float 6s ease-in-out infinite;
+}
+.why__glow {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(110, 180, 30, 0.38), rgba(20, 48, 24, 0.2) 55%, transparent 75%);
+}
+.why__badge {
+  position: absolute;
+  top: 6%;
+  right: 2%;
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #c6ff00, #6bc41a);
+  color: #0a0a0a;
+  font-family: var(--price);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  box-shadow: 0 10px 30px rgba(108, 196, 26, 0.35);
+}
+@keyframes float {
+  50% { transform: translateY(-14px) rotate(-3deg); }
+}
+.why__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.ben {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 220px;
+  padding: 28px;
+  border-radius: 28px;
+  border: 1px solid rgba(198, 255, 0, 0.12);
+  background: linear-gradient(160deg, rgba(30, 58, 30, 0.45), rgba(17, 17, 17, 0.9) 60%);
+  overflow: hidden;
+  transition: border-color 0.5s ease, transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+.ben::before {
+  /* brilho que acende quando o card passa pelo meio da tela */
+  content: "";
+  position: absolute;
+  inset: -40% -40% auto auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(198, 255, 0, 0.22), transparent);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.ben.is-lit {
+  border-color: rgba(198, 255, 0, 0.45);
+  box-shadow: 0 30px 80px -30px rgba(198, 255, 0, 0.35);
+  transform: translateY(-4px);
+}
+.ben.is-lit::before {
+  opacity: 1;
+}
+.ben svg {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: var(--lime);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 18px;
+}
+.ben h3 {
+  position: relative;
   font-family: var(--display);
-  font-weight: 600;
-  font-size: 24px;
-  line-height: 1.15;
+  font-weight: 700;
+  font-size: 21px;
   letter-spacing: -0.02em;
 }
-.why__list dd {
-  color: var(--g1);
+.ben p {
+  position: relative;
+  color: #a9a9a3;
+  font-size: 15.5px;
+  line-height: 1.5;
 }
 
 /* ── Dúvidas */
@@ -1415,12 +1509,17 @@ h2 {
     height: auto;
     padding: 16px 14px;
   }
-  .why__title {
+  .why__intro {
     position: static;
   }
-  .why__list > div {
+  .why__visual {
+    display: none;
+  }
+  .why__grid {
     grid-template-columns: 1fr;
-    gap: 8px;
+  }
+  .ben {
+    min-height: 0;
   }
   .shelf__head {
     flex-direction: column;

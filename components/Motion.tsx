@@ -120,6 +120,16 @@ export function Motion() {
           scrollTrigger: { trigger: ".compare__grid", start: "top 70%" },
         });
 
+        // ── Benefícios: cada card acende ao passar pelo meio da tela
+        gsap.utils.toArray<HTMLElement>(".ben").forEach((card) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top 62%",
+            end: "bottom 38%",
+            toggleClass: "is-lit",
+          });
+        });
+
         // ── CTA final: o raio acende
         gsap.fromTo(".final__bolt", { scale: 0.6, opacity: 0.2 }, {
           scale: 1,
