@@ -140,7 +140,7 @@ export default function Home() {
       <div className="grain" aria-hidden="true" />
 
       <header className="nav">
-        <a href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={22} /></a>
+        <a href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={26} /></a>
         <nav className="nav__links" aria-label="Seções">
           <a href="#como-funciona">Como funciona</a>
           <a href="#comparar">Comparar</a>

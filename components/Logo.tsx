@@ -9,8 +9,8 @@ export function Bolt({ size = 28, round = false, className = "" }: MarkProps) {
       ) : (
         <rect width="64" height="64" rx="18" fill="#C6FF00" />
       )}
-      <path d="M14 34 L26 46 L48 21" fill="none" stroke="#0A0A0A" strokeWidth="7" strokeLinecap="square" />
-      <path d="M35 19.5 H50 V34.5" fill="none" stroke="#0A0A0A" strokeWidth="7" strokeLinecap="square" />
+      <path d="M15 33.5 L26.5 45 L47.5 21.5" fill="none" stroke="#0A0A0A" strokeWidth="6.5" strokeLinecap="square" strokeLinejoin="miter" />
+      <path d="M35.5 20 H48.5 V33" fill="none" stroke="#0A0A0A" strokeWidth="6.5" strokeLinecap="square" strokeLinejoin="miter" />
     </svg>
   );
 }
@@ -18,7 +18,7 @@ export function Bolt({ size = 28, round = false, className = "" }: MarkProps) {
 export function Logo({ size = 26 }: { size?: number }) {
   return (
     <span className="logo" style={{ fontSize: size }}>
-      <Bolt size={size * 1.2} className="logo__mark" />
+      <Bolt size={Math.round(size * 1.1)} className="logo__mark" />
       <span className="logo__word">ACHOU</span>
     </span>
   );

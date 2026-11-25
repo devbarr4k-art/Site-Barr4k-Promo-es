@@ -114,21 +114,24 @@ h2 {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.18em;
+  gap: 0.34em;
   line-height: 1;
-}
-.logo {
-  gap: 0.38em;
 }
 .logo__mark {
   flex: none;
+  display: block;
+  shape-rendering: geometricPrecision;
 }
 .logo__word {
+  display: block;
   font-family: var(--wm);
   font-weight: 900;
   font-style: italic;
   font-stretch: 112%;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
+  line-height: 0.8;
+  /* compensa o recuo do itálico e centraliza na altura do símbolo */
+  padding: 0.06em 0.06em 0 0;
 }
 
 /* ── Botões */
