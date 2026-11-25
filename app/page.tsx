@@ -155,7 +155,7 @@ export default function Home() {
       <div className="grain" aria-hidden="true" />
 
       <header className="nav">
-        <a className="nav__brand" href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={24} /></a>
+        <a className="nav__brand" href="#topo" aria-label="ACHOU, voltar ao topo"><Logo size={26} /></a>
         <nav className="nav__links" aria-label="Seções">
           <a href="#como-funciona">Como funciona</a>
           <a href="#comparar">Comparar</a>
@@ -163,7 +163,7 @@ export default function Home() {
           <a href="#duvidas">Dúvidas</a>
         </nav>
         <a className="nav__cta" href={LINKS.telegram} target="_blank" rel="noopener">
-          Entrar no grupo
+          <TelegramIcon size={16} /> Entrar
         </a>
       </header>
 
