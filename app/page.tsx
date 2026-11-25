@@ -317,21 +317,25 @@ export default function Home() {
         <section className="stats" aria-label="A ACHOU em números">
           <div className="stat">
             <p className="stat__num">
-              38<span>/1.240</span>
+              <span className="count" data-from="0" data-to="38">38</span>
+              <span className="stat__of">
+                /<span className="count" data-from="0" data-to="1240">1.240</span>
+              </span>
             </p>
             <h3>Só o que vale a pena</h3>
             <p>Promoções que passaram no filtro hoje, de 1.240 analisadas. Se não é o menor preço dos últimos meses, não entra.</p>
           </div>
           <div className="stat">
             <p className="stat__num">
-              5<span>/dia</span>
+              <span className="count" data-from="214" data-to="5">5</span>
+              <span className="stat__of">/dia</span>
             </p>
             <h3>Zero spam</h3>
             <p>Grupo comum manda mais de 200 mensagens por dia. Aqui você pode deixar a notificação ligada.</p>
           </div>
           <div className="stat">
             <p className="stat__num">
-              R$&nbsp;0
+              R$&nbsp;<span className="count" data-from="19.9" data-to="0" data-dec="2">0</span>
             </p>
             <h3>De graça, sempre</h3>
             <p>Sem grupo VIP. A ACHOU ganha uma comissão das lojas e o preço pra você não muda.</p>

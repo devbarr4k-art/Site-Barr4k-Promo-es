@@ -159,7 +159,7 @@ export function Motion() {
           scrollTrigger: { trigger: ".idx", start: "top 80%" },
         });
 
-        // ── Números grandes
+        // ── Números grandes: entram e contam (38 sobe, spam desce de 214 pra 5, VIP desce pra R$ 0)
         gsap.utils.toArray<HTMLElement>(".stat__num").forEach((el) => {
           gsap.from(el, {
             yPercent: 30,
@@ -167,6 +167,26 @@ export function Motion() {
             duration: 1,
             ease: "power4.out",
             scrollTrigger: { trigger: el, start: "top 88%" },
+          });
+        });
+        gsap.utils.toArray<HTMLElement>(".count").forEach((el) => {
+          const de = Number(el.dataset.from);
+          const ate = Number(el.dataset.to);
+          const dec = Number(el.dataset.dec ?? 0);
+          const fmtN = (v: number) =>
+            v === ate
+              ? ate.toLocaleString("pt-BR")
+              : v.toLocaleString("pt-BR", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+          const st = { v: de };
+          el.textContent = fmtN(de);
+          gsap.to(st, {
+            v: ate,
+            duration: 2.2,
+            ease: "power3.out",
+            onUpdate: () => {
+              el.textContent = fmtN(dec ? st.v : Math.round(st.v));
+            },
+            scrollTrigger: { trigger: el, start: "top 85%" },
           });
         });
       },

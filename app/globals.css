@@ -1240,7 +1240,10 @@ h2 {
   color: var(--lime);
   margin-bottom: 16px;
 }
-.stat__num span {
+.stat__num {
+  font-variant-numeric: tabular-nums;
+}
+.stat__of {
   font-size: 0.32em;
   color: var(--g2);
   letter-spacing: -0.02em;
@@ -1510,9 +1513,6 @@ h2 {
   *::after {
     animation: none !important;
     transition: none !important;
-  }
-  .phone {
-    transform: none;
   }
 }
 
