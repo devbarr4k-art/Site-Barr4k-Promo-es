@@ -179,44 +179,15 @@ function Tempestade() {
   );
 }
 
-const CORES_AVATAR = ["#C6FF00", "#D9D9D3", "#9FBF8A", "#E8E8E2", "#B6F500"];
-
-function Estrelas({ nota }: { nota: number }) {
+function CardDepoimento({ d }: { d: Depoimento }) {
   return (
-    <span className="stars" role="img" aria-label={`Nota ${nota} de 5`}>
-      {Array.from({ length: 5 }, (_, i) => (
-        <svg key={i} viewBox="0 0 20 20" className={i < nota ? "on" : undefined} aria-hidden="true">
-          <path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z" />
-        </svg>
-      ))}
-    </span>
-  );
-}
-
-function CardDepoimento({ d, i }: { d: Depoimento; i: number }) {
-  const iniciais = d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2);
-  return (
-    <figure className={`dep ${d.foto ? "dep--foto" : ""}`}>
-      {d.foto && (
-        <div className="dep__foto">
-          <Image src={d.foto} alt={`Foto do ${d.produto} que ${d.nome.split(" ")[0]} recebeu`} width={400} height={300} sizes="380px" />
-        </div>
-      )}
-      <div className="dep__top">
-        <span className="dep__produto">{d.produto}</span>
-        <Estrelas nota={d.nota ?? 5} />
-      </div>
-      <blockquote>{d.texto}</blockquote>
+    <figure className="dep dep--membro">
+      <Image className="dep__foto-membro" src={d.avatar} alt={`Foto de ${d.nome}`} width={200} height={200} sizes="88px" />
       <figcaption>
-        <span className="dep__av" style={{ background: CORES_AVATAR[i % CORES_AVATAR.length] }}>{iniciais}</span>
-        <span className="dep__quem">
-          <b>{d.nome}</b>
-          <small>{d.cidade}</small>
-        </span>
-        <span className="dep__eco">
-          <small>economizou</small>
-          {brl(d.economia)}
-        </span>
+        <b>{d.nome}</b>
+        <span className="dep__comprou">{d.cidade}</span>
+        <span className="dep__produto">Comprou: {d.produto}</span>
+        {d.texto && <blockquote>{d.texto}</blockquote>}
       </figcaption>
     </figure>
   );
@@ -232,8 +203,8 @@ function Depoimentos() {
         <div className="deps__track">
           {[0, 1].map((c) => (
             <div key={c} className="deps__set" aria-hidden={c === 1 ? true : undefined}>
-              {DEPOIMENTOS.map((d, i) => (
-                <CardDepoimento key={d.nome} d={d} i={i} />
+              {DEPOIMENTOS.map((d) => (
+                <CardDepoimento key={d.nome} d={d} />
               ))}
             </div>
           ))}

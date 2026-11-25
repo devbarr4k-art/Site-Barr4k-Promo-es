@@ -2276,3 +2276,55 @@ h2 {
     transform: none;
   }
 }
+
+.dep__av--foto {
+  object-fit: cover;
+  border: 2px solid rgba(198, 255, 0, 0.5);
+}
+
+/* depoimento de membro: só foto, nome e produto (dados reais) */
+.dep--membro {
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  width: 390px;
+  padding: 18px 22px 18px 18px;
+}
+.dep__foto-membro {
+  flex: none;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(198, 255, 0, 0.55);
+}
+.dep--membro figcaption {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  align-items: start;
+}
+.dep--membro b {
+  font-family: var(--display);
+  font-size: 19px;
+  letter-spacing: -0.02em;
+}
+.dep__comprou {
+  font-size: 13px;
+  color: var(--g2);
+}
+.dep--membro .dep__produto {
+  white-space: nowrap;
+  justify-self: start;
+  margin-top: 4px;
+}
+@media (max-width: 899px) {
+  .dep--membro {
+    width: 330px;
+  }
+  .dep__foto-membro {
+    width: 72px;
+    height: 72px;
+  }
+}

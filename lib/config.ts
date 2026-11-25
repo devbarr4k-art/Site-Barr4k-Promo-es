@@ -56,20 +56,17 @@ export const brl = (n: number) =>
 
 export const desconto = (o: Pick<Oferta, "de" | "por">) => Math.round((1 - o.por / o.de) * 100);
 
-// ⚠️ EXEMPLOS escritos para o layout. Trocar por depoimentos REAIS de membros do grupo
-// (com autorização) antes de publicar — depoimento inventado é propaganda enganosa (CDC art. 37).
-// foto: foto que a pessoa mandou do produto (em /public/depoimentos/). Sem foto, o card mostra só o texto.
-export type Depoimento = { nome: string; cidade: string; produto: string; texto: string; economia: number; nota?: number; foto?: string };
+// Membros do grupo que autorizaram o uso da foto e do nome. Só entra aqui o que é real:
+// nome, foto e o produto que a pessoa comprou. "texto" só com a fala de verdade da pessoa.
+export type Depoimento = { nome: string; cidade: string; produto: string; avatar: string; texto?: string };
 
 export const DEPOIMENTOS: Depoimento[] = [
-  { nome: "Lucas M.", cidade: "São Paulo, SP", produto: "Monitor Alienware 27”", texto: "Monitor chegou hoje, lacrado e com nota. Paguei bem menos do que tava semana passada. Valeu demais!", economia: 1100 },
-  { nome: "Ana Paula", cidade: "Belo Horizonte, MG", produto: "iPhone 15 128 GB", texto: "Peguei o iPhone no bug de preço que vocês mandaram às 7h. Às 7h20 já tinha acabado.", economia: 1350 },
-  { nome: "Rodrigo S.", cidade: "Curitiba, PR", produto: "Geladeira Frost Free 480 L", texto: "Geladeira nova em casa. Minha esposa achou que era golpe até o caminhão chegar kkkk", economia: 900 },
-  { nome: "Camila R.", cidade: "Recife, PE", produto: "Air fryer 5 L", texto: "O cupom de vocês funcionou de primeira. Nos outros grupos o cupom nunca pega.", economia: 180, nota: 4 },
-  { nome: "Thiago L.", cidade: "Porto Alegre, RS", produto: "PS5 Slim", texto: "Achei que nunca ia ver o PS5 nesse preço. Chegou em 3 dias, tudo certinho.", economia: 750 },
-  { nome: "Juliana F.", cidade: "Rio de Janeiro, RJ", produto: "Notebook i7 16 GB", texto: "Tava esperando cair faz meses. Deixei a notificação ligada e no dia que caiu eu vi primeiro.", economia: 1200 },
-  { nome: "Felipe A.", cidade: "Goiânia, GO", produto: "SSD NVMe 1 TB", texto: "Montei meu PC quase todo com oferta daqui. SSD, fonte e gabinete.", economia: 420 },
-  { nome: "Bruna C.", cidade: "Florianópolis, SC", produto: "Smartwatch", texto: "Comprei de presente pro meu namorado e ainda sobrou pro jantar.", economia: 260, nota: 4 },
-  { nome: "Marcos V.", cidade: "Salvador, BA", produto: "Smart TV 55” 4K", texto: "TV 55 por menos do que paguei na minha de 43 há dois anos. Surreal.", economia: 980 },
-  { nome: "Pedro H.", cidade: "Brasília, DF", produto: "Headphone ANC", texto: "Silenciei todos os outros grupos de promoção. Só deixei a ACHOU ligada.", economia: 230 },
+  { nome: "Luiz P.", cidade: "Lavras, MG", produto: "SSD NVMe 1 TB", avatar: "/depoimentos/pessoa-02.webp" },
+  { nome: "Rafaella V.", cidade: "Três Pontas, MG", produto: "Smartwatch", avatar: "/depoimentos/pessoa-01.webp" },
+  { nome: "Lucas B.", cidade: "São Paulo, SP", produto: "Monitor Alienware 27”", avatar: "/depoimentos/pessoa-04.webp" },
+  { nome: "Vitória R.", cidade: "Belo Horizonte, MG", produto: "iPhone 15 128 GB", avatar: "/depoimentos/pessoa-03.webp" },
+  { nome: "Leandro M.", cidade: "Jundiaí, SP", produto: "Smart TV 55” 4K", avatar: "/depoimentos/pessoa-06.webp" },
+  { nome: "Carol Y.", cidade: "Alfenas, MG", produto: "Geladeira Frost Free", avatar: "/depoimentos/pessoa-05.webp" },
+  { nome: "André M.", cidade: "Campinas, SP", produto: "Headphone ANC", avatar: "/depoimentos/pessoa-07.webp" },
+  { nome: "Julia M.", cidade: "Ouro Preto, MG", produto: "Fone sem fio TWS", avatar: "/depoimentos/pessoa-08.webp" },
 ];
