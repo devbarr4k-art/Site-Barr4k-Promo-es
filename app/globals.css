@@ -811,8 +811,8 @@ h2 {
 .drop__product {
   position: relative;
   z-index: 2;
-  width: min(520px, 70vw);
-  margin-bottom: -4vw;
+  width: min(460px, 64vw);
+  margin-bottom: 18px;
 }
 .drop__product img {
   width: 100%;
@@ -838,8 +838,11 @@ h2 {
   rotate: -8deg;
 }
 .drop__pricebox {
+  position: relative;
+  z-index: 3;
   display: grid;
   justify-items: center;
+  gap: 2px;
   text-align: center;
 }
 .drop__name {
