@@ -183,7 +183,9 @@ function CardDepoimento({ d }: { d: Depoimento }) {
   return (
     <figure className="dep dep--membro">
       <div className="dep__head">
-        <Image className="dep__foto-membro" src={d.avatar} alt={`Foto de ${d.nome}`} width={120} height={120} sizes="60px" />
+        <span className="dep__ini" aria-hidden="true">
+          {d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2)}
+        </span>
         <span className="dep__quem2">
           <b>{d.nome}</b>
           <span className="dep__comprou">{d.cidade}</span>

@@ -56,17 +56,17 @@ export const brl = (n: number) =>
 
 export const desconto = (o: Pick<Oferta, "de" | "por">) => Math.round((1 - o.por / o.de) * 100);
 
-// Membros do grupo que autorizaram o uso da foto e do nome. Só entra aqui o que é real:
+// Membros do grupo que autorizaram o uso do nome. Só entra aqui o que é real:
 // nome, foto e o produto que a pessoa comprou. "texto" só com a fala de verdade da pessoa.
-export type Depoimento = { nome: string; cidade: string; produto: string; avatar: string; texto?: string };
+export type Depoimento = { nome: string; cidade: string; produto: string; texto?: string };
 
 export const DEPOIMENTOS: Depoimento[] = [
-  { nome: "Luiz P.", cidade: "Lavras, MG", produto: "SSD NVMe 1 TB", avatar: "/depoimentos/pessoa-02.webp", texto: "Peguei no cupom que mandaram aqui no grupo e saiu muito abaixo do preço normal! Chegou certinho em Lavras, já instalei e o PC tá voando. Economia absurda." },
-  { nome: "Rafaella V.", cidade: "Três Pontas, MG", produto: "Smartwatch", avatar: "/depoimentos/pessoa-01.webp", texto: "Comprei na oferta relâmpago que soltaram aqui e não me arrependo. Chegou rapidinho em Três Pontas, super leve pro treino e saiu pela metade do preço das lojas físicas." },
-  { nome: "Lucas B.", cidade: "São Paulo, SP", produto: "Monitor Alienware 27”", avatar: "/depoimentos/pessoa-04.webp", texto: "Tava namorando esse monitor há meses e só consegui pegar por causa do alerta daqui. Chegou no dia seguinte em SP, zero dead pixel e preço imbatível." },
-  { nome: "Vitória R.", cidade: "Belo Horizonte, MG", produto: "iPhone 15 128 GB", avatar: "/depoimentos/pessoa-03.webp", texto: "Confesso que fiquei com medo pelo preço estar tão bom, mas chegou lacrado e original aqui em BH! Ainda bem que ativei as notificações do grupo a tempo." },
-  { nome: "Leandro M.", cidade: "Jundiaí, SP", produto: "Smart TV 55” 4K", avatar: "/depoimentos/pessoa-06.webp", texto: "Melhor compra que fiz no ano! Economizei quase 600 reais com o link do grupo. A imagem é absurda de boa e chegou bem antes do prazo aqui em Jundiaí." },
-  { nome: "Carol Y.", cidade: "Alfenas, MG", produto: "Geladeira Frost Free", avatar: "/depoimentos/pessoa-05.webp", texto: "Consegui fechar no menor preço histórico que vocês avisaram! Veio impecável, super silenciosa e a entrega em Alfenas foi super tranquila." },
-  { nome: "André M.", cidade: "Campinas, SP", produto: "Headphone ANC", avatar: "/depoimentos/pessoa-07.webp", texto: "Paguei preço de fone básico nesse modelo com cancelamento de ruído graças à promo postada aqui. Isola tudo e a bateria dura muito, valeu demais!" },
-  { nome: "Julia M.", cidade: "Ouro Preto, MG", produto: "Fone sem fio TWS", avatar: "/depoimentos/pessoa-08.webp", texto: "Baratinho demais pelo que entrega! Peguei no link promocional, encaixa super bem no ouvido e tem um grave muito bom. Já indiquei o grupo pros meus amigos." },
+  { nome: "Luiz P.", cidade: "Lavras, MG", produto: "SSD NVMe 1 TB", texto: "Peguei no cupom que mandaram aqui no grupo e saiu muito abaixo do preço normal! Chegou certinho em Lavras, já instalei e o PC tá voando. Economia absurda." },
+  { nome: "Rafaella V.", cidade: "Três Pontas, MG", produto: "Smartwatch", texto: "Comprei na oferta relâmpago que soltaram aqui e não me arrependo. Chegou rapidinho em Três Pontas, super leve pro treino e saiu pela metade do preço das lojas físicas." },
+  { nome: "Lucas B.", cidade: "São Paulo, SP", produto: "Monitor Alienware 27”", texto: "Tava namorando esse monitor há meses e só consegui pegar por causa do alerta daqui. Chegou no dia seguinte em SP, zero dead pixel e preço imbatível." },
+  { nome: "Vitória R.", cidade: "Belo Horizonte, MG", produto: "iPhone 15 128 GB", texto: "Confesso que fiquei com medo pelo preço estar tão bom, mas chegou lacrado e original aqui em BH! Ainda bem que ativei as notificações do grupo a tempo." },
+  { nome: "Leandro M.", cidade: "Jundiaí, SP", produto: "Smart TV 55” 4K", texto: "Melhor compra que fiz no ano! Economizei quase 600 reais com o link do grupo. A imagem é absurda de boa e chegou bem antes do prazo aqui em Jundiaí." },
+  { nome: "Carol Y.", cidade: "Alfenas, MG", produto: "Geladeira Frost Free", texto: "Consegui fechar no menor preço histórico que vocês avisaram! Veio impecável, super silenciosa e a entrega em Alfenas foi super tranquila." },
+  { nome: "André M.", cidade: "Campinas, SP", produto: "Headphone ANC", texto: "Paguei preço de fone básico nesse modelo com cancelamento de ruído graças à promo postada aqui. Isola tudo e a bateria dura muito, valeu demais!" },
+  { nome: "Julia M.", cidade: "Ouro Preto, MG", produto: "Fone sem fio TWS", texto: "Baratinho demais pelo que entrega! Peguei no link promocional, encaixa super bem no ouvido e tem um grave muito bom. Já indiquei o grupo pros meus amigos." },
 ];
