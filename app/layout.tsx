@@ -8,12 +8,12 @@ const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight
 const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin"], style: ["italic"], axes: ["wdth"] });
 
 export const metadata: Metadata = {
-  title: "ACHOU · A gente encontra. Você economiza.",
+  title: "ACHOU · A gente acha. Você economiza.",
   description:
     "Promoções conferidas uma por uma antes de chegar no seu celular. Entre no grupo do Telegram ou na comunidade do WhatsApp da ACHOU. É de graça.",
   metadataBase: new URL("https://achou.io"),
   openGraph: {
-    title: "ACHOU · A gente encontra. Você economiza.",
+    title: "ACHOU · A gente acha. Você economiza.",
     description: "Promoções de verdade, sem spam. No Telegram e no WhatsApp.",
     locale: "pt_BR",
     type: "website",

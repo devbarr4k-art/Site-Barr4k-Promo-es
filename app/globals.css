@@ -1620,3 +1620,131 @@ h2 {
     display: none;
   }
 }
+
+/* ── Depoimentos: duas fileiras em loop, sentidos opostos */
+.deps {
+  padding: 120px 0 100px;
+  overflow: hidden;
+}
+.deps__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 32px;
+  max-width: 1440px;
+  margin: 0 auto 56px;
+  padding: 0 var(--pad);
+}
+.deps__head p {
+  max-width: 20rem;
+  color: var(--g1);
+}
+.deps__row {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.deps__row + .deps__row {
+  margin-top: 20px;
+}
+.deps__track {
+  display: flex;
+  width: max-content;
+  animation: ticker 60s linear infinite;
+}
+.deps__row--rev .deps__track {
+  animation-direction: reverse;
+  animation-duration: 70s;
+}
+.deps__row:hover .deps__track {
+  animation-play-state: paused;
+}
+.deps__set {
+  display: flex;
+  gap: 20px;
+  padding-right: 20px;
+}
+.dep {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 380px;
+  margin: 0;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: #101010;
+  transition: border-color 0.3s;
+}
+.dep:hover {
+  border-color: rgba(198, 255, 0, 0.4);
+}
+.dep__produto {
+  align-self: start;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 255, 0, 0.35);
+  color: var(--lime);
+  font-size: 13px;
+  font-weight: 600;
+}
+.dep blockquote {
+  flex: 1;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--off);
+}
+.dep figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.dep__av {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #0a0a0a;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dep__quem {
+  display: grid;
+  line-height: 1.3;
+  font-size: 14.5px;
+}
+.dep__quem small,
+.dep__eco small {
+  color: var(--g2);
+  font-size: 12px;
+  font-weight: 400;
+}
+.dep__eco {
+  margin-left: auto;
+  display: grid;
+  text-align: right;
+  line-height: 1.2;
+  font-family: var(--price);
+  font-weight: 700;
+  color: var(--lime);
+}
+@media (max-width: 899px) {
+  .deps__head {
+    flex-direction: column;
+    align-items: start;
+    gap: 12px;
+  }
+  .dep {
+    width: 300px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deps__row {
+    overflow-x: auto;
+  }
+}

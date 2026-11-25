@@ -5,7 +5,7 @@ import { PhoneFeed } from "@/components/PhoneFeed";
 import { IndexList } from "@/components/IndexList";
 import { Particles } from "@/components/Particles";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
-import { LINKS, NUMEROS, OFERTAS, brl, desconto } from "@/lib/config";
+import { DEPOIMENTOS, LINKS, NUMEROS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
 
 const console8 = OFERTAS[0];
 const fone = OFERTAS[1];
@@ -148,6 +148,54 @@ function Tempestade() {
   );
 }
 
+const CORES_AVATAR = ["#C6FF00", "#D9D9D3", "#9FBF8A", "#E8E8E2", "#B6F500"];
+
+function CardDepoimento({ d, i }: { d: Depoimento; i: number }) {
+  const iniciais = d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2);
+  return (
+    <figure className="dep">
+      <span className="dep__produto">{d.produto}</span>
+      <blockquote>{d.texto}</blockquote>
+      <figcaption>
+        <span className="dep__av" style={{ background: CORES_AVATAR[i % CORES_AVATAR.length] }}>{iniciais}</span>
+        <span className="dep__quem">
+          <b>{d.nome}</b>
+          <small>{d.cidade}</small>
+        </span>
+        <span className="dep__eco">
+          <small>economizou</small>
+          {brl(d.economia)}
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function Depoimentos() {
+  const linhas = [DEPOIMENTOS.slice(0, 5), DEPOIMENTOS.slice(5)];
+  return (
+    <section className="deps" aria-labelledby="deps-titulo">
+      <div className="deps__head">
+        <h2 id="deps-titulo" className="mega">Quem entrou, comprou.</h2>
+        <p>O que a galera do grupo conta depois que a encomenda chega.</p>
+      </div>
+      {linhas.map((linha, l) => (
+        <div key={l} className={`deps__row ${l === 1 ? "deps__row--rev" : ""}`}>
+          <div className="deps__track">
+            {[0, 1].map((c) => (
+              <div key={c} className="deps__set" aria-hidden={c === 1 ? true : undefined}>
+                {linha.map((d, i) => (
+                  <CardDepoimento key={d.nome} d={d} i={i + l * 5} />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <>
@@ -178,7 +226,7 @@ export default function Home() {
                 Curadoria ao vivo · {NUMEROS.ofertasMes} ofertas conferidas este mês
               </p>
               <h1 className="hero__title">
-                <span className="hero__line"><span>A gente encontra.</span></span>
+                <span className="hero__line"><span>A gente acha.</span></span>
                 <span className="hero__line"><span>Você economiza<span className="lime">.</span></span></span>
               </h1>
               <p className="hero__sub">
@@ -313,6 +361,8 @@ export default function Home() {
           <IndexList />
         </section>
 
+        <Depoimentos />
+
         {/* NÚMEROS */}
         <section className="stats" aria-label="A ACHOU em números">
           <div className="stat">
@@ -384,7 +434,7 @@ export default function Home() {
         <div className="foot__row">
           <div className="foot__brand">
             <Logo size={22} />
-            <p>A gente encontra. Você economiza.</p>
+            <p>A gente acha. Você economiza.</p>
           </div>
           <nav className="foot__links" aria-label="Rodapé">
             <a href="#">Termos de uso</a>
