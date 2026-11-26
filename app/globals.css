@@ -2479,3 +2479,10 @@ ul.hero__proof svg {
   background: var(--lime);
   color: #050505;
 }
+
+/* "Entrar" da navbar mantém o tamanho próprio no celular (círculo redondo) */
+@media (max-width: 899px) {
+  .btn.btn--sm {
+    height: 42px;
+  }
+}
