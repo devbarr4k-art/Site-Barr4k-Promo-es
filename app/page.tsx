@@ -215,7 +215,7 @@ function Depoimentos() {
   return (
     <section className="deps" aria-labelledby="deps-titulo">
       <div className="deps__head">
-        <h2 id="deps-titulo" className="mega">Quem entrou, comprou.</h2>
+        <h2 id="deps-titulo" className="mega">Quem entrou, <span className="lime">comprou.</span></h2>
       </div>
       <div className="deps__row">
         <div className="deps__track">
