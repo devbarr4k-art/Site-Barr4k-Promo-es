@@ -2392,3 +2392,27 @@ ul.hero__proof svg {
   justify-content: space-between;
   gap: 12px;
 }
+
+.legal__intro {
+  padding: 16px 20px;
+  border-left: 3px solid var(--lime);
+  background: #111;
+  border-radius: 0 12px 12px 0;
+}
+.legal ul {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  padding-left: 20px;
+  list-style: disc;
+  color: #c9c9c3;
+}
+.legal ul li::marker {
+  color: var(--lime);
+}
+.legal p + p {
+  margin-top: 10px;
+}
+.legal b {
+  color: var(--off);
+}
