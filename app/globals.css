@@ -2505,7 +2505,7 @@ ul.hero__proof svg {
   width: min(1100px, 120vw);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(120, 190, 20, 0.11), rgba(30, 60, 25, 0.08) 45%, transparent 72%);
+  background: radial-gradient(closest-side, rgba(130, 200, 20, 0.2), rgba(35, 70, 25, 0.14) 45%, transparent 72%);
   pointer-events: none;
 }
 .index::before { top: -10%; right: -25%; }
@@ -2513,3 +2513,23 @@ ul.hero__proof svg {
 .stats::before { top: -40%; right: -20%; }
 .faq::before { top: 0; left: -30%; }
 .deps { overflow: clip; }
+
+/* barra de rolagem no verde da marca */
+html {
+  scrollbar-color: var(--lime) #0a0a0a;
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--lime);
+  border-radius: 99px;
+  border: 2px solid #0a0a0a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d8ff4d;
+}
