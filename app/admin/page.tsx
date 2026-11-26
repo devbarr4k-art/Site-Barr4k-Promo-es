@@ -40,11 +40,12 @@ export default async function AdminPage({
 
   const hoje = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const deHoje = todos.filter((l) => new Date(l.em).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }) === hoje).length;
-  const tg = todos.filter((l) => l.canal === "telegram").length;
+  const tg = todos.filter((l) => l.canais?.includes("telegram")).length;
+  const wa = todos.filter((l) => l.canais?.includes("whatsapp")).length;
 
   const qDigitos = q.replace(/\D/g, "");
   const filtrados = todos.filter(
-    (l) => (!canal || l.canal === canal) && (!q || l.email.includes(q) || l.nome.toLowerCase().includes(q) || (qDigitos.length >= 3 && l.telefone.includes(qDigitos))),
+    (l) => (!canal || !!l.canais?.includes(canal)) && (!q || l.email.includes(q) || l.nome.toLowerCase().includes(q) || (qDigitos.length >= 3 && l.telefone.includes(qDigitos))),
   );
   const paginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
   const pagina = Math.min(paginas, Math.max(1, Number(sp.p) || 1));
@@ -84,7 +85,7 @@ export default async function AdminPage({
         <div><b>{todos.length.toLocaleString("pt-BR")}</b><span>leads no total</span></div>
         <div><b>{deHoje.toLocaleString("pt-BR")}</b><span>hoje</span></div>
         <div><b>{tg.toLocaleString("pt-BR")}</b><span>Telegram</span></div>
-        <div><b>{(todos.length - tg).toLocaleString("pt-BR")}</b><span>WhatsApp</span></div>
+        <div><b>{wa.toLocaleString("pt-BR")}</b><span>WhatsApp</span></div>
       </section>
 
       <Funil periodo={sp.f ?? "7"} />
@@ -119,7 +120,11 @@ export default async function AdminPage({
                 <td>{l.nome || "—"}</td>
                 <td><a href={`mailto:${l.email}`}>{l.email}</a></td>
                 <td><a href={`https://wa.me/${l.telefone}`} target="_blank" rel="noopener">{fmtTel(l.telefone)}</a></td>
-                <td><span className={`adm__tag adm__tag--${l.canal}`}>{l.canal === "telegram" ? "Telegram" : "WhatsApp"}</span></td>
+                <td className="adm__canais">
+                  {(l.canais ?? [l.canal]).map((c) => (
+                    <span key={c} className={`adm__tag adm__tag--${c}`}>{c === "telegram" ? "Telegram" : "WhatsApp"}</span>
+                  ))}
+                </td>
                 <td className="adm__muted">{l.origem || "—"}</td>
                 <td>{l.id && <Excluir id={l.id} quem={l.nome || l.email} />}</td>
               </tr>

@@ -11,7 +11,7 @@ import path from "path";
 // No PC, sem token, salva num arquivo temporário só pra testar.
 
 export type Canal = "telegram" | "whatsapp";
-export type Lead = { id?: string; nome: string; email: string; telefone: string; canal: Canal; em: string; origem: string };
+export type Lead = { id?: string; nome: string; email: string; telefone: string; canal: Canal; em: string; origem: string; canais?: Canal[] };
 
 const LOCAL = path.join(os.tmpdir(), "achou-site", "leads.jsonl");
 export const blobPronto = () => !!process.env.BLOB_READ_WRITE_TOKEN;
@@ -65,8 +65,34 @@ function lerNome(pathname: string): Lead | null {
   }
 }
 
-/** Todos os leads, do mais novo pro mais antigo */
+/** Todos os leads, do mais novo pro mais antigo, juntando a mesma pessoa (mesmo e-mail ou telefone) */
 export async function listarLeads(): Promise<Lead[]> {
+  return juntar(await listarBrutos());
+}
+
+/** Mesma pessoa nos dois canais vira um lead só, com os dois canais (data = primeiro cadastro). */
+export function juntar(brutos: Lead[]): Lead[] {
+  const grupos: Lead[] = [];
+  const porChave = new Map<string, Lead>();
+  for (const l of [...brutos].reverse()) {
+    const g = porChave.get("e:" + l.email) ?? porChave.get("t:" + l.telefone);
+    if (g) {
+      if (!g.canais!.includes(l.canal)) g.canais!.push(l.canal);
+      g.id = `${g.id}|${l.id}`;
+      g.nome = l.nome || g.nome;
+      porChave.set("e:" + l.email, g);
+      porChave.set("t:" + l.telefone, g);
+    } else {
+      const novo: Lead = { ...l, canais: [l.canal] };
+      grupos.push(novo);
+      porChave.set("e:" + l.email, novo);
+      porChave.set("t:" + l.telefone, novo);
+    }
+  }
+  return grupos.reverse();
+}
+
+async function listarBrutos(): Promise<Lead[]> {
   if (blobPronto()) {
     const out: Lead[] = [];
     let cursor: string | undefined;
@@ -90,8 +116,15 @@ export async function listarLeads(): Promise<Lead[]> {
 
 const NL = String.fromCharCode(10);
 
-/** Apaga um lead pelo id que a listagem devolveu */
+/** Apaga um lead pelo id que a listagem devolveu (lead juntado: apaga todos os cadastros dele) */
 export async function excluirLead(id: string) {
+  const ids = id.split("|").filter(Boolean);
+  if (ids.length > 1) {
+    // no modo local, apaga do maior índice pro menor pra não deslocar os outros
+    ids.sort((a, b) => Number(b.split(":")[1] ?? 0) - Number(a.split(":")[1] ?? 0));
+    for (const i of ids) await excluirLead(i);
+    return;
+  }
   if (blobPronto()) {
     if (!/^leads\/\d+_[0-9a-f]+_[A-Za-z0-9_-]+\.json$/.test(id)) throw new Error("id inválido");
     await del(id);

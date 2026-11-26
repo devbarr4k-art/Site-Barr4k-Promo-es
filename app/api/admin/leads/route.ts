@@ -9,7 +9,7 @@ export async function GET() {
   const linhas = [
     "data;nome;email;telefone;canal;origem",
     ...leads.map((l) =>
-      [new Date(l.em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }), l.nome, l.email, "+" + l.telefone, l.canal, l.origem]
+      [new Date(l.em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }), l.nome, l.email, "+" + l.telefone, (l.canais ?? [l.canal]).join(" + "), l.origem]
         .map(esc)
         .join(";"),
     ),

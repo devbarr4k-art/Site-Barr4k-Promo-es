@@ -68,39 +68,44 @@ export async function Funil({ periodo }: { periodo: string }) {
   const dias = [...porDia.entries()];
   const maxDia = Math.max(1, ...dias.map(([, v]) => v));
 
+  const vazio = etapas.every((e) => e.v === 0);
+  const nomePeriodo = PERIODOS.find(([k]) => k === p)?.[1].toLowerCase();
+
   return (
     <section className="fun">
       {topo}
+      <p className="fun__sub">Pessoas únicas · {nomePeriodo}</p>
 
-      <ol className="fun__etapas">
+      <ol className="fun__passos">
         {etapas.map((e, i) => (
-          <li key={e.nome}>
-            <div className="fun__linha">
-              <span className="fun__nome">
-                <i>{i + 1}</i> {e.nome}
-              </span>
-              <b>{n(e.v)}</b>
+          <li key={e.nome} className={`fun__passo ${vazio ? "is-vazio" : ""}`}>
+            {i > 0 && <span className="fun__conv">{pct(e.v, etapas[i - 1].v)}</span>}
+            <span className="fun__rot">
+              <i>{i + 1}</i>
+              {e.nome}
+            </span>
+            <b>{n(e.v)}</b>
+            <div className="fun__coluna">
+              <span style={{ height: `${visitas ? Math.max(6, (e.v / visitas) * 100) : 100 - i * 22}%` }} />
             </div>
-            <div className="fun__barra">
-              <span style={{ width: `${visitas ? Math.max(2, (e.v / visitas) * 100) : 0}%` }} />
-            </div>
-            {i > 0 && (
-              <small>
-                {pct(e.v, etapas[i - 1].v)} da etapa anterior · {pct(e.v, visitas)} de quem visitou
-              </small>
-            )}
+            <small>{i === 0 ? "base do funil" : `${pct(e.v, visitas)} do total`}</small>
           </li>
         ))}
       </ol>
+      {vazio && (
+        <p className="fun__vazio">
+          O contador começou agora. Visitas, cliques e cadastros aparecem aqui conforme as pessoas entram no site.
+        </p>
+      )}
 
       <div className="fun__cards">
         <div className="fun__card">
-          <span>Cliques nas ofertas do canal</span>
+          <span>Cliques nas ofertas</span>
           <b>{n(Number(t.oferta?.total ?? 0))}</b>
-          <small>links achou.io/o/… abertos</small>
+          <small>links achou.io/o/ abertos no canal</small>
         </div>
         <div className="fun__card">
-          <span>De onde vêm as visitas</span>
+          <span>De onde vêm</span>
           {fontes.length ? (
             <ul>
               {fontes.map((f) => (
@@ -111,12 +116,12 @@ export async function Funil({ periodo }: { periodo: string }) {
               ))}
             </ul>
           ) : (
-            <small>sem visitas no período</small>
+            <small>aparece quando chegarem visitas</small>
           )}
         </div>
-        {p !== "hoje" && (
-          <div className="fun__card">
-            <span>Visitas por dia</span>
+        <div className="fun__card">
+          <span>Visitas por dia</span>
+          {dias.length ? (
             <div className="fun__dias">
               {dias.map(([d, v]) => (
                 <div key={d} title={`${d.split("-").reverse().slice(0, 2).join("/")}: ${v}`}>
@@ -124,9 +129,10 @@ export async function Funil({ periodo }: { periodo: string }) {
                 </div>
               ))}
             </div>
-            {!dias.length && <small>sem visitas no período</small>}
-          </div>
-        )}
+          ) : (
+            <small>aparece quando chegarem visitas</small>
+          )}
+        </div>
       </div>
     </section>
   );
