@@ -13,12 +13,10 @@ const fmt = (n: number) =>
 export function Motion() {
   useEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let lenis: Lenis | null = null;
     const raf = (t: number) => lenis?.raf(t * 1000);
 
-    // A pedido do cliente, anima sempre — mesmo com "menos movimento" no sistema.
-    // A exceção é a enxurrada 3D (peças voando na direção da tela), que fica de fora nesse caso.
+    // A pedido do cliente, anima sempre, mesmo com "menos movimento" ligado no sistema.
     {
       lenis = new Lenis({ lerp: 0.1 });
       lenis.on("scroll", ScrollTrigger.update);
@@ -71,7 +69,7 @@ export function Motion() {
 
         // ── A enxurrada: tudo voa na direção da câmera, sobra a frase
         const itens = gsap.utils.toArray<HTMLElement>(".storm__item");
-        if (itens.length && !reduce) {
+        if (itens.length) {
           gsap.set(itens, { xPercent: -50, yPercent: -50 });
           const st = gsap.timeline({
             defaults: { ease: "none" },

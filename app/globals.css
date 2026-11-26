@@ -1656,12 +1656,7 @@ h2 {
     max-height: 120px;
   }
 }
-/* quem pediu menos movimento no sistema não vê as peças voando (só a frase) */
-@media (prefers-reduced-motion: reduce) {
-  .storm__item {
-    display: none;
-  }
-}
+
 
 /* ── Depoimentos: duas fileiras em loop, sentidos opostos */
 .deps {
