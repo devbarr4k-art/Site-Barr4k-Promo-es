@@ -1,6 +1,7 @@
 // Mensagem de oferta → texto pronto com o link de afiliado da ACHOU (só Mercado Livre).
 import { brl, desconto, extrair } from "./extrair";
 import { ehLinkML, lerProduto, linkAfiliado } from "./ml";
+import { linkCurto } from "./curto";
 
 export const TEMPLATE_PADRAO = `[[se chamada]]{chamada}
 
@@ -84,7 +85,7 @@ export async function processar(
     pix: /\bpix\b/i.test(mensagem) ? "1" : "",
     loja_oficial: /loja oficial/i.test(mensagem) ? "1" : "",
     cupom: ex.cupom ?? "",
-    link,
+    link: linkCurto(link),
     loja: "Mercado Livre",
     fechamento: FECHAMENTOS[Math.floor(Math.random() * FECHAMENTOS.length)],
   });
