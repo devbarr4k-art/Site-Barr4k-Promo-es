@@ -9,6 +9,8 @@ import Sair from "../Sair";
 import { BotaoEnviar } from "./BotaoEnviar";
 import { Paginacao } from "../Paginacao";
 import { Abas } from "./Abas";
+import { AutoAtualizar } from "./AutoAtualizar";
+import { BotaoResetar } from "./BotaoResetar";
 import {
   addCanal,
   addOferta,
@@ -16,6 +18,7 @@ import {
   enviarAgora,
   mudarStatus,
   removerCanal,
+  resetarTudo,
   rodarAgora,
   salvarConfig,
 } from "./acoes";
@@ -181,6 +184,10 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
             Enviar próxima agora
           </BotaoEnviar>
         </form>
+        <form action={resetarTudo}>
+          <BotaoResetar />
+        </form>
+        <AutoAtualizar />
       </div>
       {cfg.ultimo_erro && <p className="adm__aviso">Último erro do envio: {cfg.ultimo_erro}</p>}
 
