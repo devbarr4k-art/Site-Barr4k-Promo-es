@@ -2,6 +2,7 @@
 import { brl, desconto, extrair } from "./extrair";
 import { ehLinkML, lerProduto, linkAfiliado } from "./ml";
 import { linkCurto } from "./curto";
+import { criarChamada } from "./chamada";
 
 export const TEMPLATE_PADRAO = `[[se chamada]]{chamada}
 
@@ -39,13 +40,6 @@ export function montar(template: string, v: Record<string, string>) {
 
 const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
-// a chamada é só o nome do produto de novo? (ignora emoji, pontuação e maiúsculas)
-const so = (x: string) => norm(x).replace(/[^a-z0-9]+/g, "");
-const semelhante = (a: string, b: string) => {
-  const x = so(a), y = so(b);
-  return !x || x === y || y.startsWith(x.slice(0, 24)) || x.startsWith(y.slice(0, 24));
-};
-
 export type Resultado =
   | { ok: true; texto: string; linkOriginal: string; linkAfiliado: string; imagem: string | null }
   | { ok: false; motivo: string; linkOriginal?: string };
@@ -70,15 +64,10 @@ export async function processar(
   const antigo = [ex.precoAntigo, produto.precoAntigo].find((v) => v && preco && v > preco) ?? null;
   const off = desconto(preco, antigo);
   const titulo = produto.titulo || ex.titulo || "Oferta no Mercado Livre";
-  // "chamada": a primeira linha de quem postou, quando não é o próprio nome do produto
-  const chamada = mensagem
-    .split(/\r?\n/)
-    .map((l) => l.replace(/[*_~`]/g, "").trim())
-    .find((l) => l.length >= 6) ?? "";
-  const usaChamada =
-    chamada && !/https?:|R\$|cupom/i.test(chamada) && !semelhante(chamada, titulo);
+  // chamada própria (não copia a frase do canal de origem)
+  const chamada = criarChamada({ titulo, preco, desconto: off, cupom: ex.cupom, pix: /\bpix\b/i.test(mensagem) });
   const texto = montar(cfg.template || TEMPLATE_PADRAO, {
-    chamada: usaChamada ? chamada : "",
+    chamada,
     titulo,
     preco: preco ? brl(preco) : "",
     preco_antigo: antigo ? brl(antigo) : "",
