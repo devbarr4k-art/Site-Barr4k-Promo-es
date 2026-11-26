@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Bolt } from "./Logo";
 import { TelegramIcon, WhatsIcon } from "./Icons";
+import { rastrear, visitante } from "@/lib/rastrear";
 
 // Antes de liberar o grupo, a pessoa deixa nome, e-mail e telefone.
 // Quem já se cadastrou neste navegador vai direto (o link fica guardado no localStorage).
@@ -35,8 +36,11 @@ function guardarLink(canal: Canal, url: string) {
 /** Quem já se cadastrou vai direto pro grupo; quem não, vê o cadastro */
 export function entrar(canal: Canal, origem: string) {
   const url = linkGuardado(canal);
-  if (url) window.open(url, "_blank", "noopener");
-  else abrirCadastro(canal, origem);
+  rastrear("clique", { c: canal, o: origem });
+  if (url) {
+    rastrear("grupo", { c: canal, o: origem });
+    window.open(url, "_blank", "noopener");
+  } else abrirCadastro(canal, origem);
 }
 
 /** Link/botão que passa pelo cadastro antes de abrir o grupo */
@@ -119,7 +123,7 @@ export function LeadModal() {
       const r = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, email, telefone: tel, canal, consentimento: ok, origem, site }),
+        body: JSON.stringify({ nome, email, telefone: tel, canal, consentimento: ok, origem, site, v: visitante() }),
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.error || "Não deu pra enviar. Tente de novo.");
@@ -146,7 +150,16 @@ export function LeadModal() {
           <div className="gate__done">
             <h2>Tudo certo!</h2>
             <p>Seu acesso ao {nomeCanal} está liberado.</p>
-            <a className="gate__go" href={url} target="_blank" rel="noopener" onClick={() => setAberto(false)}>
+            <a
+              className="gate__go"
+              href={url}
+              target="_blank"
+              rel="noopener"
+              onClick={() => {
+                rastrear("grupo", { c: canal, o: origem });
+                setAberto(false);
+              }}
+            >
               {canal === "whatsapp" ? <WhatsIcon size={18} /> : <TelegramIcon size={18} />}
               Abrir {canal === "whatsapp" ? "o WhatsApp" : "o Telegram"}
             </a>

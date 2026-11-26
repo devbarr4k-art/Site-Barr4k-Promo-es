@@ -6,6 +6,7 @@ import LoginForm from "./LoginForm";
 import Sair from "./Sair";
 import Excluir from "./Excluir";
 import { Paginacao } from "./Paginacao";
+import { Funil } from "./Funil";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Leads · ACHOU", robots: { index: false, follow: false } };
@@ -28,7 +29,7 @@ const fmtTel = (t: string) => {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; p?: string; canal?: string }>;
+  searchParams: Promise<{ q?: string; p?: string; canal?: string; f?: string }>;
 }) {
   if (!(await isLoggedIn())) return <LoginForm />;
 
@@ -85,6 +86,8 @@ export default async function AdminPage({
         <div><b>{tg.toLocaleString("pt-BR")}</b><span>Telegram</span></div>
         <div><b>{(todos.length - tg).toLocaleString("pt-BR")}</b><span>WhatsApp</span></div>
       </section>
+
+      <Funil periodo={sp.f ?? "7"} />
 
       <form className="adm__filtros" action="/admin">
         <input name="q" defaultValue={q} placeholder="Buscar por nome, e-mail ou telefone" aria-label="Buscar" />

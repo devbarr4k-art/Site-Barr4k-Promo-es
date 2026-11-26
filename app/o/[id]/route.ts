@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { db, lerConfig } from "@/lib/automacao/db";
+import { dispositivo, ehRobo, registrar } from "@/lib/eventos";
 
 export const dynamic = "force-dynamic";
 
 // Link curto dos posts: achou.io/o/MLB123 → produto no Mercado Livre com o código de afiliado da ACHOU.
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id.toUpperCase();
   if (!/^MLBU?\d{5,15}$/.test(id)) return NextResponse.redirect("https://www.mercadolivre.com.br", 302);
+  const ua = req.headers.get("user-agent");
+  // conta o clique (robôs de pré-visualização do Telegram/WhatsApp não contam)
+  if (!ehRobo(ua)) await registrar("oferta", { produto: id, dispositivo: dispositivo(ua) });
   const { data } = await db()
     .from("auto_ofertas")
     .select("link_afiliado")

@@ -30,7 +30,8 @@ export default function Privacidade() {
         <li>
           <b>Dados de navegação:</b> ao acessar o site <b>achou.io</b>, podemos coletar dados técnicos anônimos (como tipo
           de dispositivo, navegador e páginas acessadas) por meio de ferramentas de monitoramento para melhorar o
-          desempenho e a experiência da plataforma.
+          desempenho e a experiência da plataforma. Para contar visitas e cliques, guardamos no seu navegador um código
+          aleatório que não identifica você; não registramos seu IP.
         </li>
       </ul>
 

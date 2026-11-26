@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { blobPronto, limparEmail, limparNome, limparTelefone, salvarLead, type Canal } from "@/lib/leads";
 import { LINKS } from "@/lib/config";
+import { dispositivo, registrar } from "@/lib/eventos";
 
 // Recebe o cadastro e só então devolve o link do grupo (o link não fica no HTML da página).
 export async function POST(req: Request) {
@@ -33,6 +34,13 @@ export async function POST(req: Request) {
     if (!blobPronto()) console.error("[lead] BLOB_READ_WRITE_TOKEN ausente: lead NÃO foi salvo", { canal });
     else return NextResponse.json({ error: "Não deu pra salvar agora. Tente de novo em instantes." }, { status: 500 });
   }
+
+  await registrar("cadastro", {
+    visitante: typeof body.v === "string" && /^[a-z0-9]{8,40}$/i.test(body.v) ? body.v : null,
+    canal,
+    origem: typeof body.origem === "string" ? body.origem : null,
+    dispositivo: dispositivo(req.headers.get("user-agent")),
+  });
 
   const url = canal === "whatsapp" ? process.env.WHATSAPP_URL || LINKS.whatsapp : process.env.TELEGRAM_URL || LINKS.telegram;
   return NextResponse.json({ ok: true, url });

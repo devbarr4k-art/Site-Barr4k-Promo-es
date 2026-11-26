@@ -4,6 +4,7 @@ import { Motion } from "@/components/Motion";
 import { PhoneFeed } from "@/components/PhoneFeed";
 import { IndexList } from "@/components/IndexList";
 import { GateLink, LeadModal } from "@/components/LeadGate";
+import { Rastreio } from "@/components/Rastreio";
 import { Particles } from "@/components/Particles";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
 import { DEPOIMENTOS, DESTAQUE, LINKS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
@@ -237,6 +238,7 @@ export default function Home() {
     <>
       <Motion />
       <LeadModal />
+      <Rastreio />
       <div className="grain" aria-hidden="true" />
 
       <header className="nav">
