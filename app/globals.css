@@ -2688,3 +2688,334 @@ ul.hero__proof--v2 b {
   opacity: 0.6;
   cursor: wait;
 }
+
+/* ── Painel: abas Leads / Automação */
+.adm__top {
+  flex-wrap: wrap;
+}
+.auto__nav {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #111;
+  border: 1px solid var(--line);
+}
+.auto__nav a {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--g1);
+}
+.auto__nav a[aria-current="page"] {
+  background: var(--lime);
+  color: #050505;
+  font-weight: 600;
+}
+
+/* ── Automação */
+.auto__msg {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(198, 255, 0, 0.08);
+  border: 1px solid rgba(198, 255, 0, 0.35);
+  color: var(--lime);
+  font-size: 14px;
+}
+.adm__aviso a {
+  color: var(--lime);
+  text-decoration: underline;
+}
+.auto__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #101010;
+  border: 1px solid var(--line);
+}
+.auto__robo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.auto__robo div {
+  display: grid;
+  line-height: 1.3;
+}
+.auto__robo small {
+  color: var(--g1);
+  font-size: 13px;
+}
+.auto__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #444;
+}
+.auto__dot.is-on {
+  background: var(--lime);
+  box-shadow: 0 0 12px var(--lime);
+}
+.auto__toggle {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: #161616;
+  color: var(--g1);
+  font: 600 14px var(--display);
+  cursor: pointer;
+}
+.auto__toggle.is-on {
+  background: rgba(198, 255, 0, 0.12);
+  border-color: rgba(198, 255, 0, 0.5);
+  color: var(--lime);
+}
+.auto__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.auto__abas {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 20px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+}
+.auto__abas a,
+.auto__filtros a {
+  flex: none;
+  padding: 10px 14px;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  color: var(--g1);
+  white-space: nowrap;
+}
+.auto__abas a[aria-current="page"] {
+  border-color: var(--lime);
+  color: var(--off);
+}
+.auto__filtros {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.auto__filtros a {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.auto__filtros a[aria-current="page"] {
+  border-color: rgba(198, 255, 0, 0.5);
+  background: rgba(198, 255, 0, 0.08);
+  color: var(--lime);
+}
+.auto__filtros span {
+  margin-left: 4px;
+  opacity: 0.7;
+}
+.auto__secao {
+  display: grid;
+  gap: 16px;
+}
+.auto__nova summary {
+  cursor: pointer;
+  color: var(--lime);
+  font-weight: 600;
+  font-size: 14px;
+}
+.auto__nova[open] summary {
+  margin-bottom: 10px;
+}
+.auto__form {
+  display: grid;
+  gap: 10px;
+}
+.auto__campo {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+  background: #0a0a0a;
+  color: var(--off);
+  font: inherit;
+  font-size: 15px;
+}
+.auto__campo:focus {
+  outline: none;
+  border-color: var(--lime);
+}
+textarea.auto__campo {
+  resize: vertical;
+  line-height: 1.5;
+}
+.auto__mono {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 13px;
+}
+.auto__lista {
+  display: grid;
+  gap: 12px;
+}
+.auto__oferta {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #101010;
+  border: 1px solid var(--line);
+}
+.auto__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--g1);
+}
+.auto__meta a {
+  margin-left: auto;
+  color: var(--lime);
+}
+.auto__motivo {
+  font-size: 13px;
+  color: #ff8a80;
+}
+.auto__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.auto__vazio {
+  padding: 28px 16px;
+  border-radius: 16px;
+  border: 1px dashed var(--line-2);
+  text-align: center;
+  color: var(--g1);
+  font-size: 14px;
+}
+.auto__linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px auto;
+  gap: 8px;
+}
+.auto__bloco {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #101010;
+  border: 1px solid var(--line);
+}
+.auto__bloco h2 {
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+.auto__bloco label {
+  display: grid;
+  gap: 6px;
+}
+.auto__ajuda {
+  font-size: 13px;
+  color: var(--g1);
+}
+.auto__estado {
+  font-size: 14px;
+  color: var(--lime);
+}
+.auto__canais {
+  display: grid;
+  gap: 6px;
+}
+.auto__canais li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #0a0a0a;
+}
+.auto__remover {
+  border: 0;
+  background: none;
+  color: #ff8a80;
+  font-size: 13px;
+  cursor: pointer;
+}
+.auto__check {
+  display: flex !important;
+  grid-template-columns: none;
+  align-items: flex-start;
+  gap: 10px !important;
+  font-size: 14px;
+}
+.auto__check input {
+  margin-top: 3px;
+  accent-color: var(--lime);
+}
+.auto__grade {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.auto__grade span {
+  font-size: 12.5px;
+  color: var(--g1);
+}
+.auto__salvar {
+  position: sticky;
+  bottom: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+.auto__salvar .adm__btn {
+  height: 46px;
+  padding: 0 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+.adm__btn:disabled {
+  opacity: 0.6;
+}
+@media (max-width: 700px) {
+  .adm {
+    padding: 20px 14px 48px;
+  }
+  .adm__top {
+    gap: 10px;
+  }
+  .adm__actions {
+    margin-left: 0;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .auto__linha,
+  .auto__grade {
+    grid-template-columns: 1fr 1fr;
+  }
+  .auto__linha .auto__campo:first-child {
+    grid-column: 1 / -1;
+  }
+  .auto__acoes .adm__btn,
+  .auto__acoes form {
+    flex: 1;
+  }
+  .auto__acoes .adm__btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .auto__salvar .adm__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

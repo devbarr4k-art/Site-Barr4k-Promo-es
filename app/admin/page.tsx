@@ -61,9 +61,11 @@ export default async function AdminPage({
     <main className="adm">
       <header className="adm__top">
         <Logo size={24} />
-        <span className="adm__title">Leads</span>
+        <nav className="auto__nav" aria-label="Painel">
+          <a href="/admin" aria-current="page">Leads</a>
+          <a href="/admin/automacao">Automação</a>
+        </nav>
         <div className="adm__actions">
-          <a className="adm__btn adm__btn--ghost" href="https://achou-ofertas.vercel.app/painel" target="_blank" rel="noopener">Automação de ofertas ↗</a>
           <a className="adm__btn" href="/api/admin/leads">Exportar CSV</a>
           <Sair />
         </div>
