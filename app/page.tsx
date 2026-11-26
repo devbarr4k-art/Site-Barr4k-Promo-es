@@ -163,7 +163,7 @@ function Tempestade() {
               style={{ left: `calc(50% + ${x}vw)`, top: `calc(50% + ${y}vh)` }}
             >
               {tipo === "img" ? (
-                <Image src={OFERTAS[Number(c)].img} alt="" width={OFERTAS[Number(c)].w} height={OFERTAS[Number(c)].h} sizes="300px" />
+                <Image src={OFERTAS[Number(c)].img} alt="" width={OFERTAS[Number(c)].w} height={OFERTAS[Number(c)].h} sizes="300px" loading="eager" />
               ) : (
                 <span>{c}</span>
               )}
