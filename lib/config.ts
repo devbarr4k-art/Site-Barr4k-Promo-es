@@ -56,18 +56,23 @@ export const brl = (n: number) =>
 
 export const desconto = (o: Pick<Oferta, "de" | "por">) => Math.round((1 - o.por / o.de) * 100);
 
-// Membros do grupo que autorizaram o uso do nome. Só entra aqui o que é real:
-// nome, foto e o produto que a pessoa comprou. "texto" só com a fala de verdade da pessoa.
-// foto: foto de unboxing que a própria pessoa mandou (public/depoimentos)
-export type Depoimento = { nome: string; cidade: string; produto: string; texto?: string; foto?: string; foco?: string; economia?: number };
+// Membros do grupo: nick, fala e foto enviados por eles (26/11/2026). Fala sem edição.
+// Faltando nick: smartwatch (av-smartwatch), geladeira (av-geladeira); headset falta nick e fala (av-headset).
+export type Depoimento = {
+  nome: string;
+  cidade?: string;
+  produto: string;
+  texto: string;
+  avatar: string;
+  foto?: string;
+  foco?: string;
+  economia?: number;
+};
 
 export const DEPOIMENTOS: Depoimento[] = [
-  { nome: "Luiz P.", cidade: "Lavras, MG", produto: "SSD Kingston NV3", texto: "Peguei no cupom que mandaram aqui no grupo e saiu muito abaixo do preço normal! Chegou certinho em Lavras, já instalei e o PC tá voando. Economia absurda.", foto: "/depoimentos/unbox-luiz.webp", foco: "50% 74%", economia: 350 },
-  { nome: "Rafaella V.", cidade: "Três Pontas, MG", produto: "Smartwatch", texto: "Comprei na oferta relâmpago que soltaram aqui e não me arrependo. Chegou rapidinho em Três Pontas, super leve pro treino e saiu pela metade do preço das lojas físicas.", foto: "/depoimentos/unbox-rafaella.webp", foco: "50% 62%", economia: 300 },
-  { nome: "Lucas B.", cidade: "São Paulo, SP", produto: "Monitor Alienware 27”", texto: "Tava namorando esse monitor há meses e só consegui pegar por causa do alerta daqui. Chegou no dia seguinte em SP, zero dead pixel e preço imbatível.", foto: "/depoimentos/unbox-lucas.webp", economia: 600 },
-  { nome: "Vitória R.", cidade: "Belo Horizonte, MG", produto: "iPhone", texto: "Confesso que fiquei com medo pelo preço estar tão bom, mas chegou lacrado e original aqui em BH! Ainda bem que ativei as notificações do grupo a tempo.", foto: "/depoimentos/unbox-vitoria.webp", foco: "50% 45%", economia: 250 },
-  { nome: "Leandro M.", cidade: "Jundiaí, SP", produto: "Smart TV TCL", texto: "Melhor compra que fiz no ano! Economizei quase 600 reais com o link do grupo. A imagem é absurda de boa e chegou bem antes do prazo aqui em Jundiaí.", foto: "/depoimentos/unbox-leandro.webp", economia: 400 },
-  { nome: "Carol Y.", cidade: "Alfenas, MG", produto: "Geladeira Frost Free", texto: "Consegui fechar no menor preço histórico que vocês avisaram! Veio impecável, super silenciosa e a entrega em Alfenas foi super tranquila.", foto: "/depoimentos/unbox-carol.webp", foco: "50% 22%", economia: 500 },
-  { nome: "André M.", cidade: "Campinas, SP", produto: "Headset H3 Pro", texto: "Paguei preço de fone básico nesse modelo com cancelamento de ruído graças à promo postada aqui. Isola tudo e a bateria dura muito, valeu demais!", foto: "/depoimentos/unbox-andre.webp", foco: "50% 30%", economia: 200 },
-  { nome: "Julia M.", cidade: "Ouro Preto, MG", produto: "Fone Occiam P91", texto: "Baratinho demais pelo que entrega! Peguei no link promocional, encaixa super bem no ouvido e tem um grave muito bom. Já indiquei o grupo pros meus amigos.", foto: "/depoimentos/unbox-julia.webp", economia: 60 },
+  { nome: "JkZzz", cidade: "São Paulo, SP", produto: "Monitor Alienware 27”", texto: "peguei esse 320hz por preço de 144 kkkkkkk até agora não acredito que deu bom, chegou no dia seguinte aqui em SP, alerta salvou", avatar: "/depoimentos/av-jkzzz.webp", foto: "/depoimentos/unbox-lucas.webp", economia: 600 },
+  { nome: "Vitória R.", cidade: "Belo Horizonte, MG", produto: "iPhone", texto: "Mesmo sendo a ACHOU ainda desconfiei do preço por estar tão bom, mas chegou lacrado e com garantia do mercado livre aqui em BH! ainda bem que ativei as notis do grupo", avatar: "/depoimentos/av-vitoria.webp", foto: "/depoimentos/unbox-vitoria.webp", foco: "50% 45%", economia: 250 },
+  { nome: "Lipezera", produto: "SSD Kingston NV3", texto: "Peguei no cupom aqui do grupo, slk tava na hora de dar um upgrade ná máquina! saiu bem mais barato que na KabuM, já instalei e o PC tá voando", avatar: "/depoimentos/av-lipezera.webp", foto: "/depoimentos/unbox-luiz.webp", foco: "50% 74%", economia: 350 },
+  { nome: "Vitinho", produto: "Smart TV TCL", texto: "Melhor compra do ano! enrolei pra comprar mas bastaram 2 dias no grupo que saiu o alerta da promoção e não tiver como perder, cheguei a economizar quase 600 reais com o link eu acho.", avatar: "/depoimentos/av-vitinho.webp", foto: "/depoimentos/unbox-leandro.webp" },
+  { nome: "jujubs", produto: "Fone Occiam P91", texto: "Baratinho demais pelo que entrega! Peguei no link do meli aqui do grupo, encaixa certinho no ouvido e tem um grave muito bom. mandei no grupo da família pra entrarem também!", avatar: "/depoimentos/av-jujubs.webp", foto: "/depoimentos/unbox-julia.webp", economia: 60 },
 ];

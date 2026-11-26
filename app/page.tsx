@@ -188,12 +188,10 @@ function CardDepoimento({ d }: { d: Depoimento }) {
         </div>
       )}
       <div className="dep__head">
-        <span className="dep__ini" aria-hidden="true">
-          {d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2)}
-        </span>
+        <Image className="dep__av-foto" src={d.avatar} alt="" width={104} height={104} sizes="52px" />
         <span className="dep__quem2">
           <b>{d.nome}</b>
-          <span className="dep__comprou">{d.cidade}</span>
+          {d.cidade && <span className="dep__comprou">{d.cidade}</span>}
         </span>
       </div>
       {d.texto && <blockquote>“{d.texto}”</blockquote>}
@@ -211,7 +209,7 @@ function CardDepoimento({ d }: { d: Depoimento }) {
 }
 
 // Nomes/falas/fotos estavam trocados (26/11/2026): só volta com os dados certos de cada pessoa.
-const MOSTRAR_DEPOIMENTOS = false;
+const MOSTRAR_DEPOIMENTOS = true;
 
 function Depoimentos() {
   return (

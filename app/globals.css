@@ -2604,3 +2604,12 @@ ul.hero__proof--v2 b {
   font-size: 14.5px;
   color: var(--g1);
 }
+
+.dep__av-foto {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--lime);
+}
