@@ -7,12 +7,15 @@ const PERIODOS = [
   ["hoje", "Hoje"],
   ["7", "7 dias"],
   ["30", "30 dias"],
+  ["90", "90 dias"],
+  ["total", "Total"],
 ] as const;
 
 function inicio(p: string) {
+  if (p === "total") return new Date("2020-01-01T00:00:00Z");
   const hojeSP = new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" }); // AAAA-MM-DD
   const meiaNoite = new Date(`${hojeSP}T00:00:00-03:00`);
-  const dias = p === "30" ? 29 : p === "7" ? 6 : 0;
+  const dias = p === "hoje" ? 0 : Number(p) - 1;
   return new Date(meiaNoite.getTime() - dias * 86_400_000);
 }
 
