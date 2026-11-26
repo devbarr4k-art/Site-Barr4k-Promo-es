@@ -1502,9 +1502,7 @@ h2 {
   .chat--achou {
     scale: 1;
   }
-  .chat--achou {
-    order: -1;
-  }
+
   .chat__window {
     height: 260px;
   }
@@ -2455,4 +2453,29 @@ ul.hero__proof svg {
   .foot__links {
     gap: 8px 16px;
   }
+}
+
+/* selos do topo: pílulas com check em círculo lima */
+ul.hero__proof {
+  gap: 10px;
+}
+ul.hero__proof li {
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px 0 6px;
+  border-radius: 999px;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--off);
+}
+ul.hero__proof svg {
+  box-sizing: content-box;
+  width: 12px;
+  height: 12px;
+  padding: 6px;
+  border-radius: 50%;
+  background: var(--lime);
+  color: #050505;
 }
