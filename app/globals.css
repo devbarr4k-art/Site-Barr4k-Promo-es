@@ -2613,3 +2613,17 @@ ul.hero__proof--v2 b {
   object-fit: cover;
   border: 2px solid var(--lime);
 }
+
+/* cards de depoimento todos com a mesma altura; rodapé sempre embaixo */
+.deps__set {
+  align-items: stretch !important;
+}
+.dep--membro {
+  height: auto;
+}
+.dep--membro blockquote {
+  flex: 1;
+}
+.dep__pe {
+  margin-top: auto;
+}
