@@ -198,7 +198,8 @@ export function LeadModal() {
             <label className="gate__check">
               <input type="checkbox" checked={ok} onChange={(e) => setOk(e.target.checked)} />
               <span>
-                Aceito receber ofertas da ACHOU e concordo com a{" "}
+                Aceito receber ofertas da ACHOU e concordo com os{" "}
+                <a href="/termos" target="_blank">Termos de Uso</a> e a{" "}
                 <a href="/privacidade" target="_blank">Política de Privacidade</a>.
               </span>
             </label>

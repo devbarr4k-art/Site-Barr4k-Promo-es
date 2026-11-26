@@ -462,7 +462,7 @@ export default function Home() {
             <p>A gente acha. Você economiza.</p>
           </div>
           <nav className="foot__links" aria-label="Rodapé">
-            <a href="#">Termos de uso</a>
+            <a href="/termos">Termos de uso</a>
             <a href="/privacidade">Privacidade</a>
             <a href={LINKS.instagram}>Instagram</a>
             <a href={LINKS.tiktok}>TikTok</a>
