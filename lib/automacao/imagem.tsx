@@ -1,11 +1,10 @@
-// Arte do post no visual do achou.io: fundo preto, lima, logo ACHOU, foto em cartão branco e QR do canal.
+// Arte do post no visual do achou.io: fundo preto, lima, logo ACHOU, foto em cartão branco e o @ do canal.
 import { readFile } from "fs/promises";
 import path from "path";
 import { ImageResponse } from "next/og";
-import QRCode from "qrcode";
 
 const W = 1000;
-const H = 1120;
+const H = 1100;
 const LIME = "#c6ff00";
 const PRETO = "#050505";
 const TINTA = "#0b0b0b";
@@ -26,19 +25,6 @@ function carregarFontes() {
     f("Archivo-BlackItalic.ttf", "Archivo", 900, "italic"),
   ]);
   return fontes;
-}
-
-/** QR code como SVG (um retângulo por quadradinho). */
-function qr(texto: string, lado: number) {
-  const m = QRCode.create(texto, { errorCorrectionLevel: "M" }).modules;
-  const n = m.size;
-  const rects = [];
-  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (m.get(x, y)) rects.push(<rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} fill={TINTA} />);
-  return (
-    <svg width={lado} height={lado} viewBox={`0 0 ${n} ${n}`}>
-      {rects}
-    </svg>
-  );
 }
 
 /** Símbolo da marca (check que vira seta, sobre lima), igual ao do site. */
@@ -99,56 +85,47 @@ export async function fotoComMarca(src: string, canal: string, info: InfoArte = 
           )}
         </div>
 
-        {/* foto em cartão branco */}
+        {/* foto em cartão branco, grande */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginTop: 28,
-            height: 560,
+            marginTop: 24,
+            height: 700,
             borderRadius: 40,
             background: "#ffffff",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={foto} alt="" style={{ width: 500, height: 500, objectFit: "contain" }} />
+          <img src={foto} alt="" style={{ width: 860, height: 660, objectFit: "contain" }} />
         </div>
 
         {/* preço */}
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: 30, height: 150 }}>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {info.precoAntigo ? (
-              <div style={{ display: "flex", fontSize: 34, fontWeight: 600, color: CINZA, textDecoration: "line-through" }}>{info.precoAntigo}</div>
-            ) : (
-              <div style={{ display: "flex", fontSize: 30, fontWeight: 600, color: CINZA }}>por apenas</div>
-            )}
-            <div style={{ display: "flex", fontFamily: "Poppins", fontSize: !info.preco ? 64 : info.preco.length > 12 ? 88 : 108, fontWeight: 800, color: LIME, letterSpacing: -3, lineHeight: 1.05 }}>
-              {info.preco ?? "Confira o preço"}
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22, padding: "12px 22px", borderRadius: 999, border: `2px solid ${LINHA}`, fontSize: 26, fontWeight: 600, color: OFF }}>
-            Mercado Livre
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginTop: 18, height: 150 }}>
+          {info.precoAntigo ? (
+            <div style={{ display: "flex", fontSize: 34, fontWeight: 600, color: CINZA, textDecoration: "line-through" }}>{info.precoAntigo}</div>
+          ) : null}
+          <div style={{ display: "flex", fontFamily: "Poppins", fontSize: !info.preco ? 64 : info.preco.length > 12 ? 96 : 112, fontWeight: 800, color: LIME, letterSpacing: -3, lineHeight: 1.05 }}>
+            {info.preco ?? "Confira o preço"}
           </div>
         </div>
 
-        {/* rodapé do canal */}
+        {/* rodapé curto */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             marginTop: "auto",
-            paddingTop: 26,
+            paddingTop: 18,
             borderTop: `2px solid ${LINHA}`,
+            fontSize: 28,
+            fontWeight: 600,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 40, fontWeight: 800, color: OFF, letterSpacing: -1 }}>Entre no canal e economize</div>
-            <div style={{ display: "flex", fontSize: 28, fontWeight: 600, color: CINZA, marginTop: 6 }}>Promoções e cupons todos os dias no Telegram</div>
-            <div style={{ display: "flex", marginTop: 14, fontSize: 36, fontWeight: 800, color: LIME }}>t.me/{nome}</div>
-          </div>
-          <div style={{ display: "flex", padding: 10, background: "#ffffff", borderRadius: 18 }}>{qr(`https://t.me/${nome}`, 150)}</div>
+          <div style={{ display: "flex", color: CINZA }}>Mais ofertas todo dia no Telegram</div>
+          <div style={{ display: "flex", fontWeight: 800, color: LIME }}>@{nome}</div>
         </div>
       </div>
     ),
