@@ -2385,3 +2385,10 @@ ul.hero__proof li {
 ul.hero__proof svg {
   color: var(--lime);
 }
+
+.dep__pe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}

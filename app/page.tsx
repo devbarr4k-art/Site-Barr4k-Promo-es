@@ -184,7 +184,7 @@ function CardDepoimento({ d }: { d: Depoimento }) {
     <figure className="dep dep--membro">
       {d.foto && (
         <div className="dep__unbox">
-          <Image src={d.foto} alt={`${d.produto} que ${d.nome.split(" ")[0]} recebeu`} fill sizes="(max-width: 899px) 310px, 400px" />
+          <Image src={d.foto} alt={`${d.produto} que ${d.nome.split(" ")[0]} recebeu`} fill sizes="(max-width: 899px) 310px, 400px" style={d.foco ? { objectPosition: d.foco } : undefined} />
         </div>
       )}
       <div className="dep__head">
@@ -197,7 +197,15 @@ function CardDepoimento({ d }: { d: Depoimento }) {
         </span>
       </div>
       {d.texto && <blockquote>“{d.texto}”</blockquote>}
-      <figcaption className="dep__produto">Comprou: {d.produto}</figcaption>
+      <div className="dep__pe">
+        <figcaption className="dep__produto">Comprou: {d.produto}</figcaption>
+        {d.economia ? (
+          <span className="dep__eco">
+            <small>economizou</small>
+            {brl(d.economia)}
+          </span>
+        ) : null}
+      </div>
     </figure>
   );
 }
