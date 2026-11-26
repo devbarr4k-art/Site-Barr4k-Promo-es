@@ -56,6 +56,11 @@ export async function salvarConfig(f: FormData) {
 
   const { error } = await db().from("auto_config").update(novo).eq("id", 1);
   if (error) voltar(`Não salvou: ${error.message}`, "config", true);
+  if (novo.ml_matt_tool) {
+    // os posts que ficaram parados por falta do link entram de novo no próximo minuto
+    await db().from("auto_ofertas").delete().eq("status", "erro").ilike("motivo", "%link de afiliado%");
+    await db().from("auto_grupos").update({ ultimo_post: 0 }).eq("tipo", "origem");
+  }
   voltar("Configurações salvas.", "config");
 }
 
