@@ -38,6 +38,13 @@ export function montar(template: string, v: Record<string, string>) {
 
 const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
+// a chamada é só o nome do produto de novo? (ignora emoji, pontuação e maiúsculas)
+const so = (x: string) => norm(x).replace(/[^a-z0-9]+/g, "");
+const semelhante = (a: string, b: string) => {
+  const x = so(a), y = so(b);
+  return !x || x === y || y.startsWith(x.slice(0, 24)) || x.startsWith(y.slice(0, 24));
+};
+
 export type Resultado =
   | { ok: true; texto: string; linkOriginal: string; linkAfiliado: string }
   | { ok: false; motivo: string; linkOriginal?: string };
@@ -66,7 +73,7 @@ export async function processar(
     .map((l) => l.replace(/[*_~`]/g, "").trim())
     .find((l) => l.length >= 6) ?? "";
   const usaChamada =
-    chamada && !/https?:|R\$|cupom/i.test(chamada) && norm(chamada) !== norm(titulo) && !norm(titulo).startsWith(norm(chamada).slice(0, 20));
+    chamada && !/https?:|R\$|cupom/i.test(chamada) && !semelhante(chamada, titulo);
   const texto = montar(cfg.template || TEMPLATE_PADRAO, {
     chamada: usaChamada ? chamada : "",
     titulo,

@@ -34,7 +34,12 @@ export async function lerParamsAfiliado(link: string) {
 }
 
 const decod = (s: string) => s.replace(/&amp;/g, "&");
-const desesc = (s: string) => s.replace(/\u002F/g, "/").replace(/&amp;/g, "&");
+const desesc = (s: string) =>
+  s
+    .replace(/\u002F/g, "/")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&amp;/g, "&");
 
 export type Produto = { url: string; imagem: string | null; titulo: string | null; preco: number | null };
 
