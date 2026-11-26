@@ -2648,3 +2648,48 @@ ul.hero__proof--v2 b {
   opacity: 0.4;
   cursor: wait;
 }
+
+/* popup de confirmação do painel */
+.adm__confirm {
+  width: min(400px, calc(100% - 32px));
+}
+.adm__confirm .gate__box {
+  border-color: rgba(194, 73, 63, 0.35);
+  background: radial-gradient(120% 70% at 100% 0%, rgba(194, 73, 63, 0.18), transparent 60%), #101010;
+}
+.adm__confirm h2 {
+  font-size: 26px;
+}
+.adm__confirm b {
+  color: var(--off);
+}
+.adm__confirm-ico {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(194, 73, 63, 0.15);
+  color: #ff8a80;
+}
+.adm__confirm-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+.adm__confirm-acoes .adm__btn {
+  height: 44px;
+  padding: 0 20px;
+}
+.adm__btn--perigo {
+  background: #c2493f;
+  color: #fff;
+}
+.adm__btn--perigo:hover {
+  background: #d4574c;
+}
+.adm__btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
