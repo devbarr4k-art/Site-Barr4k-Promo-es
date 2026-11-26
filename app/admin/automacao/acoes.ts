@@ -73,6 +73,13 @@ export async function alternarAtivo(f: FormData) {
   voltar(ativo ? "Disparo ligado." : "Disparo desligado.");
 }
 
+export async function alternarAprovacao(f: FormData) {
+  await guarda();
+  const liga = f.get("aprovacao") === "1";
+  await db().from("auto_config").update({ aprovacao_manual: liga }).eq("id", 1);
+  voltar(liga ? "Aprovação manual ligada: as ofertas novas esperam você aprovar." : "Aprovação manual desligada: as ofertas novas vão direto pra fila de envio.");
+}
+
 export async function addCanal(f: FormData) {
   await guarda();
   const chat = nomeCanal(txt(f, "chat"));

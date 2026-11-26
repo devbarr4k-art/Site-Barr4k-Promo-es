@@ -3073,3 +3073,6 @@ textarea.auto__campo {
   .fun { padding: 16px; }
   .fun__cards { grid-template-columns: 1fr; }
 }
+
+.auto__toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 700px) { .auto__toggles { width: 100%; } .auto__toggles form, .auto__toggles button { flex: 1; } }

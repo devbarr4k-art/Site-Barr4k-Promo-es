@@ -14,6 +14,7 @@ import { BotaoResetar } from "./BotaoResetar";
 import {
   addCanal,
   addOferta,
+  alternarAprovacao,
   alternarAtivo,
   enviarAgora,
   mudarStatus,
@@ -141,10 +142,21 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
             </small>
           </div>
         </div>
-        <form action={alternarAtivo}>
-          <input type="hidden" name="ativo" value={cfg.ativo ? "0" : "1"} />
-          <button className={`auto__toggle ${cfg.ativo ? "is-on" : ""}`}>{cfg.ativo ? "Disparo ligado" : "Disparo desligado"}</button>
-        </form>
+        <div className="auto__toggles">
+          <form action={alternarAprovacao}>
+            <input type="hidden" name="aprovacao" value={cfg.aprovacao_manual ? "0" : "1"} />
+            <button
+              className={`auto__toggle ${cfg.aprovacao_manual ? "is-on" : ""}`}
+              title={cfg.aprovacao_manual ? "As ofertas esperam você aprovar" : "As ofertas vão direto pra fila de envio"}
+            >
+              {cfg.aprovacao_manual ? "Aprovação manual ligada" : "Aprovação manual desligada"}
+            </button>
+          </form>
+          <form action={alternarAtivo}>
+            <input type="hidden" name="ativo" value={cfg.ativo ? "0" : "1"} />
+            <button className={`auto__toggle ${cfg.ativo ? "is-on" : ""}`}>{cfg.ativo ? "Disparo ligado" : "Disparo desligado"}</button>
+          </form>
+        </div>
       </section>
 
       {faltando.length > 0 && (
@@ -380,10 +392,7 @@ function Config({ cfg }: { cfg: Awaited<ReturnType<typeof lerConfig>> }) {
 
       <div className="auto__bloco">
         <h2>Quando postar</h2>
-        <label className="auto__check">
-          <input type="checkbox" name="aprovacao_manual" defaultChecked={cfg.aprovacao_manual} />
-          Ofertas capturadas esperam eu aprovar antes de ir pra fila de envio
-        </label>
+        <p className="auto__ajuda">Aprovação manual e disparo ligam e desligam nos botões lá em cima.</p>
         <div className="auto__grade">
           <label>
             <span>Começa às (h)</span>
