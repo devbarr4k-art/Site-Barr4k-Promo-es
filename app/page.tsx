@@ -198,7 +198,7 @@ function CardDepoimento({ d }: { d: Depoimento }) {
       </div>
       {d.texto && <blockquote>“{d.texto}”</blockquote>}
       <div className="dep__pe">
-        <figcaption className="dep__produto">Comprou: {d.produto}</figcaption>
+        <span className="dep__produto">Comprou: {d.produto}</span>
         {d.economia ? (
           <span className="dep__eco">
             <small>economizou</small>
