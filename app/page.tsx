@@ -348,7 +348,7 @@ export default function Home() {
                 <span className="chat__avatar chat__avatar--achou"><Bolt size={40} round /></span>
                 <span>
                   <strong>ACHOU Ofertas</strong>
-                  <small>canal · 3 ofertas hoje</small>
+                  <small>canal · 9 ofertas hoje</small>
                 </span>
               </header>
               <div className="chat__window chat__window--calm">
@@ -369,7 +369,7 @@ export default function Home() {
               <ul className="chat__verdict chat__verdict--good">
                 <li><Check /> link conferido</li>
                 <li><Check /> menor preço</li>
-                <li><Check /> 3 mensagens hoje</li>
+                <li><Check /> 9 mensagens hoje</li>
               </ul>
             </div>
 
@@ -402,7 +402,7 @@ export default function Home() {
           </div>
           <div className="stat">
             <p className="stat__num">
-              <span className="count" data-from="214" data-to="5">5</span>
+              <span className="count" data-from="214" data-to="9">9</span>
               <span className="stat__of">/dia</span>
             </p>
             <h3>Zero spam</h3>
@@ -435,7 +435,7 @@ export default function Home() {
             </details>
             <details>
               <summary>Vou receber mensagem demais?</summary>
-              <p>Não. São de 3 a 6 ofertas por dia, nos horários em que as lojas mais baixam preço. Ninguém do grupo pode mandar mensagem, então não tem conversa paralela.</p>
+              <p>Não. São de 6 a 12 ofertas por dia, nos horários em que as lojas mais baixam preço. Ninguém do grupo pode mandar mensagem, então não tem conversa paralela.</p>
             </details>
             <details>
               <summary>Vocês vendem os produtos?</summary>
