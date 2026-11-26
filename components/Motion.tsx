@@ -12,6 +12,7 @@ const fmt = (n: number) =>
 
 export function Motion() {
   useEffect(() => {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let lenis: Lenis | null = null;
     const raf = (t: number) => lenis?.raf(t * 1000);
@@ -207,11 +208,36 @@ export function Motion() {
       },
     );
 
-    const onLoad = () => ScrollTrigger.refresh();
-    window.addEventListener("load", onLoad);
+    // F5 volta pra onde a pessoa estava: o navegador restauraria a rolagem antes das seções
+    // fixas (enxurrada, preço caindo) existirem, caindo no lugar errado. Guardamos e restauramos depois.
+    const CHAVE = "achou_scroll";
+    const salvar = () => sessionStorage.setItem(CHAVE, String(window.scrollY));
+    let tentativas = 0;
+    let timer = 0;
+    const restaurar = () => {
+      const y = Number(sessionStorage.getItem(CHAVE));
+      ScrollTrigger.refresh();
+      if (!(y > 0)) return;
+      lenis?.resize();
+      window.scrollTo(0, y);
+      lenis?.scrollTo(y, { immediate: true, force: true });
+      ScrollTrigger.update();
+      // fontes e imagens ainda podem mudar a altura: tenta de novo até chegar lá
+      if (Math.abs(window.scrollY - y) > 4 && ++tentativas < 15) timer = window.setTimeout(restaurar, 120);
+    };
+    const onLoad = () => {
+      window.clearTimeout(timer);
+      tentativas = 0;
+      timer = window.setTimeout(restaurar, 60);
+    };
+    if (document.readyState === "complete") onLoad();
+    else window.addEventListener("load", onLoad);
+    window.addEventListener("pagehide", salvar);
 
     return () => {
       window.removeEventListener("load", onLoad);
+      window.removeEventListener("pagehide", salvar);
+      window.clearTimeout(timer);
       mm.revert();
       gsap.ticker.remove(raf);
       lenis?.destroy();
