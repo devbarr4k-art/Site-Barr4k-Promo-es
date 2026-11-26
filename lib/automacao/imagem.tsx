@@ -1,34 +1,53 @@
-// Arte do post: foto do produto, preço em destaque e faixa do canal com QR code.
+// Arte do post no visual do achou.io: fundo preto, lima, logo ACHOU, foto em cartão branco e QR do canal.
 import { readFile } from "fs/promises";
 import path from "path";
 import { ImageResponse } from "next/og";
 import QRCode from "qrcode";
 
 const W = 1000;
-const H = 1080;
+const H = 1120;
 const LIME = "#c6ff00";
-const PRETO = "#0a0a0a";
-const LARANJA = "#ff6b00";
+const PRETO = "#050505";
+const TINTA = "#0b0b0b";
+const OFF = "#ededE6";
+const CINZA = "#a3a39d";
+const LINHA = "rgba(237,237,230,0.14)";
 
-let fontes: Promise<{ name: string; data: Buffer; weight: 600 | 800; style: "normal" }[]> | null = null;
+type Fonte = { name: string; data: Buffer; weight: 600 | 800 | 900; style: "normal" | "italic" };
+let fontes: Promise<Fonte[]> | null = null;
 function carregarFontes() {
   const pasta = path.join(process.cwd(), "lib/automacao/fontes");
+  const f = (arq: string, name: string, weight: Fonte["weight"], style: Fonte["style"] = "normal") =>
+    readFile(path.join(pasta, arq)).then((data): Fonte => ({ name, data, weight, style }));
   fontes ??= Promise.all([
-    readFile(path.join(pasta, "Poppins-SemiBold.ttf")).then((data) => ({ name: "Poppins", data, weight: 600 as const, style: "normal" as const })),
-    readFile(path.join(pasta, "Poppins-ExtraBold.ttf")).then((data) => ({ name: "Poppins", data, weight: 800 as const, style: "normal" as const })),
+    f("InterTight-SemiBold.ttf", "Tight", 600),
+    f("InterTight-ExtraBold.ttf", "Tight", 800),
+    f("Poppins-ExtraBold.ttf", "Poppins", 800),
+    f("Archivo-BlackItalic.ttf", "Archivo", 900, "italic"),
   ]);
   return fontes;
 }
 
-/** QR code como SVG (um retângulo por quadradinho preto). */
+/** QR code como SVG (um retângulo por quadradinho). */
 function qr(texto: string, lado: number) {
   const m = QRCode.create(texto, { errorCorrectionLevel: "M" }).modules;
   const n = m.size;
   const rects = [];
-  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (m.get(x, y)) rects.push(<rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} fill={PRETO} />);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (m.get(x, y)) rects.push(<rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} fill={TINTA} />);
   return (
     <svg width={lado} height={lado} viewBox={`0 0 ${n} ${n}`}>
       {rects}
+    </svg>
+  );
+}
+
+/** Símbolo da marca (check que vira seta, sobre lima), igual ao do site. */
+function Simbolo({ lado }: { lado: number }) {
+  return (
+    <svg width={lado} height={lado} viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="18" fill={LIME} />
+      <path d="M15 33.5 L26.5 45 L47.5 21.5" fill="none" stroke={TINTA} strokeWidth="6.5" strokeLinecap="square" strokeLinejoin="miter" />
+      <path d="M35.5 20 H48.5 V33" fill="none" stroke={TINTA} strokeWidth="6.5" strokeLinecap="square" strokeLinejoin="miter" />
     </svg>
   );
 }
@@ -51,98 +70,85 @@ export async function fotoComMarca(src: string, canal: string, info: InfoArte = 
   const tipo = r.headers.get("content-type") ?? "image/jpeg";
   const foto = `data:${tipo};base64,${Buffer.from(await r.arrayBuffer()).toString("base64")}`;
   const nome = canal.replace(/^@/, "");
-  const arroba = `@${nome}`;
 
   const img = new ImageResponse(
     (
-      <div style={{ width: W, height: H, display: "flex", flexDirection: "column", background: "#fff", fontFamily: "Poppins" }}>
-        {/* foto */}
-        <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", height: 600, paddingTop: 24 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={foto} alt="" style={{ width: 560, height: 560, objectFit: "contain" }} />
+      <div style={{ width: W, height: H, display: "flex", flexDirection: "column", background: PRETO, padding: "40px 44px 40px", fontFamily: "Tight", color: OFF }}>
+        {/* topo: logo + selo de desconto */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 76 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Simbolo lado={62} />
+            <div style={{ display: "flex", fontFamily: "Archivo", fontStyle: "italic", fontWeight: 900, fontSize: 60, letterSpacing: -2, color: OFF }}>ACHOU</div>
+          </div>
           {info.desconto ? (
             <div
               style={{
-                position: "absolute",
-                top: 34,
-                right: 34,
                 display: "flex",
-                padding: "10px 26px",
+                padding: "10px 24px",
                 borderRadius: 999,
-                background: "#e11d48",
-                color: "#fff",
-                fontSize: 40,
+                background: LIME,
+                color: TINTA,
+                fontSize: 38,
                 fontWeight: 800,
               }}
             >
               -{info.desconto} OFF
             </div>
-          ) : null}
-        </div>
-
-        {/* preço */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: 230, paddingBottom: 14 }}>
-          {info.precoAntigo ? (
-            <div style={{ display: "flex", fontSize: 32, fontWeight: 600, color: "#8a8a8a", textDecoration: "line-through", marginBottom: 6 }}>
-              {info.precoAntigo}
-            </div>
-          ) : null}
-          {info.preco ? (
-            <div
-              style={{
-                display: "flex",
-                padding: "6px 54px",
-                borderRadius: 18,
-                background: LARANJA,
-                color: "#fff",
-                fontSize: 88,
-                fontWeight: 800,
-                letterSpacing: -2,
-                boxShadow: `0 10px 0 ${PRETO}`,
-                border: `5px solid ${PRETO}`,
-              }}
-            >
-              {info.preco}
-            </div>
           ) : (
-            <div style={{ display: "flex", fontSize: 60, fontWeight: 800, color: PRETO }}>Oferta no Mercado Livre</div>
+            <div style={{ display: "flex", fontSize: 26, fontWeight: 600, color: CINZA }}>oferta no Mercado Livre</div>
           )}
         </div>
 
-        {/* faixa do canal */}
+        {/* foto em cartão branco */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 28,
+            height: 560,
+            borderRadius: 40,
+            background: "#ffffff",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={foto} alt="" style={{ width: 500, height: 500, objectFit: "contain" }} />
+        </div>
+
+        {/* preço */}
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: 30, height: 150 }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {info.precoAntigo ? (
+              <div style={{ display: "flex", fontSize: 34, fontWeight: 600, color: CINZA, textDecoration: "line-through" }}>{info.precoAntigo}</div>
+            ) : (
+              <div style={{ display: "flex", fontSize: 30, fontWeight: 600, color: CINZA }}>por apenas</div>
+            )}
+            <div style={{ display: "flex", fontFamily: "Poppins", fontSize: !info.preco ? 64 : info.preco.length > 12 ? 88 : 108, fontWeight: 800, color: LIME, letterSpacing: -3, lineHeight: 1.05 }}>
+              {info.preco ?? "Confira o preço"}
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22, padding: "12px 22px", borderRadius: 999, border: `2px solid ${LINHA}`, fontSize: 26, fontWeight: 600, color: OFF }}>
+            Mercado Livre
+          </div>
+        </div>
+
+        {/* rodapé do canal */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            height: 250,
-            padding: "0 44px 0 54px",
-            background: LIME,
-            borderTop: `6px solid ${PRETO}`,
+            marginTop: "auto",
+            paddingTop: 26,
+            borderTop: `2px solid ${LINHA}`,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", color: PRETO }}>
-            <div style={{ display: "flex", fontSize: 44, fontWeight: 800, lineHeight: 1.1, fontStyle: "italic" }}>Entre no canal do Telegram</div>
-            <div style={{ display: "flex", fontSize: 34, fontWeight: 600, marginTop: 8 }}>Promoções e cupons todos os dias!</div>
-            <div
-              style={{
-                display: "flex",
-                alignSelf: "flex-start",
-                marginTop: 16,
-                padding: "6px 22px",
-                borderRadius: 999,
-                background: PRETO,
-                color: LIME,
-                fontSize: 32,
-                fontWeight: 800,
-              }}
-            >
-              {arroba}
-            </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", fontSize: 40, fontWeight: 800, color: OFF, letterSpacing: -1 }}>Entre no canal e economize</div>
+            <div style={{ display: "flex", fontSize: 28, fontWeight: 600, color: CINZA, marginTop: 6 }}>Promoções e cupons todos os dias no Telegram</div>
+            <div style={{ display: "flex", marginTop: 14, fontSize: 36, fontWeight: 800, color: LIME }}>t.me/{nome}</div>
           </div>
-          <div style={{ display: "flex", padding: 12, background: "#fff", borderRadius: 16, border: `4px solid ${PRETO}` }}>
-            {qr(`https://t.me/${nome}`, 170)}
-          </div>
+          <div style={{ display: "flex", padding: 10, background: "#ffffff", borderRadius: 18 }}>{qr(`https://t.me/${nome}`, 150)}</div>
         </div>
       </div>
     ),
