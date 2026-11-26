@@ -4,6 +4,7 @@ import { blobPronto, listarLeads } from "@/lib/leads";
 import { Logo } from "@/components/Logo";
 import LoginForm from "./LoginForm";
 import Sair from "./Sair";
+import Excluir from "./Excluir";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Leads · ACHOU", robots: { index: false, follow: false } };
@@ -101,6 +102,7 @@ export default async function AdminPage({
               <th>Telefone</th>
               <th>Canal</th>
               <th>Botão</th>
+              <th aria-label="Ações"></th>
             </tr>
           </thead>
           <tbody>
@@ -112,11 +114,12 @@ export default async function AdminPage({
                 <td><a href={`https://wa.me/${l.telefone}`} target="_blank" rel="noopener">{fmtTel(l.telefone)}</a></td>
                 <td><span className={`adm__tag adm__tag--${l.canal}`}>{l.canal === "telegram" ? "Telegram" : "WhatsApp"}</span></td>
                 <td className="adm__muted">{l.origem || "—"}</td>
+                <td>{l.id && <Excluir id={l.id} quem={l.nome || l.email} />}</td>
               </tr>
             ))}
             {lista.length === 0 && (
               <tr>
-                <td colSpan={6} className="adm__vazio">
+                <td colSpan={7} className="adm__vazio">
                   {todos.length === 0
                     ? "Nenhum lead ainda. Assim que alguém se cadastrar no site, aparece aqui."
                     : "Nada encontrado com esse filtro."}

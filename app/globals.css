@@ -2627,3 +2627,24 @@ ul.hero__proof--v2 b {
 .dep__pe {
   margin-top: auto;
 }
+
+.adm__del {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--g2);
+  cursor: pointer;
+}
+.adm__del:hover {
+  color: #ff8a80;
+  border-color: rgba(194, 73, 63, 0.5);
+  background: rgba(194, 73, 63, 0.12);
+}
+.adm__del:disabled {
+  opacity: 0.4;
+  cursor: wait;
+}

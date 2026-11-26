@@ -1,4 +1,4 @@
-import { list, put } from "@vercel/blob";
+import { del, list, put } from "@vercel/blob";
 import { randomBytes } from "crypto";
 import { promises as fs } from "fs";
 import os from "os";
@@ -11,7 +11,7 @@ import path from "path";
 // No PC, sem token, salva num arquivo temporário só pra testar.
 
 export type Canal = "telegram" | "whatsapp";
-export type Lead = { nome: string; email: string; telefone: string; canal: Canal; em: string; origem: string };
+export type Lead = { id?: string; nome: string; email: string; telefone: string; canal: Canal; em: string; origem: string };
 
 const LOCAL = path.join(os.tmpdir(), "achou-site", "leads.jsonl");
 export const blobPronto = () => !!process.env.BLOB_READ_WRITE_TOKEN;
@@ -74,7 +74,7 @@ export async function listarLeads(): Promise<Lead[]> {
       const r = await list({ prefix: "leads/", limit: 1000, cursor });
       for (const b of r.blobs) {
         const l = lerNome(b.pathname);
-        if (l) out.push(l);
+        if (l) out.push({ ...l, id: b.pathname });
       }
       cursor = r.hasMore ? r.cursor : undefined;
     } while (cursor && out.length < 100000);
@@ -84,6 +84,22 @@ export async function listarLeads(): Promise<Lead[]> {
   return txt
     .split("\n")
     .filter(Boolean)
-    .map((l) => JSON.parse(l) as Lead)
+    .map((l, i) => ({ ...(JSON.parse(l) as Lead), id: `local:${i}` }))
     .reverse();
+}
+
+const NL = String.fromCharCode(10);
+
+/** Apaga um lead pelo id que a listagem devolveu */
+export async function excluirLead(id: string) {
+  if (blobPronto()) {
+    if (!/^leads\/\d+_[0-9a-f]+_[A-Za-z0-9_-]+\.json$/.test(id)) throw new Error("id inválido");
+    await del(id);
+    return;
+  }
+  const m = id.match(/^local:(\d+)$/);
+  if (!m) throw new Error("id inválido");
+  const linhas = (await fs.readFile(LOCAL, "utf8").catch(() => "")).split(NL).filter(Boolean);
+  linhas.splice(Number(m[1]), 1);
+  await fs.writeFile(LOCAL, linhas.map((l) => l + NL).join(""));
 }
