@@ -120,11 +120,11 @@ export default async function AdminPage({
                 <td>{l.nome || "—"}</td>
                 <td><a href={`mailto:${l.email}`}>{l.email}</a></td>
                 <td><a href={`https://wa.me/${l.telefone}`} target="_blank" rel="noopener">{fmtTel(l.telefone)}</a></td>
-                <td className="adm__canais">
+                <td><div className="adm__canais">
                   {(l.canais ?? [l.canal]).map((c) => (
                     <span key={c} className={`adm__tag adm__tag--${c}`}>{c === "telegram" ? "Telegram" : "WhatsApp"}</span>
                   ))}
-                </td>
+                </div></td>
                 <td className="adm__muted">{l.origem || "—"}</td>
                 <td>{l.id && <Excluir id={l.id} quem={l.nome || l.email} />}</td>
               </tr>
