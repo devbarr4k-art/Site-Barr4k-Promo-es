@@ -47,7 +47,7 @@ const semelhante = (a: string, b: string) => {
 };
 
 export type Resultado =
-  | { ok: true; texto: string; linkOriginal: string; linkAfiliado: string }
+  | { ok: true; texto: string; linkOriginal: string; linkAfiliado: string; imagem: string | null }
   | { ok: false; motivo: string; linkOriginal?: string };
 
 export async function processar(
@@ -66,7 +66,9 @@ export async function processar(
   if (!produto) return { ok: false, motivo: "não deu pra abrir o produto no Mercado Livre", linkOriginal: links[0] };
   const link = linkAfiliado(produto.url, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
   const preco = ex.preco ?? produto.preco;
-  const off = desconto(preco, ex.precoAntigo);
+  // "De": o do post; se não tiver, o preço riscado que o Mercado Livre mostra
+  const antigo = [ex.precoAntigo, produto.precoAntigo].find((v) => v && preco && v > preco) ?? null;
+  const off = desconto(preco, antigo);
   const titulo = produto.titulo || ex.titulo || "Oferta no Mercado Livre";
   // "chamada": a primeira linha de quem postou, quando não é o próprio nome do produto
   const chamada = mensagem
@@ -79,9 +81,9 @@ export async function processar(
     chamada: usaChamada ? chamada : "",
     titulo,
     preco: preco ? brl(preco) : "",
-    preco_antigo: ex.precoAntigo && preco && ex.precoAntigo > preco ? brl(ex.precoAntigo) : "",
+    preco_antigo: antigo ? brl(antigo) : "",
     desconto: off ? `${off}%` : "",
-    economia: off && ex.precoAntigo && preco ? brl(ex.precoAntigo - preco) : "",
+    economia: off && antigo && preco ? brl(antigo - preco) : "",
     pix: /\bpix\b/i.test(mensagem) ? "1" : "",
     loja_oficial: /loja oficial/i.test(mensagem) ? "1" : "",
     cupom: ex.cupom ?? "",
@@ -89,5 +91,5 @@ export async function processar(
     loja: "Mercado Livre",
     fechamento: FECHAMENTOS[Math.floor(Math.random() * FECHAMENTOS.length)],
   });
-  return { ok: true, texto, linkOriginal: links[0], linkAfiliado: link };
+  return { ok: true, texto, linkOriginal: links[0], linkAfiliado: link, imagem: produto.imagem };
 }

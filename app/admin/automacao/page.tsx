@@ -238,6 +238,10 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                   </a>
                 )}
               </div>
+              {o.imagem && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={o.imagem} alt="" className="auto__thumb" loading="lazy" />
+              )}
               {o.motivo && <p className="auto__motivo">{o.motivo}</p>}
               <form action={mudarStatus} className="auto__form">
                 <input type="hidden" name="id" value={o.id} />

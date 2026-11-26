@@ -34,3 +34,14 @@ export async function lerConfig(): Promise<Config> {
   if (error) throw new Error(`Banco: ${error.message}`);
   return data as Config;
 }
+
+/** Insere oferta; se a coluna "imagem" ainda não existir no banco, insere sem ela. */
+export async function inserirOferta(linha: Record<string, unknown>) {
+  const r = await db().from("auto_ofertas").insert(linha);
+  if (r.error && "imagem" in linha && /imagem/.test(r.error.message)) {
+    const { imagem: _fora, ...resto } = linha;
+    void _fora;
+    return db().from("auto_ofertas").insert(resto);
+  }
+  return r;
+}

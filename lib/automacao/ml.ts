@@ -41,7 +41,7 @@ const desesc = (s: string) =>
     .replace(/&#0?39;/g, "'")
     .replace(/&amp;/g, "&");
 
-export type Produto = { url: string; imagem: string | null; titulo: string | null; preco: number | null };
+export type Produto = { url: string; imagem: string | null; titulo: string | null; preco: number | null; precoAntigo?: number | null };
 
 /** Abre o link de quem postou e devolve o produto: link, foto, nome e preço (quando a vitrine mostra). */
 export async function lerProduto(url: string): Promise<Produto | null> {
@@ -65,8 +65,12 @@ export async function lerProduto(url: string): Promise<Produto | null> {
   const ogTitulo = meta("og:title");
   const img = meta("og:image");
   const preco = ogTitulo?.match(/R\$\s*([\d.]+(?:,\d{2})?)\s*$/)?.[1];
+  // preço "de" (riscado) do card em destaque
+  const card = html.slice(Math.max(0, html.indexOf("card-featured")), html.indexOf("card-featured") + 8000);
+  const antigo = Number(card.match(/"previous_price":\{"value":([\d.]+)/)?.[1]) || null;
   return {
     url: destaque,
+    precoAntigo: antigo,
     // o gerador de imagem não lê webp: o mesmo arquivo existe em jpg
     imagem: img ? desesc(img).replace(/-[A-Z]\.webp$/, "-O.jpg") : null,
     titulo: ogTitulo ? desesc(ogTitulo).replace(/\s*-\s*R\$.*$/, "").trim() : null,

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
-import { db, lerConfig } from "@/lib/automacao/db";
+import { db, inserirOferta, lerConfig } from "@/lib/automacao/db";
 import { capturar, disparar } from "@/lib/automacao/ciclo";
 import { lerParamsAfiliado } from "@/lib/automacao/ml";
 import { nomeCanal } from "@/lib/automacao/telegram";

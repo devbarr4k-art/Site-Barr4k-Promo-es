@@ -1,6 +1,6 @@
 // Um ciclo do robô: captura posts novos dos canais de origem e posta a próxima oferta aprovada.
 // Quem chama: pg_cron do Supabase, a cada minuto (ver supabase/automacao.sql).
-import { db, lerConfig, type Config } from "./db";
+import { db, inserirOferta, lerConfig, type Config } from "./db";
 import { dentroDoHorario, proximoIntervalo } from "./agenda";
 import { lerCanal, postar, postarFoto } from "./telegram";
 import { fotoComMarca, infoDoTexto } from "./imagem";
@@ -22,9 +22,7 @@ export async function capturar(cfg: Config) {
         const temML = [...p.links, p.texto].some((x) => /meli\.la|mercadoli[vb]re\.com/i.test(x));
         if (!temML) continue;
         const r = await processar(p.texto, p.links.filter(ehLinkML), cfg);
-        await db()
-          .from("auto_ofertas")
-          .insert({
+        await inserirOferta({
             origem: g.chat,
             origem_post: p.chave,
             texto_original: p.texto,
@@ -33,6 +31,7 @@ export async function capturar(cfg: Config) {
             link_afiliado: r.ok ? r.linkAfiliado : null,
             status: r.ok ? (cfg.aprovacao_manual ? "pendente" : "aprovada") : "erro",
             motivo: r.ok ? null : r.motivo,
+            imagem: r.ok ? r.imagem : null,
           });
         log.push(`${p.chave}: ${r.ok ? "ok" : r.motivo}`);
       }
@@ -54,7 +53,7 @@ export async function disparar(cfg: Config, forcar = false) {
   if (!cfg.bot_token) return "falta o token do bot";
   const { data: oferta } = await db()
     .from("auto_ofertas")
-    .select("id, texto_final, link_original")
+    .select("*")
     .eq("status", "aprovada")
     .order("criado_em")
     .limit(1)
@@ -66,7 +65,7 @@ export async function disparar(cfg: Config, forcar = false) {
   const erros: string[] = [];
   let enviou = false;
   // foto do produto (a vitrine do link original tem a imagem); sem foto, vai só o texto
-  const foto = oferta.link_original ? await lerProduto(oferta.link_original).then((p) => p?.imagem ?? null).catch(() => null) : null;
+  const foto = oferta.imagem ?? (oferta.link_original ? await lerProduto(oferta.link_original).then((p) => p?.imagem ?? null).catch(() => null) : null);
   const info = infoDoTexto(oferta.texto_final);
   for (const d of destinos) {
     try {

@@ -64,3 +64,6 @@ select cron.schedule('achou-ciclo', '* * * * *', $$ select net.http_get('https:/
 -- Limpeza: tira da fila o que tem mais de 30 dias (o banco grátis tem 500 MB)
 select cron.unschedule('achou-limpeza') where exists (select 1 from cron.job where jobname = 'achou-limpeza');
 select cron.schedule('achou-limpeza', '0 4 * * *', $$ delete from public.auto_ofertas where criado_em < now() - interval '30 days' $$);
+
+-- foto do produto guardada na captura (os links meli.la de outros canais expiram)
+alter table auto_ofertas add column if not exists imagem text;

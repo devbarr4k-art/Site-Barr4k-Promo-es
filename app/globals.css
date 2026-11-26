@@ -3037,3 +3037,5 @@ textarea.auto__campo {
   .pag__botoes { justify-content: center; }
   .pag__txt { display: none; }
 }
+
+.auto__thumb { width: 96px; height: 96px; object-fit: contain; background: #fff; border-radius: 12px; margin-bottom: 10px; }
