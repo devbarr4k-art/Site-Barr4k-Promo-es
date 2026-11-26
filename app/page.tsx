@@ -210,6 +210,9 @@ function CardDepoimento({ d }: { d: Depoimento }) {
   );
 }
 
+// Nomes/falas/fotos estavam trocados (26/11/2026): só volta com os dados certos de cada pessoa.
+const MOSTRAR_DEPOIMENTOS = false;
+
 function Depoimentos() {
   return (
     <section className="deps" aria-labelledby="deps-titulo">
@@ -266,20 +269,9 @@ export default function Home() {
                 loja antes de mandar pro seu celular.
               </p>
               <CTAButtons origem="topo" />
-              <ul className="hero__proof hero__proof--v2">
-                <li>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8L3 12z" /><circle cx="7.5" cy="8.5" r="1.4" /></svg>
-                  <span><b>Grátis</b>pra sempre</span>
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 9.5-4.9M18 11v5l2 2H8" /><path d="M10 21h4" /><path d="M3 3l18 18" /></svg>
-                  <span><b>Sem spam</b>só oferta boa</span>
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h5v16h-5" /><path d="M10 8l-4 4 4 4" /><path d="M6 12h10" /></svg>
-                  <span><b>Sem amarras</b>sai quando quiser</span>
-                </li>
-              </ul>
+              <p className="hero__promise">
+                Grátis, sem spam, e você sai quando quiser.
+              </p>
             </div>
 
             <div className="hero__phone">
@@ -395,7 +387,8 @@ export default function Home() {
           <IndexList />
         </section>
 
-        <Depoimentos />
+        {/* Depoimentos fora do ar até chegarem nomes, falas e fotos corretos */}
+        {MOSTRAR_DEPOIMENTOS && <Depoimentos />}
 
         {/* NÚMEROS */}
         <section className="stats" aria-label="A ACHOU em números">

@@ -2598,3 +2598,9 @@ ul.hero__proof--v2 b {
     font-size: 12px;
   }
 }
+
+.hero__promise {
+  margin-top: 22px;
+  font-size: 14.5px;
+  color: var(--g1);
+}
