@@ -1,7 +1,7 @@
 // Tudo que o Barr4k pode querer trocar fica aqui.
 export const LINKS = {
-  telegram: "https://t.me/", // TODO: link real do grupo
-  whatsapp: "https://chat.whatsapp.com/", // TODO: link real da comunidade
+  telegram: "https://t.me/achou_ofertas",
+  whatsapp: "https://chat.whatsapp.com/HaCfDtW6ukjFLXRKypQa7M",
   instagram: "#",
   tiktok: "#",
 };

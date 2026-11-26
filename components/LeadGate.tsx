@@ -9,7 +9,7 @@ import { TelegramIcon, WhatsIcon } from "./Icons";
 
 type Canal = "telegram" | "whatsapp";
 const EVENTO = "achou:entrar";
-const GUARDADO = "achou_lead_v1";
+const GUARDADO = "achou_lead_v2";
 
 export function abrirCadastro(canal: Canal, origem: string) {
   window.dispatchEvent(new CustomEvent(EVENTO, { detail: { canal, origem } }));
