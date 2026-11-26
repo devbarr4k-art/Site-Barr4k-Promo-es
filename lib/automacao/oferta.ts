@@ -1,15 +1,31 @@
 // Mensagem de oferta → texto pronto com o link de afiliado da ACHOU (só Mercado Livre).
 import { brl, desconto, extrair } from "./extrair";
-import { acharProduto, ehLinkML, linkAfiliado } from "./ml";
+import { ehLinkML, lerProduto, linkAfiliado } from "./ml";
 
-export const TEMPLATE_PADRAO = `🔥 {titulo}
+export const TEMPLATE_PADRAO = `[[se chamada]]{chamada}
+
+[[/se]]🔥 *{titulo}*
 [[se preco_antigo]]
-~De {preco_antigo}~[[/se]]
-[[se preco]]✅ Por {preco}[[/se]][[se desconto]] ({desconto} OFF)[[/se]]
-[[se cupom]]
-🎟️ Cupom: {cupom}[[/se]]
+De: ~{preco_antigo}~[[/se]][[se preco]]
+Por: *{preco}*[[/se]][[se desconto]] ({desconto} OFF)[[/se]][[se pix]] no Pix[[/se]][[se economia]]
+💰 Você economiza {economia}[[/se]][[se loja_oficial]]
+✅ Vendido por loja oficial[[/se]][[se cupom]]
 
-🛒 Mercado Livre: {link}`;
+🎟️ Cupom: *{cupom}*[[/se]]
+
+🛒 Compre aqui *Mercado Livre* 👇
+{link}
+[[se cupom]]
+ℹ️ Pra pegar o desconto, aplique o cupom {cupom} no carrinho.[[/se]]
+{fechamento} #Publi`;
+
+const FECHAMENTOS = [
+  "⚡ Corre que é por tempo limitado!",
+  "⏳ O preço pode subir a qualquer momento.",
+  "🏃 Estoque voando, garanta o seu!",
+  "👀 Achou? Então aproveita!",
+  "🔔 Ofertas assim acabam rápido.",
+];
 
 export function montar(template: string, v: Record<string, string>) {
   return template
@@ -38,18 +54,32 @@ export async function processar(
   if (!links.length) return { ok: false, motivo: "sem link do Mercado Livre" };
   if (!cfg.ml_matt_tool) return { ok: false, motivo: "configure o link de afiliado do Mercado Livre", linkOriginal: links[0] };
 
-  const produto = await acharProduto(links[0]).catch(() => null);
+  const produto = await lerProduto(links[0]).catch(() => null);
   if (!produto) return { ok: false, motivo: "não deu pra abrir o produto no Mercado Livre", linkOriginal: links[0] };
-  const link = linkAfiliado(produto, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
-  const off = desconto(ex.preco, ex.precoAntigo);
+  const link = linkAfiliado(produto.url, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
+  const preco = ex.preco ?? produto.preco;
+  const off = desconto(preco, ex.precoAntigo);
+  const titulo = produto.titulo || ex.titulo || "Oferta no Mercado Livre";
+  // "chamada": a primeira linha de quem postou, quando não é o próprio nome do produto
+  const chamada = mensagem
+    .split(/\r?\n/)
+    .map((l) => l.replace(/[*_~`]/g, "").trim())
+    .find((l) => l.length >= 6) ?? "";
+  const usaChamada =
+    chamada && !/https?:|R\$|cupom/i.test(chamada) && norm(chamada) !== norm(titulo) && !norm(titulo).startsWith(norm(chamada).slice(0, 20));
   const texto = montar(cfg.template || TEMPLATE_PADRAO, {
-    titulo: ex.titulo || "Oferta no Mercado Livre",
-    preco: ex.preco ? brl(ex.preco) : "",
-    preco_antigo: ex.precoAntigo ? brl(ex.precoAntigo) : "",
+    chamada: usaChamada ? chamada : "",
+    titulo,
+    preco: preco ? brl(preco) : "",
+    preco_antigo: ex.precoAntigo && preco && ex.precoAntigo > preco ? brl(ex.precoAntigo) : "",
     desconto: off ? `${off}%` : "",
+    economia: off && ex.precoAntigo && preco ? brl(ex.precoAntigo - preco) : "",
+    pix: /\bpix\b/i.test(mensagem) ? "1" : "",
+    loja_oficial: /loja oficial/i.test(mensagem) ? "1" : "",
     cupom: ex.cupom ?? "",
     link,
     loja: "Mercado Livre",
+    fechamento: FECHAMENTOS[Math.floor(Math.random() * FECHAMENTOS.length)],
   });
   return { ok: true, texto, linkOriginal: links[0], linkAfiliado: link };
 }

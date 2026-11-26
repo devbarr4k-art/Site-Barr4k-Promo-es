@@ -9,7 +9,7 @@ export type Extraido = {
 };
 
 const RE_LINK = /https?:\/\/[^\s<>"')\]]+/gi;
-const RE_CUPOM = /\b(?:cupom|cupon|c[oó]digo|code)\s*[:\-–]?\s*[*_`"'“]?([A-Z0-9][A-Z0-9_-]{2,24})[*_`"'”]?/i;
+const RE_CUPOM = /\b(?:cupom|cupon|c[oó]digo|code)(?:\s+de\s+desconto)?\s*[:\-–]?\s*[*_`"'“]?([A-Z0-9][A-Z0-9_-]{2,24})[*_`"'”]?/i;
 const RE_PRECO = /R\$\s*([\d.]{1,9}(?:,\d{2})?)/gi;
 const PALAVRAS_DE = /\b(de|era|antes|por apenas de)\s*:?\s*$/i;
 

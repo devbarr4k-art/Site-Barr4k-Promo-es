@@ -2,9 +2,10 @@
 // Quem chama: pg_cron do Supabase, a cada minuto (ver supabase/automacao.sql).
 import { db, lerConfig, type Config } from "./db";
 import { dentroDoHorario, proximoIntervalo } from "./agenda";
-import { lerCanal, postar } from "./telegram";
+import { lerCanal, postar, postarFoto } from "./telegram";
+import { fotoComMarca, infoDoTexto } from "./imagem";
 import { processar } from "./oferta";
-import { ehLinkML } from "./ml";
+import { ehLinkML, lerProduto } from "./ml";
 
 const POR_CANAL = 6; // posts novos processados por canal a cada minuto
 
@@ -53,7 +54,7 @@ export async function disparar(cfg: Config, forcar = false) {
   if (!cfg.bot_token) return "falta o token do bot";
   const { data: oferta } = await db()
     .from("auto_ofertas")
-    .select("id, texto_final")
+    .select("id, texto_final, link_original")
     .eq("status", "aprovada")
     .order("criado_em")
     .limit(1)
@@ -64,9 +65,14 @@ export async function disparar(cfg: Config, forcar = false) {
 
   const erros: string[] = [];
   let enviou = false;
+  // foto do produto (a vitrine do link original tem a imagem); sem foto, vai só o texto
+  const foto = oferta.link_original ? await lerProduto(oferta.link_original).then((p) => p?.imagem ?? null).catch(() => null) : null;
+  const info = infoDoTexto(oferta.texto_final);
   for (const d of destinos) {
     try {
-      await postar(cfg.bot_token, d.chat, oferta.texto_final);
+      const png = foto ? await fotoComMarca(foto, d.chat, info).catch(() => null) : null;
+      if (png) await postarFoto(cfg.bot_token, d.chat, png, oferta.texto_final);
+      else await postar(cfg.bot_token, d.chat, oferta.texto_final);
       enviou = true;
     } catch (e) {
       erros.push(`${d.chat}: ${(e as Error).message}`);

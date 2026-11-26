@@ -7,7 +7,7 @@ import { db, lerConfig } from "@/lib/automacao/db";
 import { capturar, disparar } from "@/lib/automacao/ciclo";
 import { lerParamsAfiliado } from "@/lib/automacao/ml";
 import { nomeCanal } from "@/lib/automacao/telegram";
-import { processar } from "@/lib/automacao/oferta";
+import { processar, TEMPLATE_PADRAO } from "@/lib/automacao/oferta";
 
 const AQUI = "/admin/automacao";
 const txt = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
@@ -16,9 +16,10 @@ async function guarda() {
   if (!(await isLoggedIn())) redirect("/admin");
 }
 
-function voltar(msg: string, aba = "", erro = false): never {
+function voltar(msg: string, aba = "", erro = false, extra = ""): never {
   revalidatePath(AQUI);
-  const q = new URLSearchParams({ [erro ? "erro" : "ok"]: msg });
+  const q = new URLSearchParams(extra);
+  q.set(erro ? "erro" : "ok", msg);
   if (aba) q.set("aba", aba);
   redirect(`${AQUI}?${q}`);
 }
@@ -36,7 +37,8 @@ export async function salvarConfig(f: FormData) {
     hora_fim: n("hora_fim", 1, 24, atual.hora_fim),
     intervalo_min: n("intervalo_min", 1, 600, atual.intervalo_min),
     palavras_bloqueadas: txt(f, "palavras_bloqueadas").split(/\n|,/).map((s) => s.trim()).filter(Boolean),
-    template: txt(f, "template"),
+    // igual ao modelo padrão = guarda vazio, assim melhorias futuras no padrão chegam sozinhas
+    template: txt(f, "template").replace(/\r\n/g, "\n") === TEMPLATE_PADRAO ? "" : txt(f, "template"),
   };
   novo.intervalo_max = Math.max(novo.intervalo_min as number, n("intervalo_max", 1, 600, atual.intervalo_max));
 
@@ -95,7 +97,7 @@ export async function mudarStatus(f: FormData) {
   const dados: Record<string, unknown> = { status, motivo: null };
   if (texto) dados.texto_final = texto.slice(0, 4000);
   await db().from("auto_ofertas").update(dados).eq("id", txt(f, "id")).neq("status", "enviada");
-  voltar(status === "aprovada" ? "Oferta aprovada: entra na fila de envio." : status === "descartada" ? "Oferta descartada." : "Voltou pra aprovação.", txt(f, "aba") || "fila");
+  voltar(status === "aprovada" ? "Oferta aprovada: entra na fila de envio." : status === "descartada" ? "Oferta descartada." : "Voltou pra aprovação.", txt(f, "aba") || "fila", false, txt(f, "volta"));
 }
 
 export async function addOferta(f: FormData) {

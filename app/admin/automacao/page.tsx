@@ -7,6 +7,8 @@ import { Logo } from "@/components/Logo";
 import LoginForm from "../LoginForm";
 import Sair from "../Sair";
 import { BotaoEnviar } from "./BotaoEnviar";
+import { Paginacao } from "../Paginacao";
+import { Abas } from "./Abas";
 import {
   addCanal,
   addOferta,
@@ -33,7 +35,7 @@ const STATUS = [
   ["erro", "Com erro"],
   ["descartada", "Descartadas"],
 ] as const;
-const POR_PAGINA = 20;
+const POR_PAGINA = 10;
 
 const hora = (iso: string | null) =>
   iso
@@ -79,9 +81,22 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
     );
   }
 
-  let cfg;
+  // tudo numa rodada só (config, canais, contagens e a página da fila)
+  const sFila = STATUS.some(([x]) => x === sp.s) ? sp.s! : "pendente";
+  const pFila = Math.max(1, Number(sp.p) || 1);
+  let cfg, canais, contagens, ofertas;
   try {
-    cfg = await lerConfig();
+    [cfg, { data: canais }, { data: ofertas }, ...contagens] = await Promise.all([
+      lerConfig(),
+      db().from("auto_grupos").select("*").order("criado_em"),
+      db()
+        .from("auto_ofertas")
+        .select("*")
+        .eq("status", sFila)
+        .order(sFila === "enviada" ? "enviado_em" : "criado_em", { ascending: sFila === "aprovada" })
+        .range((pFila - 1) * POR_PAGINA, pFila * POR_PAGINA - 1),
+      ...STATUS.map(([s]) => db().from("auto_ofertas").select("id", { count: "exact", head: true }).eq("status", s)),
+    ]);
   } catch (e) {
     return (
       <main className="adm">
@@ -92,12 +107,7 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
       </main>
     );
   }
-
-  const [{ data: canais }, ...contagens] = await Promise.all([
-    db().from("auto_grupos").select("*").order("criado_em"),
-    ...STATUS.map(([s]) => db().from("auto_ofertas").select("id", { count: "exact", head: true }).eq("status", s)),
-  ]);
-  const total = Object.fromEntries(STATUS.map(([s], i) => [s, contagens[i].count ?? 0]));
+  const total = Object.fromEntries(STATUS.map(([s], i) => [s, (contagens[i] as { count: number | null }).count ?? 0]));
   const origens = (canais ?? []).filter((c) => c.tipo === "origem");
   const destinos = (canais ?? []).filter((c) => c.tipo === "destino");
   const cicloRecente = recente(cfg.ultimo_ciclo);
@@ -174,30 +184,20 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
       </div>
       {cfg.ultimo_erro && <p className="adm__aviso">Último erro do envio: {cfg.ultimo_erro}</p>}
 
-      <nav className="auto__abas" aria-label="Seções">
-        {ABAS.map(([a, nome]) => (
-          <Link key={a} href={`/admin/automacao?aba=${a}`} aria-current={a === aba ? "page" : undefined}>
-            {nome}
-          </Link>
-        ))}
-      </nav>
-
-      {aba === "fila" && <Fila sp={sp} total={total} />}
-      {aba === "canais" && <Canais origens={origens} destinos={destinos} />}
-      {aba === "config" && <Config cfg={cfg} />}
+      <Abas
+        inicial={aba}
+        abas={[
+          { id: "fila", nome: "Fila", conteudo: <Fila s={sFila} pagina={pFila} data={ofertas ?? []} total={total} /> },
+          { id: "canais", nome: "Canais", conteudo: <Canais origens={origens} destinos={destinos} /> },
+          { id: "config", nome: "Configurar", conteudo: <Config cfg={cfg} /> },
+        ]}
+      />
     </main>
   );
 }
 
-async function Fila({ sp, total }: { sp: SP; total: Record<string, number> }) {
-  const s = STATUS.some(([x]) => x === sp.s) ? sp.s! : "pendente";
-  const pagina = Math.max(1, Number(sp.p) || 1);
-  const { data } = await db()
-    .from("auto_ofertas")
-    .select("*")
-    .eq("status", s)
-    .order(s === "enviada" ? "enviado_em" : "criado_em", { ascending: s === "aprovada" })
-    .range((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA - 1);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any[]; total: Record<string, number> }) {
   const paginas = Math.max(1, Math.ceil((total[s] ?? 0) / POR_PAGINA));
   const editavel = s !== "enviada";
 
@@ -242,6 +242,7 @@ async function Fila({ sp, total }: { sp: SP; total: Record<string, number> }) {
               <form action={mudarStatus} className="auto__form">
                 <input type="hidden" name="id" value={o.id} />
                 <input type="hidden" name="aba" value="fila" />
+                <input type="hidden" name="volta" value={`s=${s}&p=${pagina}`} />
                 <textarea
                   name="texto"
                   className="auto__campo auto__mono"
@@ -275,23 +276,7 @@ async function Fila({ sp, total }: { sp: SP; total: Record<string, number> }) {
         </ul>
       )}
 
-      <nav className="adm__pag" aria-label="Páginas">
-        <span>
-          página {pagina} de {paginas}
-        </span>
-        <div>
-          {pagina > 1 ? (
-            <Link className="adm__btn adm__btn--ghost" href={`/admin/automacao?aba=fila&s=${s}&p=${pagina - 1}`}>
-              ← Anterior
-            </Link>
-          ) : null}
-          {pagina < paginas ? (
-            <Link className="adm__btn adm__btn--ghost" href={`/admin/automacao?aba=fila&s=${s}&p=${pagina + 1}`}>
-              Próxima →
-            </Link>
-          ) : null}
-        </div>
-      </nav>
+      <Paginacao pagina={pagina} paginas={paginas} total={total[s] ?? 0} link={(p) => `/admin/automacao?aba=fila&s=${s}&p=${p}`} />
     </section>
   );
 }
@@ -416,7 +401,7 @@ function Config({ cfg }: { cfg: Awaited<ReturnType<typeof lerConfig>> }) {
         </label>
         <label>
           <span className="auto__ajuda">
-            Modelo do post. Variáveis: {"{titulo} {preco} {preco_antigo} {desconto} {cupom} {link}"} · trecho opcional:{" "}
+            Modelo do post. Variáveis: {"{chamada} {titulo} {preco} {preco_antigo} {desconto} {economia} {cupom} {link} {fechamento}"} · trecho opcional:{" "}
             {"[[se cupom]] ... [[/se]]"} · {"~texto~"} fica riscado.
           </span>
           <textarea name="template" rows={10} className="auto__campo auto__mono" defaultValue={cfg.template || TEMPLATE_PADRAO} />

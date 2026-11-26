@@ -9,7 +9,9 @@ const ent = (s: string) =>
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#0?39;/g, "'")
-    .replace(/&nbsp;/g, " ");
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#x([0-9a-f]+);/gi, (_m, h: string) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_m, d: string) => String.fromCodePoint(Number(d)));
 
 export const nomeCanal = (chat: string) =>
   chat.trim().replace(/^https?:\/\/t\.me\/(s\/)?/i, "").replace(/^@/, "").replace(/\/.*$/, "");
@@ -40,27 +42,65 @@ export async function lerCanal(chat: string): Promise<Post[]> {
   return posts.sort((a, b) => a.id - b.id);
 }
 
-/** ~riscado~ e *negrito* pro HTML do Telegram. */
+/** Link longo vira um link clicável com texto curto (ex.: mercadolivre.com.br/MLB123). */
+function rotulo(url: string) {
+  try {
+    const u = new URL(url);
+    const id = url.match(/MLBU?\d+/)?.[0];
+    const host = u.hostname.replace(/^www\./, "");
+    return id ? `${host}/${id}` : url.length > 60 ? `${host}${u.pathname.slice(0, 30)}…` : url;
+  } catch {
+    return url;
+  }
+}
+
+/** ~riscado~, *negrito* e links pro HTML do Telegram. */
 export function paraHtml(texto: string) {
-  const esc = texto.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  return esc.replace(/~([^~\n]+)~/g, "<s>$1</s>").replace(/\*([^*\n]+)\*/g, "<b>$1</b>");
+  const esc = (x: string) => x.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const links: string[] = [];
+  const semLinks = texto.replace(/https?:\/\/[^\s<>"]+/g, (u) => {
+    links.push(u);
+    return "\u0001L" + (links.length - 1) + "\u0001";
+  });
+  return esc(semLinks)
+    .replace(/~([^~\n]+)~/g, "<s>$1</s>")
+    .replace(/\*([^*\n]+)\*/g, "<b>$1</b>")
+    .replace(/\u0001L(\d+)\u0001/g, (_m, i: string) => `<a href="${esc(links[Number(i)])}">${esc(rotulo(links[Number(i)]))}</a>`);
+}
+
+const alvoDe = (chat: string) => (/^-?\d+$/.test(chat.trim()) ? chat.trim() : `@${nomeCanal(chat)}`);
+
+async function resposta(r: Response) {
+  const j = (await r.json().catch(() => ({}))) as { ok?: boolean; description?: string };
+  if (!j.ok) throw new Error(traduzir(j.description ?? `Telegram respondeu ${r.status}`));
 }
 
 export async function postar(token: string, chat: string, texto: string) {
-  const alvo = /^-?\d+$/.test(chat.trim()) ? chat.trim() : `@${nomeCanal(chat)}`;
   const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      chat_id: alvo,
+      chat_id: alvoDe(chat),
       text: paraHtml(texto),
       parse_mode: "HTML",
-      link_preview_options: { prefer_large_media: true, show_above_text: true },
+      link_preview_options: { is_disabled: true },
     }),
     signal: AbortSignal.timeout(15000),
   });
-  const j = (await r.json().catch(() => ({}))) as { ok?: boolean; description?: string };
-  if (!j.ok) throw new Error(traduzir(j.description ?? `Telegram respondeu ${r.status}`));
+  await resposta(r);
+}
+
+/** Foto com legenda (limite do Telegram: 1024 caracteres na legenda). */
+export async function postarFoto(token: string, chat: string, foto: ArrayBuffer, texto: string) {
+  const html = paraHtml(texto);
+  if (html.replace(/<[^>]+>/g, "").length > 1024) return postar(token, chat, texto);
+  const f = new FormData();
+  f.set("chat_id", alvoDe(chat));
+  f.set("caption", html);
+  f.set("parse_mode", "HTML");
+  f.set("photo", new Blob([foto], { type: "image/png" }), "oferta.png");
+  const r = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: "POST", body: f, signal: AbortSignal.timeout(20000) });
+  await resposta(r);
 }
 
 function traduzir(m: string) {

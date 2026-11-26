@@ -5,11 +5,12 @@ import { Logo } from "@/components/Logo";
 import LoginForm from "./LoginForm";
 import Sair from "./Sair";
 import Excluir from "./Excluir";
+import { Paginacao } from "./Paginacao";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Leads · ACHOU", robots: { index: false, follow: false } };
 
-const POR_PAGINA = 50;
+const POR_PAGINA = 20;
 const fmtData = (iso: string) =>
   new Date(iso).toLocaleString("pt-BR", {
     timeZone: "America/Sao_Paulo",
@@ -133,15 +134,7 @@ export default async function AdminPage({
         </table>
       </div>
 
-      <nav className="adm__pag" aria-label="Páginas">
-        <span>
-          {filtrados.length.toLocaleString("pt-BR")} resultado{filtrados.length === 1 ? "" : "s"} · página {pagina} de {paginas}
-        </span>
-        <div>
-          {pagina > 1 ? <a className="adm__btn" href={link(pagina - 1)}>← Anterior</a> : <span className="adm__btn is-off">← Anterior</span>}
-          {pagina < paginas ? <a className="adm__btn" href={link(pagina + 1)}>Próxima →</a> : <span className="adm__btn is-off">Próxima →</span>}
-        </div>
-      </nav>
+      <Paginacao pagina={pagina} paginas={paginas} total={filtrados.length} link={link} />
     </main>
   );
 }
