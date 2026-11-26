@@ -2353,7 +2353,7 @@ h2 {
 /* foto de unboxing do membro, no topo do card */
 .dep__unbox {
   position: relative;
-  height: 230px;
+  height: 260px;
   margin: -8px -8px 2px;
   border-radius: 16px;
   overflow: hidden;
