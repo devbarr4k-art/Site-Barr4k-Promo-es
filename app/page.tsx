@@ -266,10 +266,19 @@ export default function Home() {
                 loja antes de mandar pro seu celular.
               </p>
               <CTAButtons origem="topo" />
-              <ul className="hero__proof">
-                <li><Check /> Grátis</li>
-                <li><Check /> Sem spam</li>
-                <li><Check /> Sai quando quiser</li>
+              <ul className="hero__proof hero__proof--v2">
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8L3 12z" /><circle cx="7.5" cy="8.5" r="1.4" /></svg>
+                  <span><b>Grátis</b>pra sempre</span>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 9.5-4.9M18 11v5l2 2H8" /><path d="M10 21h4" /><path d="M3 3l18 18" /></svg>
+                  <span><b>Sem spam</b>só oferta boa</span>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h5v16h-5" /><path d="M10 8l-4 4 4 4" /><path d="M6 12h10" /></svg>
+                  <span><b>Sem amarras</b>sai quando quiser</span>
+                </li>
               </ul>
             </div>
 
