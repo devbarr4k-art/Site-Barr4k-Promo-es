@@ -106,8 +106,9 @@ export async function addOferta(f: FormData) {
   const cfg = await lerConfig();
   const r = await processar(msg, [], cfg);
   if (!r.ok) voltar(`Não entrou: ${r.motivo}.`, "fila", true);
-  await db().from("auto_ofertas").insert({
+  await inserirOferta({
     origem: "manual",
+    imagem: r.imagem,
     texto_original: msg,
     texto_final: r.texto,
     link_original: r.linkOriginal,
