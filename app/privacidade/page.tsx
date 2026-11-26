@@ -19,7 +19,7 @@ export default function Privacidade() {
       <h2>O que a gente coleta</h2>
       <p>
         Quando você pede para entrar no grupo do Telegram ou na comunidade do WhatsApp da ACHOU, pedimos seu
-        <b> e-mail</b> e seu <b>telefone</b>. Também registramos a data do cadastro e qual grupo você escolheu.
+        <b> nome</b>, <b>e-mail</b> e <b>telefone</b>. Também registramos a data do cadastro e qual grupo você escolheu.
       </p>
 
       <h2>Para que usamos</h2>

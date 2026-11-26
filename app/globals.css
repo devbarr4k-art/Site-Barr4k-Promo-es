@@ -2349,3 +2349,39 @@ h2 {
   font-weight: 800;
   font-size: 17px;
 }
+
+/* foto de unboxing do membro, no topo do card */
+.dep__unbox {
+  position: relative;
+  height: 230px;
+  margin: -8px -8px 2px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0d0d0d;
+}
+.dep__unbox img {
+  object-fit: cover;
+}
+@media (max-width: 899px) {
+  .dep__unbox {
+    height: 190px;
+  }
+}
+
+/* selos no lugar do "+500 mil" */
+ul.hero__proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin-top: 26px;
+  font-size: 14.5px;
+  color: #c9c9c3;
+}
+ul.hero__proof li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+ul.hero__proof svg {
+  color: var(--lime);
+}

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bolt } from "./Logo";
 import { TelegramIcon, WhatsIcon } from "./Icons";
 
-// Antes de liberar o grupo, a pessoa deixa e-mail e telefone.
+// Antes de liberar o grupo, a pessoa deixa nome, e-mail e telefone.
 // Quem já se cadastrou neste navegador vai direto (o link fica guardado no localStorage).
 
 type Canal = "telegram" | "whatsapp";
@@ -77,6 +77,7 @@ export function LeadModal() {
   const [aberto, setAberto] = useState(false);
   const [canal, setCanal] = useState<Canal>("telegram");
   const [origem, setOrigem] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
   const [ok, setOk] = useState(false);
@@ -118,7 +119,7 @@ export function LeadModal() {
       const r = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, telefone: tel, canal, consentimento: ok, origem, site }),
+        body: JSON.stringify({ nome, email, telefone: tel, canal, consentimento: ok, origem, site }),
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.error || "Não deu pra enviar. Tente de novo.");
@@ -153,12 +154,23 @@ export function LeadModal() {
         ) : (
           <form onSubmit={enviar} noValidate>
             <h2>Falta só um passo.</h2>
-            <p>Deixa seu e-mail e telefone pra liberar o {nomeCanal}. É de graça.</p>
+            <p>Deixa seu nome, e-mail e telefone pra liberar o {nomeCanal}. É de graça.</p>
 
+            <label className="gate__field">
+              <span>Nome</span>
+              <input
+                ref={primeiro}
+                type="text"
+                autoComplete="name"
+                placeholder="Seu nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+              />
+            </label>
             <label className="gate__field">
               <span>E-mail</span>
               <input
-                ref={primeiro}
                 type="email"
                 inputMode="email"
                 autoComplete="email"

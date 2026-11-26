@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OFERTAS, brl, desconto } from "@/lib/config";
 import { entrar } from "./LeadGate";
 
@@ -9,6 +9,27 @@ import { entrar } from "./LeadGate";
 export function IndexList() {
   const [ativo, setAtivo] = useState<number | null>(null);
   const preview = useRef<HTMLDivElement>(null);
+  const lista = useRef<HTMLDivElement>(null);
+
+  // Rolar a página não dispara "mouse saiu": esconde a foto quando a lista sai de baixo do cursor
+  useEffect(() => {
+    let x = -1;
+    let y = -1;
+    const onMove = (e: PointerEvent) => {
+      x = e.clientX;
+      y = e.clientY;
+    };
+    const onScroll = () => {
+      const r = lista.current?.getBoundingClientRect();
+      if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) setAtivo(null);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   const mover = (e: React.MouseEvent) => {
     const el = preview.current;
@@ -17,7 +38,7 @@ export function IndexList() {
   };
 
   return (
-    <div className="idx" onMouseMove={mover} onMouseLeave={() => setAtivo(null)}>
+    <div ref={lista} className="idx" onMouseMove={mover} onMouseLeave={() => setAtivo(null)}>
       <div className="idx__row idx__row--head" aria-hidden="true">
         <span>Nº</span>
         <span>Produto</span>

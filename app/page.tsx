@@ -6,7 +6,7 @@ import { IndexList } from "@/components/IndexList";
 import { GateLink, LeadModal } from "@/components/LeadGate";
 import { Particles } from "@/components/Particles";
 import { Check, Cross, TelegramIcon, WhatsIcon } from "@/components/Icons";
-import { DEPOIMENTOS, DESTAQUE, LINKS, NUMEROS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
+import { DEPOIMENTOS, DESTAQUE, LINKS, OFERTAS, brl, desconto, type Depoimento } from "@/lib/config";
 
 const console8 = DESTAQUE;
 const fone = OFERTAS[1];
@@ -152,7 +152,7 @@ const TEMPESTADE: [string, string, number, number, number][] = [
 
 function Tempestade() {
   return (
-    <section className="storm" aria-label="1.240 promoções por dia, 38 valem a pena">
+    <section className="storm" aria-label="A gente garimpa tudo. Só chega o que vale a pena.">
       <div className="storm__stage">
         <div className="storm__space" aria-hidden="true">
           {TEMPESTADE.map(([tipo, c, x, y, z], i) => (
@@ -171,8 +171,8 @@ function Tempestade() {
           ))}
         </div>
         <h2 className="storm__title">
-          <span>1.240 promoções por dia.</span>
-          <span className="lime">38 valem a pena.</span>
+          <span>A gente garimpa tudo.</span>
+          <span className="lime">Só chega o que vale a pena.</span>
         </h2>
       </div>
     </section>
@@ -182,6 +182,11 @@ function Tempestade() {
 function CardDepoimento({ d }: { d: Depoimento }) {
   return (
     <figure className="dep dep--membro">
+      {d.foto && (
+        <div className="dep__unbox">
+          <Image src={d.foto} alt={`${d.produto} que ${d.nome.split(" ")[0]} recebeu`} fill sizes="(max-width: 899px) 310px, 400px" />
+        </div>
+      )}
       <div className="dep__head">
         <span className="dep__ini" aria-hidden="true">
           {d.nome.split(" ").map((p) => p[0]).join("").slice(0, 2)}
@@ -245,7 +250,7 @@ export default function Home() {
           <div className="hero__grid">
             <div className="hero__copy">
               <h1 className="hero__title">
-                <span className="hero__line"><span>A gente acha.</span></span>
+                <span className="hero__line"><span>A gente acha,</span></span>
                 <span className="hero__line"><span>Você <span className="hl">economiza</span><span className="lime">.</span></span></span>
               </h1>
               <p className="hero__sub">
@@ -253,17 +258,11 @@ export default function Home() {
                 loja antes de mandar pro seu celular.
               </p>
               <CTAButtons origem="topo" />
-              <div className="hero__proof">
-                <span className="avatars" aria-hidden="true">
-                  <span style={{ background: "#C6FF00" }}>LP</span>
-                  <span style={{ background: "#D9D9D3" }}>MA</span>
-                  <span style={{ background: "#9FBF8A" }}>RJ</span>
-                  <span style={{ background: "#E8E8E2" }}>CS</span>
-                </span>
-                <p>
-                  <b>{NUMEROS.membros}</b> pessoas já fazem parte
-                </p>
-              </div>
+              <ul className="hero__proof">
+                <li><Check /> Grátis</li>
+                <li><Check /> Sem spam</li>
+                <li><Check /> Sai quando quiser</li>
+              </ul>
             </div>
 
             <div className="hero__phone">
@@ -328,7 +327,7 @@ export default function Home() {
         {/* COMPARAÇÃO */}
         <section className="compare" id="comparar">
           <h2 className="mega">
-            O mesmo fone.
+            O mesmo fone,
             <br />
             Três grupos.
           </h2>

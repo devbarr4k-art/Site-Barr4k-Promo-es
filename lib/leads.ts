@@ -11,13 +11,18 @@ import path from "path";
 // No PC, sem token, salva num arquivo temporário só pra testar.
 
 export type Canal = "telegram" | "whatsapp";
-export type Lead = { email: string; telefone: string; canal: Canal; em: string; origem: string };
+export type Lead = { nome: string; email: string; telefone: string; canal: Canal; em: string; origem: string };
 
 const LOCAL = path.join(os.tmpdir(), "achou-site", "leads.jsonl");
 export const blobPronto = () => !!process.env.BLOB_READ_WRITE_TOKEN;
 
 const b64 = (s: string) => Buffer.from(s, "utf8").toString("base64url");
 const unb64 = (s: string) => Buffer.from(s, "base64url").toString("utf8");
+
+export function limparNome(v: unknown) {
+  const n = typeof v === "string" ? v.replace(/\s+/g, " ").trim().slice(0, 80) : "";
+  return n.length >= 2 ? n : null;
+}
 
 export function limparEmail(v: unknown) {
   const e = typeof v === "string" ? v.trim().toLowerCase().slice(0, 120) : "";
@@ -54,7 +59,7 @@ function lerNome(pathname: string): Lead | null {
   if (!m) return null;
   try {
     const o = JSON.parse(unb64(m[1]));
-    return { email: String(o.email), telefone: String(o.telefone), canal: o.canal === "whatsapp" ? "whatsapp" : "telegram", em: String(o.em), origem: String(o.origem ?? "") };
+    return { nome: String(o.nome ?? ""), email: String(o.email), telefone: String(o.telefone), canal: o.canal === "whatsapp" ? "whatsapp" : "telegram", em: String(o.em), origem: String(o.origem ?? "") };
   } catch {
     return null;
   }

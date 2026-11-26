@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { blobPronto, limparEmail, limparTelefone, salvarLead, type Canal } from "@/lib/leads";
+import { blobPronto, limparEmail, limparNome, limparTelefone, salvarLead, type Canal } from "@/lib/leads";
 import { LINKS } from "@/lib/config";
 
 // Recebe o cadastro e só então devolve o link do grupo (o link não fica no HTML da página).
@@ -7,9 +7,11 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   if (body.site) return NextResponse.json({ ok: true, url: "/" }); // campo isca contra robô
 
+  const nome = limparNome(body.nome);
   const email = limparEmail(body.email);
   const telefone = limparTelefone(body.telefone);
   const canal: Canal = body.canal === "whatsapp" ? "whatsapp" : "telegram";
+  if (!nome) return NextResponse.json({ error: "Diz seu nome." }, { status: 400 });
   if (!email) return NextResponse.json({ error: "Confira o e-mail." }, { status: 400 });
   if (!telefone) return NextResponse.json({ error: "Confira o telefone, com DDD." }, { status: 400 });
   if (body.consentimento !== true) {
@@ -18,6 +20,7 @@ export async function POST(req: Request) {
 
   try {
     await salvarLead({
+      nome,
       email,
       telefone,
       canal,

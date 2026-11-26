@@ -41,7 +41,7 @@ export default async function AdminPage({
 
   const qDigitos = q.replace(/\D/g, "");
   const filtrados = todos.filter(
-    (l) => (!canal || l.canal === canal) && (!q || l.email.includes(q) || (qDigitos.length >= 3 && l.telefone.includes(qDigitos))),
+    (l) => (!canal || l.canal === canal) && (!q || l.email.includes(q) || l.nome.toLowerCase().includes(q) || (qDigitos.length >= 3 && l.telefone.includes(qDigitos))),
   );
   const paginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
   const pagina = Math.min(paginas, Math.max(1, Number(sp.p) || 1));
@@ -82,7 +82,7 @@ export default async function AdminPage({
       </section>
 
       <form className="adm__filtros" action="/admin">
-        <input name="q" defaultValue={q} placeholder="Buscar por e-mail ou telefone" aria-label="Buscar" />
+        <input name="q" defaultValue={q} placeholder="Buscar por nome, e-mail ou telefone" aria-label="Buscar" />
         <select name="canal" defaultValue={canal} aria-label="Canal">
           <option value="">Todos os canais</option>
           <option value="telegram">Telegram</option>
@@ -96,6 +96,7 @@ export default async function AdminPage({
           <thead>
             <tr>
               <th>Data</th>
+              <th>Nome</th>
               <th>E-mail</th>
               <th>Telefone</th>
               <th>Canal</th>
@@ -106,6 +107,7 @@ export default async function AdminPage({
             {lista.map((l, i) => (
               <tr key={l.em + i}>
                 <td>{fmtData(l.em)}</td>
+                <td>{l.nome || "—"}</td>
                 <td><a href={`mailto:${l.email}`}>{l.email}</a></td>
                 <td><a href={`https://wa.me/${l.telefone}`} target="_blank" rel="noopener">{fmtTel(l.telefone)}</a></td>
                 <td><span className={`adm__tag adm__tag--${l.canal}`}>{l.canal === "telegram" ? "Telegram" : "WhatsApp"}</span></td>
@@ -114,7 +116,7 @@ export default async function AdminPage({
             ))}
             {lista.length === 0 && (
               <tr>
-                <td colSpan={5} className="adm__vazio">
+                <td colSpan={6} className="adm__vazio">
                   {todos.length === 0
                     ? "Nenhum lead ainda. Assim que alguém se cadastrar no site, aparece aqui."
                     : "Nada encontrado com esse filtro."}

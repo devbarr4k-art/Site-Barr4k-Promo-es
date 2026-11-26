@@ -7,9 +7,9 @@ export async function GET() {
   const leads = await listarLeads();
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
   const linhas = [
-    "data;email;telefone;canal;origem",
+    "data;nome;email;telefone;canal;origem",
     ...leads.map((l) =>
-      [new Date(l.em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }), l.email, "+" + l.telefone, l.canal, l.origem]
+      [new Date(l.em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }), l.nome, l.email, "+" + l.telefone, l.canal, l.origem]
         .map(esc)
         .join(";"),
     ),
