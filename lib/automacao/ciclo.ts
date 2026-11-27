@@ -4,6 +4,7 @@ import { db, inserirOferta, lerConfig, type Config } from "./db";
 import { dentroDoHorario, proximoIntervalo } from "./agenda";
 import { lerCanal, postar, postarFoto } from "./telegram";
 import { fotoComMarca, infoDoTexto } from "./imagem";
+import { ehGrupoWhats, postarWhats, whatsLigado } from "./whatsapp";
 import { processar } from "./oferta";
 import { ehLinkML, lerProduto } from "./ml";
 
@@ -52,7 +53,6 @@ export async function disparar(cfg: Config, forcar = false, id?: string) {
     if (!dentroDoHorario(cfg)) return "fora do horário";
     if (cfg.proximo_envio && new Date(cfg.proximo_envio) > new Date()) return "aguardando intervalo";
   }
-  if (!cfg.bot_token) return "falta o token do bot";
   const busca = db().from("auto_ofertas").select("*");
   const { data: oferta } = await (id
     ? busca.eq("id", id).in("status", ["pendente", "aprovada", "erro"])
@@ -62,17 +62,27 @@ export async function disparar(cfg: Config, forcar = false, id?: string) {
   if (!oferta.texto_final) return "oferta sem texto";
   const { data: destinos } = await db().from("auto_grupos").select("chat").eq("tipo", "destino").eq("ativo", true);
   if (!destinos?.length) return "nenhum canal de destino";
+  // token do bot só é obrigatório se houver canal de Telegram entre os destinos
+  if (!cfg.bot_token && destinos.some((d) => !ehGrupoWhats(d.chat))) return "falta o token do bot";
 
   const erros: string[] = [];
   let enviou = false;
   // foto do produto (a vitrine do link original tem a imagem); sem foto, vai só o texto
   const foto = oferta.imagem ?? (oferta.link_original ? await lerProduto(oferta.link_original).then((p) => p?.imagem ?? null).catch(() => null) : null);
   const info = infoDoTexto(oferta.texto_final);
+  // a arte leva o @ do canal de Telegram (ou achou_ofertas); a mesma arte vai pros dois
+  const marca = destinos.map((d) => d.chat).find((c) => c.startsWith("@")) ?? "@achou_ofertas";
+  const png = foto ? await fotoComMarca(foto, marca, info).catch(() => null) : null;
   for (const d of destinos) {
     try {
-      const png = foto ? await fotoComMarca(foto, d.chat, info).catch(() => null) : null;
-      if (png) await postarFoto(cfg.bot_token, d.chat, png, oferta.texto_final);
-      else await postar(cfg.bot_token, d.chat, oferta.texto_final);
+      if (ehGrupoWhats(d.chat)) {
+        if (!whatsLigado()) throw new Error("WhatsApp não configurado (falta a Evolution na Vercel)");
+        await postarWhats(d.chat, oferta.texto_final, png);
+      } else if (png) {
+        await postarFoto(cfg.bot_token, d.chat, png, oferta.texto_final);
+      } else {
+        await postar(cfg.bot_token, d.chat, oferta.texto_final);
+      }
       enviou = true;
     } catch (e) {
       erros.push(`${d.chat}: ${(e as Error).message}`);

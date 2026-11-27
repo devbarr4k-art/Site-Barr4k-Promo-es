@@ -11,6 +11,8 @@ import { Paginacao } from "../Paginacao";
 import { Abas } from "./Abas";
 import { AutoAtualizar } from "./AutoAtualizar";
 import { BotaoResetar } from "./BotaoResetar";
+import { GruposWhats } from "./GruposWhats";
+import { whatsLigado } from "@/lib/automacao/whatsapp";
 import {
   addCanal,
   addOferta,
@@ -199,7 +201,7 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
         inicial={aba}
         abas={[
           { id: "fila", nome: "Fila", conteudo: <Fila s={sFila} pagina={pFila} data={ofertas ?? []} total={total} /> },
-          { id: "canais", nome: "Canais", conteudo: <Canais origens={origens} destinos={destinos} /> },
+          { id: "canais", nome: "Canais", conteudo: <Canais origens={origens} destinos={destinos} whats={whatsLigado()} /> },
           { id: "config", nome: "Configurar", conteudo: <Config cfg={cfg} /> },
         ]}
       />
@@ -320,7 +322,7 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
 
 type Canal = { id: string; chat: string; tipo: string; ultimo_post: number };
 
-function Canais({ origens, destinos }: { origens: Canal[]; destinos: Canal[] }) {
+function Canais({ origens, destinos, whats }: { origens: Canal[]; destinos: Canal[]; whats: boolean }) {
   const lista = (titulo: string, ajuda: string, itens: Canal[]) => (
     <div className="auto__bloco">
       <h2>{titulo}</h2>
@@ -331,9 +333,13 @@ function Canais({ origens, destinos }: { origens: Canal[]; destinos: Canal[] }) 
         <ul className="auto__canais">
           {itens.map((c) => (
             <li key={c.id}>
-              <a href={`https://t.me/${c.chat.replace(/^@/, "")}`} target="_blank" rel="noopener">
-                {c.chat}
-              </a>
+              {c.chat.startsWith("@") ? (
+                <a href={`https://t.me/${c.chat.replace(/^@/, "")}`} target="_blank" rel="noopener">
+                  {c.chat}
+                </a>
+              ) : (
+                <span>📱 {c.chat.replace(/@g\.us$/, "")} (WhatsApp)</span>
+              )}
               <form action={removerCanal}>
                 <input type="hidden" name="id" value={c.id} />
                 <button className="auto__remover" aria-label={`Remover ${c.chat}`}>
@@ -359,7 +365,8 @@ function Canais({ origens, destinos }: { origens: Canal[]; destinos: Canal[] }) 
         </BotaoEnviar>
       </form>
       {lista("Canais monitorados", "Canais públicos de promoção. O robô lê os posts novos a cada minuto e pega os que têm link do Mercado Livre.", origens)}
-      {lista("Onde o robô posta", "O bot precisa ser administrador desses canais (com permissão de publicar).", destinos)}
+      {lista("Onde o robô posta", "Telegram (o bot precisa ser admin) e WhatsApp (abaixo). A mesma arte e o mesmo texto vão pros dois.", destinos)}
+      <GruposWhats ligado={whats} />
     </section>
   );
 }

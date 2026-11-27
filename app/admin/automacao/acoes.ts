@@ -74,8 +74,15 @@ export async function alternarAtivo(f: FormData) {
 
 export async function addCanal(f: FormData) {
   await guarda();
-  const chat = nomeCanal(txt(f, "chat"));
+  const bruto = txt(f, "chat");
   const tipo = txt(f, "tipo") === "origem" ? "origem" : "destino";
+  // grupo de WhatsApp: entra pelo JID (…@g.us), sem virar @canal do Telegram
+  if (/@g\.us$/i.test(bruto)) {
+    const { error } = await db().from("auto_grupos").insert({ chat: bruto, tipo: "destino" });
+    if (error) voltar(`Não salvou: ${error.message}`, "canais", true);
+    voltar("Grupo do WhatsApp adicionado.", "canais");
+  }
+  const chat = nomeCanal(bruto);
   if (!chat) voltar("Coloque o @ do canal.", "canais", true);
   const { error } = await db().from("auto_grupos").insert({ chat: `@${chat}`, tipo });
   if (error) voltar(`Não salvou: ${error.message}`, "canais", true);
