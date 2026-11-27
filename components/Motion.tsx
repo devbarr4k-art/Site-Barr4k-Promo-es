@@ -76,8 +76,8 @@ export function Motion() {
             scrollTrigger: {
               trigger: ".storm",
               start: "top top",
-              end: desktop ? "+=2600" : "+=1900",
-              scrub: 0.8,
+              end: desktop ? "+=1300" : "+=950",
+              scrub: 0.5,
               pin: ".storm__stage",
             },
           });
@@ -87,8 +87,8 @@ export function Motion() {
             st.fromTo(el, { z: -3200, rotate: gsap.utils.random(-14, 14) }, { z: 900, rotate: 0, duration: 2.4 }, ini);
             st.fromTo(el, { opacity: 0 }, { keyframes: { opacity: [0, 1, 1, 1, 0] }, duration: 2.4 }, ini);
           });
-          st.fromTo(".storm__title span", { opacity: 0, yPercent: 40, scale: 0.92 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.8, stagger: 0.5 }, 2.6)
-            .to({}, { duration: 1.2 });
+          st.fromTo(".storm__title span", { opacity: 0, yPercent: 40, scale: 0.92 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.6, stagger: 0.3 }, 2.4)
+            .to({}, { duration: 0.3 });
         }
 
         // ── Queda de preço: seção fixa, preço cai com a rolagem
