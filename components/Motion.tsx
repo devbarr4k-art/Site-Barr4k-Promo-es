@@ -75,8 +75,8 @@ export function Motion() {
             scrollTrigger: {
               trigger: ".storm",
               start: "top top",
-              end: desktop ? "+=1300" : "+=950",
-              scrub: 0.5,
+              end: desktop ? "+=850" : "+=650",
+              scrub: 0.35,
               pin: ".storm__stage",
             },
           });
