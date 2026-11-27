@@ -1465,7 +1465,7 @@ h2 {
     margin-bottom: 4vw;
   }
   .hero__word {
-    margin-top: 0;
+    display: none;
   }
   .phone {
     width: 300px;
@@ -1578,14 +1578,46 @@ h2 {
   display: grid;
   place-items: center;
 }
+.storm__glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(1150px, 125vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(160, 230, 0, 0.2), rgba(24, 58, 22, 0.24) 46%, transparent 74%);
+  pointer-events: none;
+  z-index: 0;
+}
+.storm__rings {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(920px, 115vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px dashed rgba(198, 255, 0, 0.12);
+  box-shadow:
+    inset 0 0 0 110px rgba(5, 5, 5, 0),
+    inset 0 0 0 111px rgba(237, 237, 230, 0.05),
+    inset 0 0 0 240px rgba(5, 5, 5, 0),
+    inset 0 0 0 241px rgba(198, 255, 0, 0.07);
+  pointer-events: none;
+  z-index: 0;
+}
 .storm__space {
   position: absolute;
   inset: 0;
+  z-index: 1;
   perspective: 900px;
   transform-style: preserve-3d;
 }
 .storm__item {
   position: absolute;
+  left: calc(50% + var(--x, 0) * 1vw);
+  top: calc(50% + var(--y, 0) * 1vh);
   opacity: 0;
   will-change: transform, opacity;
 }
@@ -1594,7 +1626,10 @@ h2 {
   height: auto;
   max-width: clamp(160px, 18vw, 300px);
   max-height: clamp(130px, 22vh, 230px);
-  filter: drop-shadow(0 30px 30px rgba(0, 0, 0, 0.85));
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.16)) drop-shadow(0 30px 30px rgba(0, 0, 0, 0.85));
+}
+.storm__item.is-stay img {
+  filter: drop-shadow(0 0 1px rgba(198, 255, 0, 0.28)) drop-shadow(0 30px 40px rgba(0, 0, 0, 0.9));
 }
 .storm__item--tag span {
   display: inline-block;
@@ -1606,21 +1641,54 @@ h2 {
   font-weight: 800;
   font-size: clamp(18px, 2vw, 30px);
   white-space: nowrap;
+  box-shadow: 0 12px 32px -8px rgba(198, 255, 0, 0.4);
 }
 .storm__item--spam span {
   display: inline-block;
   padding: 10px 16px;
   border-radius: 14px 14px 14px 4px;
-  background: #222;
-  color: #9a9a94;
+  border: 1px solid rgba(194, 73, 63, 0.35);
+  background: #1b1515;
+  color: #b4aba9;
   font-size: clamp(14px, 1.4vw, 20px);
   white-space: nowrap;
   text-decoration: line-through;
   text-decoration-color: var(--bad);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+}
+.storm__copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  padding: 0 var(--pad);
+}
+.storm__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 255, 0, 0.3);
+  background: rgba(12, 16, 10, 0.85);
+  backdrop-filter: blur(8px);
+  font-family: var(--price);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--off);
+  opacity: 0;
+}
+.storm__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 10px var(--lime);
 }
 .storm__title {
   position: relative;
-  z-index: 2;
   display: grid;
   text-align: center;
   font-family: var(--display);
@@ -1629,7 +1697,10 @@ h2 {
   font-size: clamp(2rem, 5.4vw, 6rem);
   line-height: 0.9;
   letter-spacing: -0.05em;
-  text-shadow: 0 10px 60px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 10px 60px rgba(0, 0, 0, 0.95);
+}
+.storm__title span {
+  opacity: 0;
 }
 
 /* ── Reflexo de luz passando pelo console (ref.: hypercar) */
@@ -1651,9 +1722,24 @@ h2 {
 }
 
 @media (max-width: 899px) {
+  .storm__item {
+    left: calc(50% + var(--x, 0) * 0.72vw);
+    top: calc(50% + var(--y, 0) * 0.78vh);
+  }
   .storm__item--img img {
-    max-width: 140px;
-    max-height: 120px;
+    max-width: 132px;
+    max-height: 112px;
+  }
+  .storm__item--tag span {
+    padding: 7px 14px;
+    font-size: 15px;
+  }
+  .storm__item--spam span {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+  .storm__kicker {
+    font-size: 11.5px;
   }
 }
 
@@ -2242,7 +2328,6 @@ h2 {
   /* enxurrada: título sem palavra sobrando */
   .storm__title {
     font-size: clamp(1.6rem, 7.2vw, 2.4rem);
-    padding: 0 var(--pad);
   }
   .chat__window--calm {
     height: auto;

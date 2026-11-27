@@ -66,31 +66,78 @@ export function Motion() {
           gsap.fromTo(t, { xPercent: 0 }, { xPercent: -50, ease: "none", repeat: -1, duration: desktop ? 90 : 50, force3D: true });
         });
 
-        // ── A enxurrada: tudo voa na direção da câmera, sobra a frase
+        // ── A enxurrada: já entra viva abaixo do letreiro, o spam passa pela câmera e sobram os achados limpos
         const itens = gsap.utils.toArray<HTMLElement>(".storm__item");
         if (itens.length) {
+          gsap.fromTo(
+            ".storm__space",
+            { scale: 0.84, y: 40 },
+            {
+              scale: 1,
+              y: 0,
+              ease: "none",
+              scrollTrigger: { trigger: ".storm", start: "top 95%", end: "top top", scrub: 0.35 },
+            },
+          );
+          gsap.fromTo(
+            ".storm__glow",
+            { opacity: 0.2, scale: 0.8 },
+            {
+              opacity: 1,
+              scale: 1,
+              ease: "none",
+              scrollTrigger: { trigger: ".storm", start: "top 95%", end: "top top", scrub: 0.35 },
+            },
+          );
+
           gsap.set(itens, { xPercent: -50, yPercent: -50 });
           const st = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
               trigger: ".storm",
               start: "top top",
-              end: desktop ? "+=850" : "+=650",
+              end: desktop ? "+=1150" : "+=850",
               scrub: 0.35,
               pin: ".storm__stage",
             },
           });
+          st.fromTo(".storm__rings", { scale: 0.88, rotate: -10, opacity: 0.45 }, { scale: 1.18, rotate: 16, opacity: 0.9, duration: 2.5 }, 0);
+
           itens.forEach((el, i) => {
-            const ordem = Number(el.dataset.z);
-            const ini = ordem * 0.16;
-            // o primeiro produto já começa na tela (evita o vão preto antes da animação)
-            const zIni = i === 0 ? -500 : -2400;
-            const op0 = i === 0 ? 1 : 0;
-            st.fromTo(el, { z: zIni, rotate: i === 0 ? 0 : gsap.utils.random(-14, 14) }, { z: 900, rotate: 0, duration: 2.0 }, ini);
-            st.fromTo(el, { opacity: op0 }, { keyframes: { opacity: [op0, 1, 1, 1, 0] }, duration: 2.0 }, ini);
+            const z0 = Number(el.dataset.z0 ?? -2400);
+            const ini = Number(el.dataset.ini ?? 0);
+            const op0 = Number(el.dataset.op0 ?? 0);
+            const fica = el.dataset.stay === "1";
+            const ang = (i % 2 === 0 ? -1 : 1) * (4 + ((i * 3) % 10));
+
+            if (fica) {
+              st.fromTo(el, { z: z0, rotate: ang }, { z: -260, rotate: ang * 0.35, duration: 1.25, ease: "power2.out" }, ini);
+              st.fromTo(el, { opacity: 0 }, { opacity: desktop ? 0.88 : 0.72, duration: 0.75, ease: "power1.out" }, ini);
+            } else {
+              const dur = ini === 0 ? 1.05 + Math.abs(z0) / 1300 : 1.75;
+              st.fromTo(el, { z: z0, rotate: ang }, { z: 820, rotate: 0, duration: dur }, ini);
+              st.fromTo(
+                el,
+                { opacity: op0 },
+                { keyframes: { opacity: [op0, 1, 1, 0] }, duration: dur },
+                ini,
+              );
+            }
           });
-          st.fromTo(".storm__title span", { opacity: 0, yPercent: 40, scale: 0.92 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.6, stagger: 0.3 }, 2.0)
-            .to({}, { duration: 0.3 });
+
+          st.fromTo(
+            ".storm__kicker",
+            { opacity: 0, y: 18, scale: 0.95 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out" },
+            1.6,
+          )
+            .fromTo(
+              ".storm__title span",
+              { opacity: 0, yPercent: 38, scale: 0.92 },
+              { opacity: 1, yPercent: 0, scale: 1, duration: 0.55, stagger: 0.24, ease: "power2.out" },
+              1.75,
+            )
+            .to({}, { duration: 0.55 });
         }
 
         // ── Queda de preço: seção fixa, preço cai com a rolagem

@@ -139,50 +139,90 @@ function Ticker() {
   );
 }
 
-// Peças que voam na "enxurrada": [tipo, conteúdo, x (vw), y (vh), profundidade inicial]
-const TEMPESTADE: [string, string, number, number, number][] = [
-  ["img", "0", -26, -14, 0],
-  ["spam", "CORREEEE!!! 🔥", 24, -22, 1],
-  ["tag", "-40%", -8, 18, 2],
-  ["img", "2", 30, 12, 3],
-  ["spam", "GRUPO VIP R$ 19,90", -34, 20, 4],
-  ["tag", "R$ 299", 14, -8, 5],
-  ["img", "1", -18, -30, 6],
-  ["spam", "link expirado", 36, -30, 7],
-  ["tag", "CUPOM ACHOU15", -30, 4, 8],
-  ["img", "3", 22, 28, 9],
-  ["spam", "SÓ HOJE!!! ÚLTIMAS UNIDADES", -12, -24, 10],
-  ["tag", "FRETE GRÁTIS", 32, -2, 11],
-  ["img", "4", -36, -6, 12],
-  ["spam", "bit.ly/3xK9q…", 8, 30, 13],
-  ["tag", "-38%", -22, 30, 14],
-  ["spam", "promoção falsa", 18, -34, 15],
+// Peças que voam na "enxurrada": [tipo, conteúdo, x (vw), y (vh), z inicial (-2200..0), início na timeline, opacidade inicial, fica no final?]
+// A 1ª onda já entra visível e espalhada pelo palco (nada de tela preta ou produto solto),
+// o spam passa e some pela câmera, e os achados limpos emolduram a frase final.
+type PecaTempestade = {
+  tipo: "img" | "tag" | "spam";
+  c: string;
+  x: number;
+  y: number;
+  z0: number;
+  ini: number;
+  op0: number;
+  fica?: boolean;
+};
+
+const TEMPESTADE: PecaTempestade[] = [
+  // ── Onda 1: já visível assim que a seção aparece abaixo do letreiro
+  { tipo: "img", c: "0", x: -27, y: -14, z0: -380, ini: 0, op0: 1 },
+  { tipo: "spam", c: "CORREEEE!!! 🔥", x: 25, y: -22, z0: -460, ini: 0, op0: 0.95 },
+  { tipo: "tag", c: "-40%", x: -12, y: 20, z0: -520, ini: 0, op0: 0.9 },
+  { tipo: "img", c: "1", x: 28, y: 14, z0: -680, ini: 0, op0: 0.9 },
+  { tipo: "spam", c: "GRUPO VIP R$ 19,90", x: -30, y: 18, z0: -820, ini: 0, op0: 0.8 },
+  { tipo: "img", c: "4", x: 4, y: -26, z0: -920, ini: 0, op0: 0.78 },
+  { tipo: "tag", c: "CUPOM ACHOU15", x: -26, y: -30, z0: -1050, ini: 0, op0: 0.65 },
+
+  // ── Onda 2: enxurrada principal (spam + ofertas cruzam a câmera)
+  { tipo: "img", c: "2", x: -22, y: 12, z0: -1450, ini: 0.08, op0: 0 },
+  { tipo: "tag", c: "MENOR PREÇO 90D", x: 18, y: -8, z0: -1550, ini: 0.14, op0: 0 },
+  { tipo: "spam", c: "link expirado", x: 32, y: -28, z0: -1650, ini: 0.2, op0: 0 },
+  { tipo: "img", c: "3", x: 24, y: 24, z0: -1750, ini: 0.26, op0: 0 },
+  { tipo: "spam", c: "SÓ HOJE!!! ÚLTIMAS UNIDADES", x: -14, y: -24, z0: -1850, ini: 0.34, op0: 0 },
+  { tipo: "tag", c: "FRETE GRÁTIS", x: 32, y: -2, z0: -1950, ini: 0.42, op0: 0 },
+  { tipo: "img", c: "5", x: -34, y: -4, z0: -2050, ini: 0.5, op0: 0 },
+  { tipo: "spam", c: "bit.ly/3xK9q…", x: 10, y: 28, z0: -2150, ini: 0.58, op0: 0 },
+  { tipo: "tag", c: "R$ 269,90", x: -22, y: 28, z0: -2200, ini: 0.66, op0: 0 },
+  { tipo: "spam", c: "promoção falsa", x: 20, y: -32, z0: -2250, ini: 0.74, op0: 0 },
+  { tipo: "spam", c: "CUPOM INVÁLIDO 😭", x: -32, y: -18, z0: -2300, ini: 0.82, op0: 0 },
+  { tipo: "tag", c: "-52%", x: 8, y: -16, z0: -2350, ini: 0.9, op0: 0 },
+  { tipo: "spam", c: "FRETE R$ 89,00", x: -6, y: 22, z0: -2400, ini: 0.98, op0: 0 },
+
+  // ── Onda 3: o ruído foi embora; só os achados limpos ficam nas bordas com a frase
+  { tipo: "img", c: "ps5", x: -33, y: -18, z0: -2400, ini: 1.05, op0: 0, fica: true },
+  { tipo: "img", c: "1", x: 34, y: 18, z0: -2400, ini: 1.12, op0: 0, fica: true },
+  { tipo: "tag", c: "PIX -10%", x: 31, y: -22, z0: -2400, ini: 1.18, op0: 0, fica: true },
+  { tipo: "tag", c: "CONFERIDO", x: -31, y: 22, z0: -2400, ini: 1.24, op0: 0, fica: true },
 ];
 
 function Tempestade() {
   return (
     <section className="storm" aria-label="A gente garimpa tudo. Só chega o que vale a pena.">
       <div className="storm__stage">
+        <div className="storm__glow" aria-hidden="true" />
+        <div className="storm__rings" aria-hidden="true" />
         <div className="storm__space" aria-hidden="true">
-          {TEMPESTADE.map(([tipo, c, x, y, z], i) => (
-            <div
-              key={i}
-              className={`storm__item storm__item--${tipo}`}
-              data-z={z}
-              style={{ left: `calc(50% + ${x}vw)`, top: `calc(50% + ${y}vh)` }}
-            >
-              {tipo === "img" ? (
-                <Image src={OFERTAS[Number(c)].img} alt="" width={OFERTAS[Number(c)].w} height={OFERTAS[Number(c)].h} sizes="300px" loading="eager" />
-              ) : (
-                <span>{c}</span>
-              )}
-            </div>
-          ))}
+          {TEMPESTADE.map((p, i) => {
+            const prod = p.tipo === "img" ? (p.c === "ps5" ? console8 : OFERTAS[Number(p.c)]) : null;
+            return (
+              <div
+                key={i}
+                className={`storm__item storm__item--${p.tipo}${p.fica ? " is-stay" : ""}`}
+                data-z0={p.z0}
+                data-ini={p.ini}
+                data-op0={p.op0}
+                data-stay={p.fica ? "1" : undefined}
+                style={{ "--x": p.x, "--y": p.y } as React.CSSProperties}
+              >
+                {prod ? (
+                  <Image src={prod.img} alt="" width={prod.w} height={prod.h} sizes="300px" loading="eager" />
+                ) : (
+                  <span>{p.c}</span>
+                )}
+              </div>
+            );
+          })}
         </div>
-        <h2 className="storm__title">
-          <span>A gente garimpa tudo.</span>
-          <span className="lime">Só chega o que vale a pena.</span>
-        </h2>
+        <div className="storm__copy">
+          <p className="storm__kicker">
+            <span className="storm__dot" aria-hidden="true" />
+            1.240 links analisados por dia · só ~38 passam
+          </p>
+          <h2 className="storm__title">
+            <span>A gente garimpa tudo.</span>
+            <span className="lime">Só chega o que vale a pena.</span>
+          </h2>
+        </div>
       </div>
     </section>
   );
@@ -446,7 +486,7 @@ export default function Home() {
             </details>
             <details>
               <summary>Vou receber mensagem demais?</summary>
-              <p>Não. São de 6 a 12 ofertas por dia, nos horários em que as lojas mais baixam preço. Ninguém do grupo pode mandar mensagem, então não tem conversa paralela.</p>
+              <p>Não. Só o que vale a pena nos horários em que as lojas mais baixam preço. Ninguém do grupo pode mandar mensagem, então não tem conversa paralela.</p>
             </details>
             <details>
               <summary>Vocês vendem os produtos?</summary>
