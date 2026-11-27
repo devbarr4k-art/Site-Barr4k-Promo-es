@@ -413,11 +413,11 @@ export default function Home() {
           </div>
           <div className="stat">
             <p className="stat__num">
-              <span className="count" data-from="214" data-to="9">9</span>
-              <span className="stat__of">/dia</span>
+              <span className="count" data-from="0" data-to="100">100</span>
+              <span className="stat__of">%</span>
             </p>
-            <h3>Zero spam</h3>
-            <p>Grupo comum manda mais de 200 mensagens por dia. Aqui você pode deixar a notificação ligada.</p>
+            <h3>Conferida 1 por 1</h3>
+            <p>A gente garimpa vários grupos e lojas e confere cada oferta — preço e cupom — antes de soltar. Você recebe só as melhores.</p>
           </div>
           <div className="stat">
             <p className="stat__num">
