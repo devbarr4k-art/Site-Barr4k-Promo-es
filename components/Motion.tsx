@@ -47,7 +47,6 @@ export function Motion() {
         // ── Hero: uma entrada só, o ACHOU gigante sobe por baixo do celular
         const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
         intro
-          .from(".hero__word span", { yPercent: 60, opacity: 0, duration: 1.4 }, 0)
           .from(".hero__line > span", { yPercent: 110, duration: 1.1, stagger: 0.1 }, 0.15)
           .from(".hero__sub, .hero__proof", { opacity: 0, y: 16, duration: 0.8, stagger: 0.06 }, 0.5)
           .from(".hero .ctas .btn", { opacity: 0, y: 16, duration: 0.8, stagger: 0.08 }, 0.6)
@@ -61,10 +60,10 @@ export function Motion() {
           ease: "none",
           scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
         });
-        gsap.to(".hero__word span", {
-          xPercent: -6,
-          ease: "none",
-          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
+        // ── Depoimentos: esteira contínua (GSAP roda liso no iPhone; não pausa com toque nem mouse)
+        gsap.utils.toArray<HTMLElement>(".deps__track").forEach((t) => {
+          t.style.animation = "none";
+          gsap.fromTo(t, { xPercent: 0 }, { xPercent: -50, ease: "none", repeat: -1, duration: desktop ? 90 : 50, force3D: true });
         });
 
         // ── A enxurrada: tudo voa na direção da câmera, sobra a frase

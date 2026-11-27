@@ -3100,3 +3100,30 @@ textarea.auto__campo {
   .dep:hover { border-color: var(--line); }
   .deps__row { -webkit-tap-highlight-color: transparent; }
 }
+/* botão do WhatsApp enquanto a comunidade não abre */
+.btn--breve { opacity: 0.55; cursor: default; pointer-events: none; }
+
+/* cadastro novo: selo, lema, botão grande e etapa opcional de interesses */
+.gate__box form, .gate__done { text-align: center; }
+.gate__field, .gate__check { text-align: left; }
+.gate__selo { justify-self: center; padding: 4px 12px; border-radius: 999px; background: rgba(198,255,0,.12); color: var(--lime); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.gate h2 { margin: 0; }
+.gate__lema { color: var(--lime) !important; font-family: var(--display); font-weight: 700; font-size: 19px !important; margin: -6px 0 0; }
+.gate__go--grande { height: 60px; font-size: 17px; text-transform: uppercase; letter-spacing: .02em; }
+.gate__nota { font-size: 12.5px !important; color: var(--g2) !important; margin: -4px 0 0; }
+.gate__extra { display: grid; gap: 10px; margin-top: 8px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(5,5,5,.5); text-align: left; }
+.gate__extra h3 { margin: 0; font-size: 18px; }
+.gate__extra h3 small { font-size: 13px; font-weight: 500; color: var(--g2); }
+.gate__extra p { margin: 0; font-size: 14px; }
+.gate__cats { display: flex; flex-wrap: wrap; gap: 8px; }
+.gate__cats button { padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--off); font: inherit; font-size: 14px; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+.gate__cats button.is-on { background: var(--lime); border-color: var(--lime); color: #050505; font-weight: 600; }
+.gate__cats button.is-on::before { content: "✓ "; }
+.gate__salvar { height: 46px; border-radius: 999px; border: 1px solid var(--lime); background: transparent; color: var(--lime); font: inherit; font-weight: 700; cursor: pointer; }
+.gate__salvar:disabled { opacity: .4; cursor: default; }
+.gate__ok { color: var(--lime) !important; font-weight: 600; text-align: center; }
+@media (max-width: 520px) {
+  .gate__box { padding: 26px 18px; }
+  .gate h2 { font-size: 27px; }
+  .gate__cats button { font-size: 13px; padding: 8px 12px; }
+}

@@ -7,6 +7,7 @@ import Sair from "./Sair";
 import Excluir from "./Excluir";
 import { Paginacao } from "./Paginacao";
 import { Funil } from "./Funil";
+import { CATEGORIAS, lerInteresses, nomeCategoria } from "@/lib/interesses";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Leads · ACHOU", robots: { index: false, follow: false } };
@@ -29,14 +30,16 @@ const fmtTel = (t: string) => {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; p?: string; canal?: string; f?: string }>;
+  searchParams: Promise<{ q?: string; p?: string; canal?: string; f?: string; i?: string }>;
 }) {
   if (!(await isLoggedIn())) return <LoginForm />;
 
   const sp = await searchParams;
   const q = (sp.q ?? "").trim().toLowerCase();
   const canal = sp.canal === "telegram" || sp.canal === "whatsapp" ? sp.canal : "";
-  const todos = await listarLeads();
+  const interesse = CATEGORIAS.some(([k]) => k === sp.i) ? sp.i! : "";
+  const [brutos, mapaInteresses] = await Promise.all([listarLeads(), lerInteresses().catch(() => new Map<string, string[]>())]);
+  const todos = brutos.map((l) => ({ ...l, interesses: mapaInteresses.get(l.email) ?? [] }));
 
   const hoje = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const deHoje = todos.filter((l) => new Date(l.em).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }) === hoje).length;
@@ -45,7 +48,7 @@ export default async function AdminPage({
 
   const qDigitos = q.replace(/\D/g, "");
   const filtrados = todos.filter(
-    (l) => (!canal || !!l.canais?.includes(canal)) && (!q || l.email.includes(q) || l.nome.toLowerCase().includes(q) || (qDigitos.length >= 3 && l.telefone.includes(qDigitos))),
+    (l) => (!canal || !!l.canais?.includes(canal)) && (!interesse || l.interesses.includes(interesse)) && (!q || l.email.includes(q) || l.nome.toLowerCase().includes(q) || (qDigitos.length >= 3 && l.telefone.includes(qDigitos))),
   );
   const paginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
   const pagina = Math.min(paginas, Math.max(1, Number(sp.p) || 1));
@@ -55,6 +58,7 @@ export default async function AdminPage({
     const u = new URLSearchParams();
     if (q) u.set("q", q);
     if (canal) u.set("canal", canal);
+    if (interesse) u.set("i", interesse);
     if (p > 1) u.set("p", String(p));
     const s = u.toString();
     return s ? `/admin?${s}` : "/admin";
@@ -97,6 +101,12 @@ export default async function AdminPage({
           <option value="telegram">Telegram</option>
           <option value="whatsapp">WhatsApp</option>
         </select>
+        <select name="i" defaultValue={interesse} aria-label="Interesse">
+          <option value="">Todos os interesses</option>
+          {CATEGORIAS.map(([k, nome]) => (
+            <option key={k} value={k}>{nome}</option>
+          ))}
+        </select>
         <button className="adm__btn" type="submit">Filtrar</button>
       </form>
 
@@ -109,6 +119,7 @@ export default async function AdminPage({
               <th>E-mail</th>
               <th>Telefone</th>
               <th>Canal</th>
+              <th>Interesses</th>
               <th>Botão</th>
               <th aria-label="Ações"></th>
             </tr>
@@ -125,13 +136,14 @@ export default async function AdminPage({
                     <span key={c} className={`adm__tag adm__tag--${c}`}>{c === "telegram" ? "Telegram" : "WhatsApp"}</span>
                   ))}
                 </div></td>
+                <td className="adm__muted adm__interesses">{l.interesses.length ? l.interesses.map(nomeCategoria).join(", ") : "—"}</td>
                 <td className="adm__muted">{l.origem || "—"}</td>
                 <td>{l.id && <Excluir id={l.id} quem={l.nome || l.email} />}</td>
               </tr>
             ))}
             {lista.length === 0 && (
               <tr>
-                <td colSpan={7} className="adm__vazio">
+                <td colSpan={8} className="adm__vazio">
                   {todos.length === 0
                     ? "Nenhum lead ainda. Assim que alguém se cadastrar no site, aparece aqui."
                     : "Nada encontrado com esse filtro."}

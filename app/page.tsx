@@ -101,9 +101,17 @@ function CTAButtons({ origem }: { origem: string }) {
       <Btn origem={origem} icon={<TelegramIcon size={18} />}>
         Entrar no grupo do Telegram
       </Btn>
-      <Btn canal="whatsapp" origem={origem} icon={<WhatsIcon size={18} />} variant="white">
-        Comunidade no WhatsApp
-      </Btn>
+      {/* comunidade do WhatsApp ainda não abriu: botão desativado */}
+      <span className="btn btn--white btn--lg btn--breve" aria-disabled="true" title="A comunidade no WhatsApp abre em breve">
+        <span className="btn__ico" aria-hidden="true">
+          <span className="btn__ico-a">
+            <WhatsIcon size={18} />
+          </span>
+        </span>
+        <span className="btn__label">
+          <span>WhatsApp · em breve</span>
+        </span>
+      </span>
     </div>
   );
 }
@@ -279,9 +287,6 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero__word" aria-hidden="true">
-            <span>ACHOU</span>
-          </div>
         </section>
 
         <Ticker />
