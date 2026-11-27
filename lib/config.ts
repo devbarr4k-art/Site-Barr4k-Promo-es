@@ -25,11 +25,11 @@ export type Oferta = {
 
 // Recortes vindos do canvas de marca (ACHOU — Brand Guidelines). Trocar pelas fotos das ofertas reais.
 export const OFERTAS: Oferta[] = [
-  { id: "console", nome: "Console portátil 64 GB", loja: "Loja parceira", de: 2399, por: 1799, img: "/produtos/console-v3.webp", w: 1800, h: 882 },
-  { id: "fone", nome: "Headphone Bluetooth ANC", loja: "Loja parceira", de: 419.9, por: 269.9, img: "/produtos/headphone-v2.webp", w: 300, h: 338 },
+  { id: "console", nome: "Console Nintendo Switch", loja: "Loja parceira", de: 2399, por: 1799, img: "/produtos/switch-v1.webp", w: 900, h: 485 },
+  { id: "fone", nome: "Fone Bluetooth", loja: "Loja parceira", de: 419.9, por: 269.9, img: "/produtos/fone-bt-v1.webp", w: 347, h: 470 },
   { id: "purificador", nome: "Purificador de água gelada", loja: "Loja parceira", de: 1299, por: 899, img: "/produtos/purificador-v1.webp", w: 705, h: 872 },
   { id: "geladeira", nome: "Geladeira Frost Free 2 portas", loja: "Loja parceira", de: 3899, por: 2799, img: "/produtos/geladeira-v1.webp", w: 247, h: 598 },
-  { id: "teclado", nome: "Teclado mecânico 75%", loja: "Loja parceira", de: 549, por: 389, img: "/produtos/teclado-v2.webp", w: 618, h: 375 },
+  { id: "teclado", nome: "Teclado mecânico 75%", loja: "Loja parceira", de: 549, por: 389, img: "/produtos/teclado-v3.webp", w: 330, h: 203 },
   { id: "earbuds", nome: "Fone sem fio TWS", loja: "Loja parceira", de: 199, por: 123, img: "/produtos/earbuds-v3.webp", w: 352, h: 559 },
 ];
 

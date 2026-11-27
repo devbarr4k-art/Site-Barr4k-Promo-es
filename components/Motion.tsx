@@ -80,13 +80,16 @@ export function Motion() {
               pin: ".storm__stage",
             },
           });
-          itens.forEach((el) => {
+          itens.forEach((el, i) => {
             const ordem = Number(el.dataset.z);
-            const ini = ordem * 0.22;
-            st.fromTo(el, { z: -3200, rotate: gsap.utils.random(-14, 14) }, { z: 900, rotate: 0, duration: 2.4 }, ini);
-            st.fromTo(el, { opacity: 0 }, { keyframes: { opacity: [0, 1, 1, 1, 0] }, duration: 2.4 }, ini);
+            const ini = ordem * 0.16;
+            // o primeiro produto já começa na tela (evita o vão preto antes da animação)
+            const zIni = i === 0 ? -500 : -2400;
+            const op0 = i === 0 ? 1 : 0;
+            st.fromTo(el, { z: zIni, rotate: i === 0 ? 0 : gsap.utils.random(-14, 14) }, { z: 900, rotate: 0, duration: 2.0 }, ini);
+            st.fromTo(el, { opacity: op0 }, { keyframes: { opacity: [op0, 1, 1, 1, 0] }, duration: 2.0 }, ini);
           });
-          st.fromTo(".storm__title span", { opacity: 0, yPercent: 40, scale: 0.92 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.6, stagger: 0.3 }, 2.4)
+          st.fromTo(".storm__title span", { opacity: 0, yPercent: 40, scale: 0.92 }, { opacity: 1, yPercent: 0, scale: 1, duration: 0.6, stagger: 0.3 }, 2.0)
             .to({}, { duration: 0.3 });
         }
 
