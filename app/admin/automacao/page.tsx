@@ -266,6 +266,23 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                   readOnly={!editavel}
                   aria-label="Texto da postagem"
                 />
+                {editavel && o.texto_final && (
+                  <div className="auto__meli">
+                    <input
+                      name="meli"
+                      type="url"
+                      inputMode="url"
+                      className="auto__campo"
+                      placeholder="Cole o meli.la gerado na conta do Barr4k (troca o link do post)"
+                      aria-label="Link meli.la do Barr4k"
+                    />
+                    {o.link_afiliado && (
+                      <a className="adm__btn adm__btn--ghost" href={o.link_afiliado} target="_blank" rel="noopener">
+                        Gerar meli.la ↗
+                      </a>
+                    )}
+                  </div>
+                )}
                 {editavel && (
                   <div className="auto__botoes">
                     {s !== "aprovada" && o.texto_final && (

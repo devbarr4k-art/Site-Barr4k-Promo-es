@@ -88,13 +88,29 @@ export async function removerCanal(f: FormData) {
   voltar("Canal removido.", "canais");
 }
 
+/** meli.la colado na oferta: confere se é da conta de afiliado configurada e troca o link no texto. */
+async function aplicarMeli(f: FormData, texto: string) {
+  const meli = txt(f, "meli");
+  if (!meli) return { texto, link: null as string | null };
+  if (!/^https?:\/\/(www\.)?meli\.la\/\w+/i.test(meli)) voltar("Cole um link que comece com https://meli.la/", "fila", true, txt(f, "volta"));
+  const cfg = await lerConfig();
+  const p = await lerParamsAfiliado(meli).catch(() => null);
+  if (!p || p.matt_tool !== cfg.ml_matt_tool) {
+    voltar("Esse meli.la não é da conta de afiliado configurada. Gere o link logado na conta do Barr4k.", "fila", true, txt(f, "volta"));
+  }
+  const curto = /https:\/\/achou\.io\/o\/\S+/;
+  return { texto: curto.test(texto) ? texto.replace(curto, meli) : `${texto}\n${meli}`, link: meli };
+}
+
 export async function mudarStatus(f: FormData) {
   await guarda();
   const status = txt(f, "status");
   if (!["aprovada", "descartada", "pendente"].includes(status)) return;
-  const texto = txt(f, "texto");
+  const m = status === "descartada" ? { texto: txt(f, "texto"), link: null } : await aplicarMeli(f, txt(f, "texto"));
+  const texto = m.texto;
   const dados: Record<string, unknown> = { status, motivo: null };
   if (texto) dados.texto_final = texto.slice(0, 4000);
+  if (m.link) dados.link_afiliado = m.link;
   await db().from("auto_ofertas").update(dados).eq("id", txt(f, "id")).neq("status", "enviada");
   voltar(status === "aprovada" ? "Oferta aprovada: entra na fila de envio." : status === "descartada" ? "Oferta descartada." : "Voltou pra aprovação.", txt(f, "aba") || "fila", false, txt(f, "volta"));
 }
@@ -128,8 +144,14 @@ export async function rodarAgora() {
 export async function dispararOferta(f: FormData) {
   await guarda();
   const id = txt(f, "id");
-  const texto = txt(f, "texto");
-  if (texto) await db().from("auto_ofertas").update({ texto_final: texto.slice(0, 4000) }).eq("id", id).neq("status", "enviada");
+  const m = await aplicarMeli(f, txt(f, "texto"));
+  if (m.texto) {
+    await db()
+      .from("auto_ofertas")
+      .update({ texto_final: m.texto.slice(0, 4000), ...(m.link ? { link_afiliado: m.link } : {}) })
+      .eq("id", id)
+      .neq("status", "enviada");
+  }
   const r = await disparar(await lerConfig(), true, id);
   voltar(r === "enviada" ? "Oferta disparada agora." : `Não enviou: ${r}.`, "fila", r !== "enviada", txt(f, "volta"));
 }
