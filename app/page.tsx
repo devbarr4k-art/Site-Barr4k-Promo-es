@@ -475,8 +475,7 @@ export default function Home() {
           <nav className="foot__links" aria-label="Rodapé">
             <a href="/termos">Termos de uso</a>
             <a href="/privacidade">Privacidade</a>
-            <a href={LINKS.instagram}>Instagram</a>
-            <a href={LINKS.tiktok}>TikTok</a>
+            <a href={LINKS.telegram} target="_blank" rel="noopener">Telegram</a>
           </nav>
         </div>
         <div className="foot__row foot__row--legal">
