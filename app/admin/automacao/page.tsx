@@ -415,7 +415,7 @@ function Config({ cfg }: { cfg: Awaited<ReturnType<typeof lerConfig>> }) {
         {cfg.extensao_token ? (
           <>
             <p className="auto__ajuda">1) Baixe e instale a extensão. 2) Entre no Mercado Livre no Chrome. 3) Cole este token na extensão:</p>
-            <input className="auto__campo auto__mono" readOnly value={cfg.extensao_token} aria-label="Token da extensão" onFocus={(e) => e.currentTarget.select()} />
+            <input className="auto__campo auto__mono" readOnly defaultValue={cfg.extensao_token} aria-label="Token da extensão" />
             <a className="adm__btn adm__btn--ghost" href="/extensao-achou.zip" download style={{ marginTop: 8, display: "inline-flex" }}>
               Baixar a extensão
             </a>
