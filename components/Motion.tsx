@@ -79,16 +79,6 @@ export function Motion() {
               scrollTrigger: { trigger: ".storm", start: "top 95%", end: "top top", scrub: 0.35 },
             },
           );
-          gsap.fromTo(
-            ".storm__glow",
-            { opacity: 0.2, scale: 0.8 },
-            {
-              opacity: 1,
-              scale: 1,
-              ease: "none",
-              scrollTrigger: { trigger: ".storm", start: "top 95%", end: "top top", scrub: 0.35 },
-            },
-          );
 
           gsap.set(itens, { xPercent: -50, yPercent: -50 });
           const st = gsap.timeline({
@@ -101,7 +91,6 @@ export function Motion() {
               pin: ".storm__stage",
             },
           });
-          st.fromTo(".storm__rings", { scale: 0.88, rotate: -10, opacity: 0.45 }, { scale: 1.18, rotate: 16, opacity: 0.9, duration: 2.5 }, 0);
 
           itens.forEach((el, i) => {
             const z0 = Number(el.dataset.z0 ?? -2400);
@@ -126,18 +115,11 @@ export function Motion() {
           });
 
           st.fromTo(
-            ".storm__kicker",
-            { opacity: 0, y: 18, scale: 0.95 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out" },
-            1.6,
-          )
-            .fromTo(
-              ".storm__title span",
-              { opacity: 0, yPercent: 38, scale: 0.92 },
-              { opacity: 1, yPercent: 0, scale: 1, duration: 0.55, stagger: 0.24, ease: "power2.out" },
-              1.75,
-            )
-            .to({}, { duration: 0.55 });
+            ".storm__title span",
+            { opacity: 0, yPercent: 38, scale: 0.92 },
+            { opacity: 1, yPercent: 0, scale: 1, duration: 0.55, stagger: 0.24, ease: "power2.out" },
+            1.65,
+          ).to({}, { duration: 0.55 });
         }
 
         // ── Queda de preço: seção fixa, preço cai com a rolagem

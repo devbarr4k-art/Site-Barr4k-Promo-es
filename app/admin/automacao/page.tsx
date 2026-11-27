@@ -7,6 +7,7 @@ import { Logo } from "@/components/Logo";
 import LoginForm from "../LoginForm";
 import Sair from "../Sair";
 import { BotaoEnviar } from "./BotaoEnviar";
+import { BotaoGerarMeli } from "./BotaoGerarMeli";
 import { Paginacao } from "../Paginacao";
 import { Abas } from "./Abas";
 import { AutoAtualizar } from "./AutoAtualizar";
@@ -17,11 +18,10 @@ import { whatsLigado } from "@/lib/automacao/whatsapp";
 import {
   addCanal,
   addOferta,
-
+  alternarAprovacaoAuto,
   alternarAtivo,
   alternarLinkAuto,
   dispararOferta,
-  gerarLinkOferta,
   enviarAgora,
   mudarStatus,
   removerCanal,
@@ -153,9 +153,18 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
             <input type="hidden" name="link_auto" value={cfg.link_automatico ? "0" : "1"} />
             <button
               className={`auto__toggle ${cfg.link_automatico ? "is-on" : ""}`}
-              title={cfg.link_automatico ? "Toda oferta já sai com o meli.la da sua conta" : "As ofertas saem com o link achou.io; use 'Gerar link' nas que quiser"}
+              title={cfg.link_automatico ? "Gera o link meli.la pela extensão automaticamente em todas as ofertas" : "As ofertas saem com o link achou.io; use 'Gerar link meli.la' nas que quiser"}
             >
               {cfg.link_automatico ? "Link automático ligado" : "Link automático desligado"}
+            </button>
+          </form>
+          <form action={alternarAprovacaoAuto}>
+            <input type="hidden" name="aprovar_auto" value={cfg.aprovacao_manual ? "1" : "0"} />
+            <button
+              className={`auto__toggle ${!cfg.aprovacao_manual ? "is-on" : ""}`}
+              title={!cfg.aprovacao_manual ? "Tudo que cai em esperando aprovação já é aprovado e enviado automaticamente" : "Novas ofertas esperam sua aprovação antes de entrar na fila de envio"}
+            >
+              {!cfg.aprovacao_manual ? "Aprovar/Enviar automático ligado" : "Aprovar/Enviar automático desligado"}
             </button>
           </form>
           <form action={alternarAtivo}>
@@ -282,13 +291,7 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                 />
                 {editavel && o.texto_final && (
                   <div className="auto__meli">
-                    {/\/meli\.la\//.test(o.link_afiliado ?? "") ? (
-                      <span className="auto__estado">✓ Com meli.la da sua conta</span>
-                    ) : (
-                      <BotaoEnviar formAction={gerarLinkOferta} className="adm__btn auto__gerar" carregando="Gerando…">
-                        🔗 Gerar link meli.la
-                      </BotaoEnviar>
-                    )}
+                    {/\/meli\.la\//.test(o.link_afiliado ?? "") && <span className="auto__estado">✓ Com meli.la da sua conta</span>}
                     <details className="auto__melimanual">
                       <summary>colar na mão</summary>
                       <input
@@ -304,6 +307,9 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                 )}
                 {editavel && (
                   <div className="auto__botoes">
+                    {o.texto_final && !/\/meli\.la\//.test(o.link_afiliado ?? "") && (
+                      <BotaoGerarMeli id={o.id} volta={`s=${s}&p=${pagina}`} status={s} />
+                    )}
                     {s !== "aprovada" && o.texto_final && (
                       <button name="status" value="aprovada" className="adm__btn">
                         Aprovar

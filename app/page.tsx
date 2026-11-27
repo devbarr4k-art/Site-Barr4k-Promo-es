@@ -154,14 +154,14 @@ type PecaTempestade = {
 };
 
 const TEMPESTADE: PecaTempestade[] = [
-  // ── Onda 1: já visível assim que a seção aparece abaixo do letreiro
-  { tipo: "img", c: "0", x: -27, y: -14, z0: -380, ini: 0, op0: 1 },
-  { tipo: "spam", c: "CORREEEE!!! 🔥", x: 25, y: -22, z0: -460, ini: 0, op0: 0.95 },
-  { tipo: "tag", c: "-40%", x: -12, y: 20, z0: -520, ini: 0, op0: 0.9 },
-  { tipo: "img", c: "1", x: 28, y: 14, z0: -680, ini: 0, op0: 0.9 },
-  { tipo: "spam", c: "GRUPO VIP R$ 19,90", x: -30, y: 18, z0: -820, ini: 0, op0: 0.8 },
-  { tipo: "img", c: "4", x: 4, y: -26, z0: -920, ini: 0, op0: 0.78 },
-  { tipo: "tag", c: "CUPOM ACHOU15", x: -26, y: -30, z0: -1050, ini: 0, op0: 0.65 },
+  // ── Onda 1: já visível assim que a seção aparece abaixo do letreiro (sem sobreposição)
+  { tipo: "img", c: "0", x: -30, y: -12, z0: -380, ini: 0, op0: 1 },
+  { tipo: "spam", c: "CORREEEE!!! 🔥", x: 28, y: -22, z0: -460, ini: 0, op0: 0.95 },
+  { tipo: "tag", c: "-40%", x: -10, y: 26, z0: -520, ini: 0, op0: 0.9 },
+  { tipo: "img", c: "1", x: 29, y: 14, z0: -680, ini: 0, op0: 0.9 },
+  { tipo: "spam", c: "GRUPO VIP R$ 19,90", x: -32, y: 20, z0: -760, ini: 0, op0: 0.85 },
+  { tipo: "img", c: "4", x: 4, y: -28, z0: -920, ini: 0, op0: 0.8 },
+  { tipo: "tag", c: "CUPOM ACHOU15", x: -16, y: -34, z0: -780, ini: 0, op0: 0.85 },
 
   // ── Onda 2: enxurrada principal (spam + ofertas cruzam a câmera)
   { tipo: "img", c: "2", x: -22, y: 12, z0: -1450, ini: 0.08, op0: 0 },
@@ -189,8 +189,6 @@ function Tempestade() {
   return (
     <section className="storm" aria-label="A gente garimpa tudo. Só chega o que vale a pena.">
       <div className="storm__stage">
-        <div className="storm__glow" aria-hidden="true" />
-        <div className="storm__rings" aria-hidden="true" />
         <div className="storm__space" aria-hidden="true">
           {TEMPESTADE.map((p, i) => {
             const prod = p.tipo === "img" ? (p.c === "ps5" ? console8 : OFERTAS[Number(p.c)]) : null;
@@ -213,16 +211,10 @@ function Tempestade() {
             );
           })}
         </div>
-        <div className="storm__copy">
-          <p className="storm__kicker">
-            <span className="storm__dot" aria-hidden="true" />
-            1.240 links analisados por dia · só ~38 passam
-          </p>
-          <h2 className="storm__title">
-            <span>A gente garimpa tudo.</span>
-            <span className="lime">Só chega o que vale a pena.</span>
-          </h2>
-        </div>
+        <h2 className="storm__title">
+          <span>A gente garimpa tudo.</span>
+          <span className="lime">Só chega o que vale a pena.</span>
+        </h2>
       </div>
     </section>
   );

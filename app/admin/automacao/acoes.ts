@@ -79,27 +79,58 @@ export async function alternarLinkAuto(f: FormData) {
   if (error) voltar("Rode o arquivo supabase/link-auto.sql no Supabase pra ligar essa opção.", "", true);
   voltar(
     liga
-      ? "Link automático ligado: toda oferta já sai com o meli.la da sua conta."
-      : "Link automático desligado: as ofertas saem com o link achou.io. Use o botão 'Gerar link' nas que quiser gerar o meli.la.",
+      ? "Link automático ligado: as ofertas novas já vêm com o link meli.la da sua conta."
+      : "Link automático desligado: as ofertas saem com o link achou.io. Use 'Gerar link meli.la' nas que quiser.",
   );
 }
 
-/** Botão "Gerar link" de uma oferta: gera o meli.la da conta do dono só nessa e troca na legenda. */
+export async function alternarAprovacaoAuto(f: FormData) {
+  await guarda();
+  const ligar = f.get("aprovar_auto") === "1";
+  const { error } = await db().from("auto_config").update({ aprovacao_manual: !ligar }).eq("id", 1);
+  if (error) voltar(`Não salvou: ${error.message}`, "", true);
+  if (!ligar) voltar("Aprovar/Enviar automático desligado: novas ofertas esperam sua aprovação.");
+
+  // Tudo que já estiver esperando aprovação vai direto pra fila de envio
+  const { data: movidas } = await db()
+    .from("auto_ofertas")
+    .update({ status: "aprovada", motivo: null })
+    .eq("status", "pendente")
+    .neq("texto_final", "")
+    .select("id");
+  const qtd = movidas?.length ?? 0;
+  const extra = qtd ? ` (${qtd} ${qtd === 1 ? "oferta aprovada" : "ofertas aprovadas"} da fila)` : "";
+
+  const cfg = await lerConfig();
+  if (cfg.ativo) {
+    await disparar(cfg).catch(() => null);
+    voltar(`Aprovar/Enviar automático ligado${extra}: tudo que cair já é aprovado e enviado.`);
+  }
+  voltar(`Aprovar/Enviar automático ligado${extra}. Ligue também o Disparo para enviar aos canais.`);
+}
+
+/** Botão "Gerar link meli.la": gera o meli.la da conta do dono (e aprova direto se pedido no popup). */
 export async function gerarLinkOferta(f: FormData) {
   await guarda();
   const id = txt(f, "id");
+  const aprovar = txt(f, "aprovar") === "1";
   const { data: o } = await db().from("auto_ofertas").select("texto_original, link_original").eq("id", id).maybeSingle();
   const oferta = o as { texto_original?: string; link_original?: string } | null;
   if (!oferta?.link_original) voltar("Não achei o link original dessa oferta.", "fila", true, txt(f, "volta"));
   const cfg = await lerConfig();
   const r = await processar(oferta!.texto_original ?? "", [oferta!.link_original!], cfg, true);
   if (!r.ok) voltar(`Não deu pra gerar o link: ${r.motivo}.`, "fila", true, txt(f, "volta"));
-  await db()
-    .from("auto_ofertas")
-    .update({ texto_final: r.texto, link_afiliado: r.linkAfiliado })
-    .eq("id", id)
-    .neq("status", "enviada");
   const virou = /meli\.la/.test(r.linkAfiliado);
+  const campos: Record<string, unknown> = { texto_final: r.texto, link_afiliado: r.linkAfiliado };
+  if (aprovar && virou) {
+    campos.status = "aprovada";
+    campos.motivo = null;
+  }
+  await db().from("auto_ofertas").update(campos).eq("id", id).neq("status", "enviada");
+  if (aprovar && !virou) {
+    voltar("Não deu pra gerar o meli.la (verifique a extensão); a oferta continuou sem aprovar.", "fila", true, txt(f, "volta"));
+  }
+  if (aprovar) voltar("meli.la gerado e oferta aprovada pra fila de envio.", "fila", false, txt(f, "volta"));
   voltar(virou ? "meli.la gerado e colocado na legenda." : "Link atualizado (meli.la indisponível, ficou o achou.io).", "fila", !virou, txt(f, "volta"));
 }
 
@@ -166,7 +197,7 @@ export async function addOferta(f: FormData) {
     texto_final: r.texto,
     link_original: r.linkOriginal,
     link_afiliado: r.linkAfiliado,
-    status: "pendente",
+    status: !cfg.aprovacao_manual ? "aprovada" : "pendente",
   });
   voltar("Oferta adicionada.", "fila");
 }

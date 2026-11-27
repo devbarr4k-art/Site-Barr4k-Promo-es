@@ -1578,35 +1578,6 @@ h2 {
   display: grid;
   place-items: center;
 }
-.storm__glow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: min(1150px, 125vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(160, 230, 0, 0.2), rgba(24, 58, 22, 0.24) 46%, transparent 74%);
-  pointer-events: none;
-  z-index: 0;
-}
-.storm__rings {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: min(920px, 115vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px dashed rgba(198, 255, 0, 0.12);
-  box-shadow:
-    inset 0 0 0 110px rgba(5, 5, 5, 0),
-    inset 0 0 0 111px rgba(237, 237, 230, 0.05),
-    inset 0 0 0 240px rgba(5, 5, 5, 0),
-    inset 0 0 0 241px rgba(198, 255, 0, 0.07);
-  pointer-events: none;
-  z-index: 0;
-}
 .storm__space {
   position: absolute;
   inset: 0;
@@ -1656,40 +1627,11 @@ h2 {
   text-decoration-color: var(--bad);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
 }
-.storm__copy {
+.storm__title {
   position: relative;
   z-index: 2;
   display: grid;
-  justify-items: center;
-  gap: 18px;
   padding: 0 var(--pad);
-}
-.storm__kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(198, 255, 0, 0.3);
-  background: rgba(12, 16, 10, 0.85);
-  backdrop-filter: blur(8px);
-  font-family: var(--price);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--off);
-  opacity: 0;
-}
-.storm__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--lime);
-  box-shadow: 0 0 10px var(--lime);
-}
-.storm__title {
-  position: relative;
-  display: grid;
   text-align: center;
   font-family: var(--display);
   font-weight: 800;
@@ -1737,9 +1679,6 @@ h2 {
   .storm__item--spam span {
     padding: 7px 12px;
     font-size: 13px;
-  }
-  .storm__kicker {
-    font-size: 11.5px;
   }
 }
 
@@ -3228,3 +3167,7 @@ textarea.auto__campo {
 .auto__gerar { background: var(--lime); color: #000; }
 .auto__melimanual summary { font-size: 12px; color: var(--g1); cursor: pointer; margin-top: 6px; }
 .auto__melimanual input { margin-top: 6px; }
+.auto__meli-popup .gate__box { border-color: rgba(198, 255, 0, 0.3); background: radial-gradient(120% 70% at 100% 0%, rgba(198, 255, 0, 0.14), transparent 60%), #101010; text-align: left; }
+.auto__meli-popup h2 { font-size: 24px; padding-right: 36px; }
+.auto__meli-acoes { display: grid; gap: 8px; margin-top: 4px; }
+.auto__meli-acoes .adm__btn { width: 100%; height: 46px; justify-content: center; }

@@ -30,9 +30,8 @@ export async function capturar(cfg: Config) {
             texto_final: r.ok ? r.texto : "",
             link_original: r.linkOriginal ?? null,
             link_afiliado: r.ok ? r.linkAfiliado : null,
-            // sempre espera aprovação manual
-            // link automático ligado = já aprova pra enviar (automação total quando ele sai)
-            status: r.ok ? (cfg.link_automatico ? "aprovada" : "pendente") : "erro",
+            // Aprovar/Enviar automático ligado (aprovacao_manual = false) → já entra aprovada na fila de envio
+            status: r.ok ? (!cfg.aprovacao_manual ? "aprovada" : "pendente") : "erro",
             motivo: r.ok ? null : r.motivo,
             imagem: r.ok ? r.imagem : null,
           });
