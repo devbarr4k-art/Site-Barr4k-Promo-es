@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
 import { db, inserirOferta, lerConfig } from "@/lib/automacao/db";
@@ -18,6 +18,7 @@ async function guarda() {
 
 function voltar(msg: string, aba = "", erro = false, extra = ""): never {
   revalidatePath(AQUI);
+  refresh();
   const q = new URLSearchParams(extra);
   q.set(erro ? "erro" : "ok", msg);
   if (aba) q.set("aba", aba);

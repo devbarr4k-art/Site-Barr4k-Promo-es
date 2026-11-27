@@ -282,6 +282,7 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                 <input type="hidden" name="aba" value="fila" />
                 <input type="hidden" name="volta" value={`s=${s}&p=${pagina}`} />
                 <textarea
+                  key={o.texto_final || o.texto_original}
                   name="texto"
                   className="auto__campo auto__mono"
                   rows={8}
