@@ -24,6 +24,7 @@ export type Config = {
   intervalo_max: number;
   palavras_bloqueadas: string[];
   template: string;
+  link_automatico?: boolean;
   ultimo_ciclo: string | null;
   proximo_envio: string | null;
   ultimo_erro: string | null;

@@ -72,6 +72,37 @@ export async function alternarAtivo(f: FormData) {
   voltar(ativo ? "Disparo ligado." : "Disparo desligado.");
 }
 
+export async function alternarLinkAuto(f: FormData) {
+  await guarda();
+  const liga = f.get("link_auto") === "1";
+  const { error } = await db().from("auto_config").update({ link_automatico: liga }).eq("id", 1);
+  if (error) voltar("Rode o arquivo supabase/link-auto.sql no Supabase pra ligar essa opção.", "", true);
+  voltar(
+    liga
+      ? "Link automático ligado: toda oferta já sai com o meli.la da sua conta."
+      : "Link automático desligado: as ofertas saem com o link achou.io. Use o botão 'Gerar link' nas que quiser gerar o meli.la.",
+  );
+}
+
+/** Botão "Gerar link" de uma oferta: gera o meli.la da conta do dono só nessa e troca na legenda. */
+export async function gerarLinkOferta(f: FormData) {
+  await guarda();
+  const id = txt(f, "id");
+  const { data: o } = await db().from("auto_ofertas").select("texto_original, link_original").eq("id", id).maybeSingle();
+  const oferta = o as { texto_original?: string; link_original?: string } | null;
+  if (!oferta?.link_original) voltar("Não achei o link original dessa oferta.", "fila", true, txt(f, "volta"));
+  const cfg = await lerConfig();
+  const r = await processar(oferta!.texto_original ?? "", [oferta!.link_original!], cfg, true);
+  if (!r.ok) voltar(`Não deu pra gerar o link: ${r.motivo}.`, "fila", true, txt(f, "volta"));
+  await db()
+    .from("auto_ofertas")
+    .update({ texto_final: r.texto, link_afiliado: r.linkAfiliado })
+    .eq("id", id)
+    .neq("status", "enviada");
+  const virou = /meli\.la/.test(r.linkAfiliado);
+  voltar(virou ? "meli.la gerado e colocado na legenda." : "Link atualizado (meli.la indisponível, ficou o achou.io).", "fila", !virou, txt(f, "volta"));
+}
+
 export async function addCanal(f: FormData) {
   await guarda();
   const bruto = txt(f, "chat");

@@ -19,7 +19,9 @@ import {
   addOferta,
 
   alternarAtivo,
+  alternarLinkAuto,
   dispararOferta,
+  gerarLinkOferta,
   enviarAgora,
   mudarStatus,
   removerCanal,
@@ -147,6 +149,15 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
           </div>
         </div>
         <div className="auto__toggles">
+          <form action={alternarLinkAuto}>
+            <input type="hidden" name="link_auto" value={cfg.link_automatico ? "0" : "1"} />
+            <button
+              className={`auto__toggle ${cfg.link_automatico ? "is-on" : ""}`}
+              title={cfg.link_automatico ? "Toda oferta já sai com o meli.la da sua conta" : "As ofertas saem com o link achou.io; use 'Gerar link' nas que quiser"}
+            >
+              {cfg.link_automatico ? "Link automático ligado" : "Link automático desligado"}
+            </button>
+          </form>
           <form action={alternarAtivo}>
             <input type="hidden" name="ativo" value={cfg.ativo ? "0" : "1"} />
             <button className={`auto__toggle ${cfg.ativo ? "is-on" : ""}`}>{cfg.ativo ? "Disparo ligado" : "Disparo desligado"}</button>
@@ -271,19 +282,24 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                 />
                 {editavel && o.texto_final && (
                   <div className="auto__meli">
-                    <input
-                      name="meli"
-                      type="url"
-                      inputMode="url"
-                      className="auto__campo"
-                      placeholder="Cole o meli.la gerado na conta do Barr4k (troca o link do post)"
-                      aria-label="Link meli.la do Barr4k"
-                    />
-                    {o.link_afiliado && (
-                      <a className="adm__btn adm__btn--ghost" href={o.link_afiliado} target="_blank" rel="noopener">
-                        Gerar meli.la ↗
-                      </a>
+                    {/\/meli\.la\//.test(o.link_afiliado ?? "") ? (
+                      <span className="auto__estado">✓ Com meli.la da sua conta</span>
+                    ) : (
+                      <BotaoEnviar formAction={gerarLinkOferta} className="adm__btn auto__gerar" carregando="Gerando…">
+                        🔗 Gerar link meli.la
+                      </BotaoEnviar>
                     )}
+                    <details className="auto__melimanual">
+                      <summary>colar na mão</summary>
+                      <input
+                        name="meli"
+                        type="url"
+                        inputMode="url"
+                        className="auto__campo"
+                        placeholder="Cole um meli.la gerado na conta do Barr4k"
+                        aria-label="Link meli.la do Barr4k"
+                      />
+                    </details>
                   </div>
                 )}
                 {editavel && (

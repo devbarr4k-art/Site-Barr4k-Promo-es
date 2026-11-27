@@ -49,7 +49,9 @@ export type Resultado =
 export async function processar(
   mensagem: string,
   linksExtras: string[],
-  cfg: { ml_matt_tool: string; ml_matt_word: string; template: string; palavras_bloqueadas: string[] },
+  cfg: { ml_matt_tool: string; ml_matt_word: string; template: string; palavras_bloqueadas: string[]; link_automatico?: boolean },
+  // força gerar o meli.la mesmo com link automático desligado (botão "Gerar link")
+  forcarMeli = false,
 ): Promise<Resultado> {
   const bloq = cfg.palavras_bloqueadas.find((p) => p.trim() && norm(mensagem).includes(norm(p.trim())));
   if (bloq) return { ok: false, motivo: `palavra bloqueada: ${bloq}` };
@@ -61,9 +63,12 @@ export async function processar(
   const produto = await lerProduto(links[0]).catch(() => null);
   if (!produto) return { ok: false, motivo: "não deu pra abrir o produto no Mercado Livre", linkOriginal: links[0] };
   const linkMl = linkAfiliado(produto.url, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
-  // meli.la do dono: 1º pela nossa extensão (sessão dele), 2º pelo Bot do Afiliado; senão fica o achou.io/o/...
-  const convertido =
-    (await gerarMeliDaSessao(produto.url).catch(() => null)) ?? (botAfiliadoLigado() ? await converterLink(produto.url) : null);
+  // meli.la do dono só quando o "link automático" está ligado, ou no botão "Gerar link" (forcarMeli).
+  // Senão fica o achou.io/o/... (que leva o mesmo código de afiliado e NÃO lota a conta do ML dele).
+  const geraMeli = forcarMeli || cfg.link_automatico;
+  const convertido = geraMeli
+    ? (await gerarMeliDaSessao(produto.url).catch(() => null)) ?? (botAfiliadoLigado() ? await converterLink(produto.url) : null)
+    : null;
   const link = convertido ?? linkMl;
   const preco = ex.preco ?? produto.preco;
   // "De": o do post; se não tiver, o preço riscado que o Mercado Livre mostra
