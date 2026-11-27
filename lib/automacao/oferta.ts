@@ -3,6 +3,7 @@ import { brl, desconto, extrair } from "./extrair";
 import { ehLinkML, lerProduto, linkAfiliado } from "./ml";
 import { linkCurto } from "./curto";
 import { criarChamada } from "./chamada";
+import { botAfiliadoLigado, converterLink } from "./botafiliado";
 
 export const TEMPLATE_PADRAO = `[[se chamada]]{chamada}
 
@@ -58,7 +59,10 @@ export async function processar(
 
   const produto = await lerProduto(links[0]).catch(() => null);
   if (!produto) return { ok: false, motivo: "não deu pra abrir o produto no Mercado Livre", linkOriginal: links[0] };
-  const link = linkAfiliado(produto.url, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
+  const linkMl = linkAfiliado(produto.url, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
+  // com o Bot do Afiliado ligado: link gerado pela conta do Barr4k; se falhar, fica o achou.io/o/...
+  const convertido = botAfiliadoLigado() ? await converterLink(produto.url) : null;
+  const link = convertido ?? linkMl;
   const preco = ex.preco ?? produto.preco;
   // "De": o do post; se não tiver, o preço riscado que o Mercado Livre mostra
   const antigo = [ex.precoAntigo, produto.precoAntigo].find((v) => v && preco && v > preco) ?? null;
@@ -76,7 +80,7 @@ export async function processar(
     pix: /\bpix\b/i.test(mensagem) ? "1" : "",
     loja_oficial: /loja oficial/i.test(mensagem) ? "1" : "",
     cupom: ex.cupom ?? "",
-    link: linkCurto(link),
+    link: convertido ?? linkCurto(linkMl),
     loja: "Mercado Livre",
     fechamento: FECHAMENTOS[Math.floor(Math.random() * FECHAMENTOS.length)],
   });
