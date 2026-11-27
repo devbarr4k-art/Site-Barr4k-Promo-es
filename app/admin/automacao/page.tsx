@@ -14,8 +14,9 @@ import { BotaoResetar } from "./BotaoResetar";
 import {
   addCanal,
   addOferta,
-  alternarAprovacao,
+
   alternarAtivo,
+  dispararOferta,
   enviarAgora,
   mudarStatus,
   removerCanal,
@@ -143,15 +144,6 @@ export default async function Automacao({ searchParams }: { searchParams: Promis
           </div>
         </div>
         <div className="auto__toggles">
-          <form action={alternarAprovacao}>
-            <input type="hidden" name="aprovacao" value={cfg.aprovacao_manual ? "0" : "1"} />
-            <button
-              className={`auto__toggle ${cfg.aprovacao_manual ? "is-on" : ""}`}
-              title={cfg.aprovacao_manual ? "As ofertas esperam você aprovar" : "As ofertas vão direto pra fila de envio"}
-            >
-              {cfg.aprovacao_manual ? "Aprovação manual ligada" : "Aprovação manual desligada"}
-            </button>
-          </form>
           <form action={alternarAtivo}>
             <input type="hidden" name="ativo" value={cfg.ativo ? "0" : "1"} />
             <button className={`auto__toggle ${cfg.ativo ? "is-on" : ""}`}>{cfg.ativo ? "Disparo ligado" : "Disparo desligado"}</button>
@@ -280,6 +272,11 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
                       <button name="status" value="aprovada" className="adm__btn">
                         Aprovar
                       </button>
+                    )}
+                    {o.texto_final && (
+                      <BotaoEnviar formAction={dispararOferta} className="adm__btn auto__disparar" carregando="Disparando…">
+                        🚀 Disparar agora
+                      </BotaoEnviar>
                     )}
                     {s === "aprovada" && (
                       <button name="status" value="pendente" className="adm__btn adm__btn--ghost">

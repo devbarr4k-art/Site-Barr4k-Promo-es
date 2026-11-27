@@ -29,7 +29,8 @@ export async function capturar(cfg: Config) {
             texto_final: r.ok ? r.texto : "",
             link_original: r.linkOriginal ?? null,
             link_afiliado: r.ok ? r.linkAfiliado : null,
-            status: r.ok ? (cfg.aprovacao_manual ? "pendente" : "aprovada") : "erro",
+            // sempre espera aprovação manual
+            status: r.ok ? "pendente" : "erro",
             motivo: r.ok ? null : r.motivo,
             imagem: r.ok ? r.imagem : null,
           });
@@ -44,21 +45,21 @@ export async function capturar(cfg: Config) {
   return log;
 }
 
-export async function disparar(cfg: Config, forcar = false) {
+/** Posta a próxima oferta aprovada; com `id`, posta essa oferta (botão "Disparar agora"). */
+export async function disparar(cfg: Config, forcar = false, id?: string) {
   if (!forcar) {
     if (!cfg.ativo) return "disparo desligado";
     if (!dentroDoHorario(cfg)) return "fora do horário";
     if (cfg.proximo_envio && new Date(cfg.proximo_envio) > new Date()) return "aguardando intervalo";
   }
   if (!cfg.bot_token) return "falta o token do bot";
-  const { data: oferta } = await db()
-    .from("auto_ofertas")
-    .select("*")
-    .eq("status", "aprovada")
-    .order("criado_em")
-    .limit(1)
-    .maybeSingle();
-  if (!oferta) return "fila vazia";
+  const busca = db().from("auto_ofertas").select("*");
+  const { data: oferta } = await (id
+    ? busca.eq("id", id).in("status", ["pendente", "aprovada", "erro"])
+    : busca.eq("status", "aprovada").order("criado_em").limit(1)
+  ).maybeSingle();
+  if (!oferta) return id ? "oferta não encontrada (já foi enviada?)" : "fila vazia";
+  if (!oferta.texto_final) return "oferta sem texto";
   const { data: destinos } = await db().from("auto_grupos").select("chat").eq("tipo", "destino").eq("ativo", true);
   if (!destinos?.length) return "nenhum canal de destino";
 

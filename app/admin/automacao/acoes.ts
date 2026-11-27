@@ -32,7 +32,6 @@ export async function salvarConfig(f: FormData) {
     return Number.isFinite(v) && txt(f, k) !== "" ? Math.min(max, Math.max(min, Math.round(v))) : padrao;
   };
   const novo: Record<string, unknown> = {
-    aprovacao_manual: f.get("aprovacao_manual") === "on",
     hora_inicio: n("hora_inicio", 0, 23, atual.hora_inicio),
     hora_fim: n("hora_fim", 1, 24, atual.hora_fim),
     intervalo_min: n("intervalo_min", 1, 600, atual.intervalo_min),
@@ -71,13 +70,6 @@ export async function alternarAtivo(f: FormData) {
   const ativo = f.get("ativo") === "1";
   await db().from("auto_config").update({ ativo, proximo_envio: null }).eq("id", 1);
   voltar(ativo ? "Disparo ligado." : "Disparo desligado.");
-}
-
-export async function alternarAprovacao(f: FormData) {
-  await guarda();
-  const liga = f.get("aprovacao") === "1";
-  await db().from("auto_config").update({ aprovacao_manual: liga }).eq("id", 1);
-  voltar(liga ? "Aprovação manual ligada: as ofertas novas esperam você aprovar." : "Aprovação manual desligada: as ofertas novas vão direto pra fila de envio.");
 }
 
 export async function addCanal(f: FormData) {
@@ -120,7 +112,7 @@ export async function addOferta(f: FormData) {
     texto_final: r.texto,
     link_original: r.linkOriginal,
     link_afiliado: r.linkAfiliado,
-    status: cfg.aprovacao_manual ? "pendente" : "aprovada",
+    status: "pendente",
   });
   voltar("Oferta adicionada.", "fila");
 }
@@ -130,6 +122,16 @@ export async function rodarAgora() {
   const cfg = await lerConfig();
   const cap = await capturar(cfg);
   voltar(`Verifiquei os canais: ${cap.length ? cap.length + " post(s) novo(s) processado(s)" : "nada novo"}.`);
+}
+
+/** Botão "Disparar agora" de uma oferta: salva o texto editado e posta na hora. */
+export async function dispararOferta(f: FormData) {
+  await guarda();
+  const id = txt(f, "id");
+  const texto = txt(f, "texto");
+  if (texto) await db().from("auto_ofertas").update({ texto_final: texto.slice(0, 4000) }).eq("id", id).neq("status", "enviada");
+  const r = await disparar(await lerConfig(), true, id);
+  voltar(r === "enviada" ? "Oferta disparada agora." : `Não enviou: ${r}.`, "fila", r !== "enviada", txt(f, "volta"));
 }
 
 export async function enviarAgora() {
