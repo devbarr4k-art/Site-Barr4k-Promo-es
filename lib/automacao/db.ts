@@ -27,6 +27,11 @@ export type Config = {
   ultimo_ciclo: string | null;
   proximo_envio: string | null;
   ultimo_erro: string | null;
+  // sessão do Mercado Livre (extensão da ACHOU)
+  ml_cookies?: string | null;
+  ml_sessao_em?: string | null;
+  ml_sessao_erro?: string | null;
+  extensao_token?: string | null;
 };
 
 export async function lerConfig(): Promise<Config> {

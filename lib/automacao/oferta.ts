@@ -4,6 +4,7 @@ import { ehLinkML, lerProduto, linkAfiliado } from "./ml";
 import { linkCurto } from "./curto";
 import { criarChamada } from "./chamada";
 import { botAfiliadoLigado, converterLink } from "./botafiliado";
+import { gerarMeliDaSessao } from "./meli";
 
 export const TEMPLATE_PADRAO = `[[se chamada]]{chamada}
 
@@ -60,8 +61,9 @@ export async function processar(
   const produto = await lerProduto(links[0]).catch(() => null);
   if (!produto) return { ok: false, motivo: "não deu pra abrir o produto no Mercado Livre", linkOriginal: links[0] };
   const linkMl = linkAfiliado(produto.url, { matt_tool: cfg.ml_matt_tool, matt_word: cfg.ml_matt_word });
-  // com o Bot do Afiliado ligado: link gerado pela conta do Barr4k; se falhar, fica o achou.io/o/...
-  const convertido = botAfiliadoLigado() ? await converterLink(produto.url) : null;
+  // meli.la do dono: 1º pela nossa extensão (sessão dele), 2º pelo Bot do Afiliado; senão fica o achou.io/o/...
+  const convertido =
+    (await gerarMeliDaSessao(produto.url).catch(() => null)) ?? (botAfiliadoLigado() ? await converterLink(produto.url) : null);
   const link = convertido ?? linkMl;
   const preco = ex.preco ?? produto.preco;
   // "De": o do post; se não tiver, o preço riscado que o Mercado Livre mostra

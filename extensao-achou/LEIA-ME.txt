@@ -1,0 +1,14 @@
+Extensão ACHOU — Gerador de links do Mercado Livre
+
+Como instalar (uma vez só):
+1. Abra o Google Chrome e vá em: chrome://extensions
+2. Ligue o "Modo do desenvolvedor" (canto superior direito).
+3. Clique em "Carregar sem compactação" e escolha esta pasta.
+4. A extensão ACHOU aparece na barra do Chrome (ícone verde).
+
+Como conectar a conta:
+1. No mesmo Chrome, entre no Mercado Livre com a conta de afiliado.
+2. Clique no ícone da ACHOU, cole o token do painel (achou.io/admin > Automação > Configurar) e clique em "Conectar minha conta".
+3. Pronto. O painel passa a gerar os links meli.la sozinho.
+
+Se um dia parar: abra a extensão e clique em "Conectar minha conta" de novo (a sessão do Mercado Livre expira de tempos em tempos).

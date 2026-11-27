@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "ACHOU — Gerador de links",
+  "version": "1.0.0",
+  "description": "Gera os links de afiliado do Mercado Livre da sua conta pro painel da ACHOU.",
+  "permissions": ["cookies", "storage"],
+  "host_permissions": ["https://*.mercadolivre.com.br/*", "https://www.achou.io/*", "https://achou.io/*"],
+  "action": {
+    "default_title": "ACHOU — Gerador de links",
+    "default_popup": "popup.html",
+    "default_icon": { "48": "icon.png", "128": "icon.png" }
+  },
+  "icons": { "48": "icon.png", "128": "icon.png" }
+}

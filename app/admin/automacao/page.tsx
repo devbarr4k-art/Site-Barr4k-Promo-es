@@ -392,6 +392,33 @@ function Config({ cfg }: { cfg: Awaited<ReturnType<typeof lerConfig>> }) {
       </div>
 
       <div className="auto__bloco">
+        <h2>Link meli.la automático (extensão)</h2>
+        <p className="auto__ajuda">
+          Com a extensão da ACHOU instalada e conectada, os posts saem com o <b>meli.la</b> da sua conta. Sem ela, saem com o link
+          achou.io (que leva o mesmo código de afiliado).
+        </p>
+        {cfg.ml_cookies ? (
+          <p className="auto__estado">
+            ✓ Conta conectada{cfg.ml_sessao_em ? ` em ${hora(cfg.ml_sessao_em)}` : ""}.
+          </p>
+        ) : (
+          <p className="auto__estado">Ainda não conectada.</p>
+        )}
+        {cfg.ml_sessao_erro && <p className="auto__motivo">{cfg.ml_sessao_erro}</p>}
+        {cfg.extensao_token ? (
+          <>
+            <p className="auto__ajuda">1) Baixe e instale a extensão. 2) Entre no Mercado Livre no Chrome. 3) Cole este token na extensão:</p>
+            <input className="auto__campo auto__mono" readOnly value={cfg.extensao_token} aria-label="Token da extensão" onFocus={(e) => e.currentTarget.select()} />
+            <a className="adm__btn adm__btn--ghost" href="/extensao-achou.zip" download style={{ marginTop: 8, display: "inline-flex" }}>
+              Baixar a extensão
+            </a>
+          </>
+        ) : (
+          <p className="auto__motivo">Rode o arquivo <b>supabase/meli.sql</b> no Supabase pra liberar o token da extensão.</p>
+        )}
+      </div>
+
+      <div className="auto__bloco">
         <h2>Bot do Telegram</h2>
         <p className="auto__ajuda">Token que o @BotFather te deu. Depois coloque o bot como administrador do canal onde ele vai postar.</p>
         <p className="auto__estado">{cfg.bot_token ? "✓ Token salvo" : "Ainda sem token"}</p>
