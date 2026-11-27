@@ -134,8 +134,8 @@ export function Motion() {
             scrollTrigger: {
               trigger: ".drop",
               start: "top top",
-              end: desktop ? "+=2400" : "+=1700",
-              scrub: 0.6,
+              end: desktop ? "+=1550" : "+=1100",
+              scrub: 0.4,
               pin: ".drop__stage",
             },
           });
