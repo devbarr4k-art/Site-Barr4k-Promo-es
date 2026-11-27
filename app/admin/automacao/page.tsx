@@ -12,6 +12,7 @@ import { Abas } from "./Abas";
 import { AutoAtualizar } from "./AutoAtualizar";
 import { BotaoResetar } from "./BotaoResetar";
 import { GruposWhats } from "./GruposWhats";
+import { WhatsConexao } from "./WhatsConexao";
 import { whatsLigado } from "@/lib/automacao/whatsapp";
 import {
   addCanal,
@@ -366,6 +367,7 @@ function Canais({ origens, destinos, whats }: { origens: Canal[]; destinos: Cana
       </form>
       {lista("Canais monitorados", "Canais públicos de promoção. O robô lê os posts novos a cada minuto e pega os que têm link do Mercado Livre.", origens)}
       {lista("Onde o robô posta", "Telegram (o bot precisa ser admin) e WhatsApp (abaixo). A mesma arte e o mesmo texto vão pros dois.", destinos)}
+      <WhatsConexao ligado={whats} />
       <GruposWhats ligado={whats} />
     </section>
   );

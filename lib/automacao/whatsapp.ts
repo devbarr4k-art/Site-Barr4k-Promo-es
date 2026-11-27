@@ -9,6 +9,33 @@ export const whatsLigado = () => !!(base && key && instancia);
 /** É um destino de WhatsApp? (JID de grupo termina em @g.us) */
 export const ehGrupoWhats = (chat: string) => /@(g\.us|s\.whatsapp\.net)$/i.test(chat.trim());
 
+/** Estado da conexão do número: conectado / conectando / desligado / off (não configurado). */
+export async function statusWhats(): Promise<"conectado" | "conectando" | "desligado" | "off"> {
+  if (!whatsLigado()) return "off";
+  try {
+    const r = await fetch(`${base}/instance/connectionState/${instancia}`, { headers: { apikey: key }, signal: AbortSignal.timeout(12000) });
+    const j = (await r.json().catch(() => ({}))) as { instance?: { state?: string } };
+    const s = j?.instance?.state;
+    return s === "open" ? "conectado" : s === "connecting" ? "conectando" : "desligado";
+  } catch {
+    return "desligado";
+  }
+}
+
+/** QR code pra conectar o número (base64 de imagem), ou {conectado:true} se já está ligado. */
+export async function qrWhats(): Promise<{ qr?: string; conectado?: boolean; erro?: string }> {
+  if (!whatsLigado()) return { erro: "WhatsApp não configurado na Vercel (Evolution)." };
+  try {
+    const r = await fetch(`${base}/instance/connect/${instancia}`, { headers: { apikey: key }, signal: AbortSignal.timeout(15000) });
+    const j = (await r.json().catch(() => ({}))) as { base64?: string; qrcode?: { base64?: string }; instance?: { state?: string }; state?: string };
+    if (j?.instance?.state === "open" || j?.state === "open") return { conectado: true };
+    const qr = j?.base64 ?? j?.qrcode?.base64;
+    return qr ? { qr } : { erro: "A Evolution não devolveu o QR. Tente de novo em instantes." };
+  } catch (e) {
+    return { erro: (e as Error).message };
+  }
+}
+
 async function chamar(caminho: string, corpo: unknown) {
   const r = await fetch(`${base}/${caminho}/${instancia}`, {
     method: "POST",

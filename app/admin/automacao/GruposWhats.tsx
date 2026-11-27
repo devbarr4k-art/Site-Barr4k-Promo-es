@@ -26,17 +26,7 @@ export function GruposWhats({ ligado }: { ligado: boolean }) {
     }
   };
 
-  if (!ligado) {
-    return (
-      <div className="auto__bloco">
-        <h2>Grupos do WhatsApp</h2>
-        <p className="auto__ajuda">
-          Pra postar no WhatsApp, falta ligar a Evolution na Vercel (EVOLUTION_URL, EVOLUTION_KEY e EVOLUTION_INSTANCE) e ler o QR com o
-          número da ACHOU.
-        </p>
-      </div>
-    );
-  }
+  if (!ligado) return null;
 
   return (
     <div className="auto__bloco">
