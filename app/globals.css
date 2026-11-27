@@ -3134,11 +3134,6 @@ textarea.auto__campo {
 .auto__meli { display: flex; gap: 8px; align-items: center; }
 .auto__meli input { flex: 1; min-width: 0; }
 @media (max-width: 700px) { .auto__meli { flex-direction: column; align-items: stretch; } }
-/* sem o ACHOU gigante: espaço pra faixa de ofertas não cobrir o texto e o celular */
-.hero { padding-bottom: clamp(56px, 7vw, 120px); }
 .btn--breve { background: transparent !important; color: var(--g1) !important; border: 1px dashed var(--line-2); opacity: 1; }
-/* celular do topo inteiro (sem cortar na faixa de ofertas) */
-@media (min-width: 900px) {
-  .hero__phone { zoom: 0.7; align-self: start; }
-  .hero { padding-bottom: 150px; }
-}
+/* ACHOU gigante do topo: invisível, mas ocupando o mesmo espaço (layout igual ao de antes) */
+.hero__word { visibility: hidden; }

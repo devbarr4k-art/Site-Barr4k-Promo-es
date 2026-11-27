@@ -287,6 +287,10 @@ export default function Home() {
             </div>
           </div>
 
+          {/* invisível (CSS): só segura o espaço, o layout fica igual ao de antes */}
+          <div className="hero__word" aria-hidden="true">
+            <span>ACHOU</span>
+          </div>
         </section>
 
         <Ticker />
