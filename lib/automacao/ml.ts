@@ -60,12 +60,44 @@ export async function lerProduto(url: string): Promise<Produto | null> {
   const doItem = comp
     ? links.find((l) => new RegExp(`(/p/MLB${comp}|item_id(%3A|:)MLB${comp}|MLB-${comp})(\\D|$)`).test(l))
     : undefined;
-  const destaque = doItem ?? links.find((l) => /card-featured/.test(l)) ?? links[0];
-  if (!destaque) return null;
   const meta = (k: string) => html.match(new RegExp(`property="${k}" content="([^"]+)"`))?.[1] ?? null;
   const ogTitulo = meta("og:title");
+  const ogOk = ogTitulo && !/minhas listas|recomenda/i.test(ogTitulo); // página de lista não é o produto
   const img = meta("og:image");
-  const preco = ogTitulo?.match(/R\$\s*([\d.]+(?:,\d{2})?)\s*$/)?.[1];
+  const precoOg = ogTitulo?.match(/R\$\s*([\d.]+(?:,\d{2})?)\s*$/)?.[1];
+
+  // 1) o cartão do produto compartilhado (variação certa: link, foto, nome e preços)
+  const ini = comp ? html.indexOf(`"metadata":{"id":"MLB${comp}"`) : -1;
+  if (ini >= 0) {
+    const c = html.slice(ini, ini + 6000);
+    const urlCard = c.match(/"url":"([^"]+)"/)?.[1];
+    const foto = c.match(/"pictures":\[\{"id":"([^"]+)"/)?.[1];
+    const nome = c.match(/"title":\{"text":"([^"]+)"/)?.[1];
+    if (urlCard) {
+      let url = "https://" + desesc(urlCard).replace(/^https?:\/\//, "");
+      // página de produto com várias variações: fixa a variação que foi compartilhada
+      if (/\/up\/MLBU\d+/.test(url) && !/item_id/.test(url)) url += `${url.includes("?") ? "&" : "?"}pdp_filters=item_id%3AMLB${comp}`;
+      return {
+        url,
+        imagem: foto ? `https://http2.mlstatic.com/D_NQ_NP_${foto}-O.jpg` : img && ogOk ? desesc(img).replace(/-[A-Z]\.webp$/, "-O.jpg") : null,
+        titulo: nome ? desesc(nome) : ogOk ? desesc(ogTitulo!).replace(/\s*-\s*R\$.*$/, "").trim() : null,
+        preco: Number(c.match(/"current_price":\{"value":([\d.]+)/)?.[1]) || null,
+        precoAntigo: Number(c.match(/"previous_price":\{"value":([\d.]+)/)?.[1]) || null,
+      };
+    }
+  }
+
+  // 2) um link da página com o código compartilhado; se não tiver, monta o link pelo código
+  //    (nunca pega outro produto da página no lugar)
+  const tipo = html.match(/"shared_item":\{"id":"MLB\d+","type":"(\w+)"/)?.[1];
+  const destaque =
+    doItem ??
+    (comp
+      ? tipo === "PRODUCT"
+        ? `https://www.mercadolivre.com.br/p/MLB${comp}`
+        : `https://produto.mercadolivre.com.br/MLB-${comp}`
+      : links.find((l) => /card-featured/.test(l)) ?? links[0]);
+  if (!destaque) return null;
   // preço "de" (riscado) do card em destaque
   const card = html.slice(Math.max(0, html.indexOf("card-featured")), html.indexOf("card-featured") + 8000);
   const antigo = Number(card.match(/"previous_price":\{"value":([\d.]+)/)?.[1]) || null;
@@ -73,9 +105,9 @@ export async function lerProduto(url: string): Promise<Produto | null> {
     url: destaque,
     precoAntigo: antigo,
     // o gerador de imagem não lê webp: o mesmo arquivo existe em jpg
-    imagem: img ? desesc(img).replace(/-[A-Z]\.webp$/, "-O.jpg") : null,
-    titulo: ogTitulo ? desesc(ogTitulo).replace(/\s*-\s*R\$.*$/, "").trim() : null,
-    preco: preco ? Number(preco.replace(/\./g, "").replace(",", ".")) : null,
+    imagem: img && ogOk ? desesc(img).replace(/-[A-Z]\.webp$/, "-O.jpg") : null,
+    titulo: ogOk ? desesc(ogTitulo!).replace(/\s*-\s*R\$.*$/, "").trim() : null,
+    preco: precoOg ? Number(precoOg.replace(/\./g, "").replace(",", ".")) : null,
   };
 }
 

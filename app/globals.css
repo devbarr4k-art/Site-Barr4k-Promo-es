@@ -1692,8 +1692,11 @@ h2 {
   animation-direction: reverse;
   animation-duration: 70s;
 }
-.deps__row:hover .deps__track {
-  animation-play-state: paused;
+/* roda sempre, sem pausar com mouse ou dedo */
+.deps__track {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 .deps__set {
   display: flex;
@@ -3091,3 +3094,9 @@ textarea.auto__campo {
 .adm__canais { display: flex; gap: 6px; flex-wrap: nowrap; white-space: nowrap; }
 
 .auto__disparar { background: var(--lime); color: #000; }
+/* depoimentos no celular: um pouco mais rápido e sem destaque de toque */
+@media (max-width: 899px) {
+  .deps__row .deps__track { animation-duration: 55s; }
+  .dep:hover { border-color: var(--line); }
+  .deps__row { -webkit-tap-highlight-color: transparent; }
+}
