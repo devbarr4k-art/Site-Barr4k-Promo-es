@@ -8,7 +8,8 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   if (body.site) return NextResponse.json({ ok: true, url: "/" }); // campo isca contra robô
 
-  const nome = limparNome(body.nome) ?? ""; // opcional: o formulário novo pede só e-mail e WhatsApp
+  const nome = limparNome(body.nome);
+  if (!nome) return NextResponse.json({ error: "Diz seu nome." }, { status: 400 });
   const email = limparEmail(body.email);
   const telefone = limparTelefone(body.telefone);
   const canal: Canal = body.canal === "whatsapp" ? "whatsapp" : "telegram";

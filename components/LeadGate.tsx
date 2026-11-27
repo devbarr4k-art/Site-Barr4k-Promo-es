@@ -81,7 +81,7 @@ export function LeadModal() {
   const [aberto, setAberto] = useState(false);
   const [canal, setCanal] = useState<Canal>("telegram");
   const [origem, setOrigem] = useState("");
-  const nome = ""; // o cadastro novo pede só e-mail e WhatsApp
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
   const [ok, setOk] = useState(false);
@@ -212,9 +212,20 @@ export function LeadModal() {
             <p>Cadastre-se gratuitamente e desbloqueie o nosso {nomeCanal}.</p>
 
             <label className="gate__field">
-              <span>E-mail</span>
+              <span>Nome</span>
               <input
                 ref={primeiro}
+                type="text"
+                autoComplete="name"
+                placeholder="Seu nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+              />
+            </label>
+            <label className="gate__field">
+              <span>E-mail</span>
+              <input
                 type="email"
                 inputMode="email"
                 autoComplete="email"
