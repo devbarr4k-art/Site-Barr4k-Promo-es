@@ -243,3 +243,15 @@ export async function resetarTudo() {
       : "Fila de aprovação já estava vazia. Os canais voltam a puxar as últimas promoções.",
   );
 }
+
+export async function limparEnviadas() {
+  await guarda();
+  const { data: apagadas } = await db().from("auto_ofertas").delete().eq("status", "enviada").select("id");
+  const qtd = apagadas?.length ?? 0;
+  voltar(
+    qtd ? `Enviadas apagadas (${qtd} ${qtd === 1 ? "oferta removida" : "ofertas removidas"} do banco).` : "Nenhuma oferta enviada pra apagar.",
+    "fila",
+    false,
+    "s=enviada",
+  );
+}

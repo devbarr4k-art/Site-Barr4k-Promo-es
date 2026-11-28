@@ -23,6 +23,7 @@ import {
   alternarLinkAuto,
   dispararOferta,
   enviarAgora,
+  limparEnviadas,
   mudarStatus,
   removerCanal,
   resetarTudo,
@@ -254,6 +255,16 @@ function Fila({ s, pagina, data, total }: { s: string; pagina: number; data: any
           </Link>
         ))}
       </nav>
+
+      {s === "enviada" && (total.enviada ?? 0) > 0 && (
+        <form action={limparEnviadas} className="auto__limpar">
+          <BotaoResetar
+            rotulo={`Apagar todas as enviadas (${total.enviada})`}
+            carregando="Apagando…"
+            confirmacao={`Apagar todas as ${total.enviada} ofertas já enviadas do histórico e liberar espaço no banco?\n\nAs ofertas esperando aprovação e na fila de envio não são afetadas.`}
+          />
+        </form>
+      )}
 
       {!(data ?? []).length ? (
         <p className="auto__vazio">
