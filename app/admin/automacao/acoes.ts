@@ -234,8 +234,12 @@ export async function enviarAgora() {
 
 export async function resetarTudo() {
   await guarda();
-  await db().from("auto_ofertas").delete().not("id", "is", null);
+  const { data: apagadas } = await db().from("auto_ofertas").delete().eq("status", "pendente").select("id");
   await db().from("auto_grupos").update({ ultimo_post: 0 }).eq("tipo", "origem");
-  await db().from("auto_config").update({ proximo_envio: null, ultimo_erro: null }).eq("id", 1);
-  voltar("Tudo resetado: a fila foi apagada e os canais voltam a ser lidos no próximo minuto.");
+  const qtd = apagadas?.length ?? 0;
+  voltar(
+    qtd
+      ? `Fila de aprovação limpa (${qtd} ${qtd === 1 ? "oferta removida" : "ofertas removidas"}). As aprovadas continuam na fila de envio.`
+      : "Fila de aprovação já estava vazia. Os canais voltam a puxar as últimas promoções.",
+  );
 }
